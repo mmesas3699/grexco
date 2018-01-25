@@ -1,0 +1,42 @@
+Conectar Mysql y Django: https://www.digitalocean.com/community/tutorials/how-to-create-a-django-app-and-connect-it-to-a-database
+
+Conceder acceso a usuarios a Mysql: https://chartio.com/resources/tutorials/how-to-grant-all-privileges-on-a-database-in-mysql/
+
+Crear Data base: CREATE DATABASE `my-db` CHARACTER SET utf8 COLLATE utf8_general_ci;	
+Check Mysql services:
+	$ sudo service mysql status
+	$ sudo service mysql stop
+	$ sudo service mysql start
+
+
+******* Comandos Django **********
+# Iniciar un proyecto 
+$ django-admin.py startproject mysite
+
+# Iniciar el servidor de Djando 
+$ python manage.py runserver
+
+# Para iniciar el servidor en el puerto 8080
+$ python manage.py runserver 8080
+
+# Para que este disponible para cualquier equipo de la red
+$ python manage.py runserver 0.0.0.0:8000
+
+# Para instalar mysqlclient
+$ sudo apt-get install python3-dev libmysqlclient-dev
+$ pip install mysqlclient
+
+# Para crear una app 
+$ python manage.py startapp aplicacion
+
+
+******* Carpetas Django *********
+- mysite/: Directorio que contiene el projecto. Se puede cambiar el nombre en cualquier momento sin afectar el proyecto.
+- mysite/mysite/: Directorio del paquete que contiene el projecto. Es un paquete python y se usará para importar cualquier cosa dentro
+                  de el.
+- mysite/__init__.py: Un archivo requerido para que Python trate a este directorio como un paquete.
+- mysite/settings.py: Opciones/configuraciones para este proyecto de Django.
+- mysite/urls.py: La declaración de las URL para este proyecto de Django; una "tabla de contenidos".
+- mysite/wsgi.py: El archivo encargado de ser compatible con el servidor web.
+
+
