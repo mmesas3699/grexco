@@ -1,0 +1,122 @@
+body {
+	font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}	
+
+nav {
+	background-color: #ffff;
+}
+
+
+.nav-link {
+	color: #299cff;	
+}
+
+#bienvenida {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+
+#bienvenida-txt {
+	color: #666666;
+}
+
+#titulo-bienvenida {
+	margin: auto;
+	width: 60%;
+}
+
+#acerca-de {
+	background-color: #299cff;
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+.acerca-de-titulo {
+	margin: auto;
+	width: 50%;
+	margin-bottom: 20px;
+}
+
+.acerca-de-contenido {
+	color: #F8F8FF;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+/* ---------------- Activos Fijos ---------------  */
+
+#activos-fijos {
+	background-image: url(/static/landing/img/activos-fijos.jpg);
+	padding-bottom: 300px;
+	background-repeat: no-repeat;
+}
+
+#activos-fijos-contenido {
+	position: absolute;
+    right: 0px;
+	margin-right: 10px;
+	margin-left: 20px;
+	background-color: black;
+	opacity: 0.8;
+	color: #F8F8FF;
+}
+
+.material-icons.md-36.white { 
+/*
+Funcionamiento de Google Icons para cambiar el color, y alinearlos con el texto
+*/
+	color: #F8F8FF;
+	font-size: 36px;
+	text-align: center;
+    vertical-align: middle;
+}
+
+.material-icons.md-36.orange { 
+/*
+Funcionamiento de Google Icons para cambiar el color, y alinearlos con el texto
+*/
+	color: #FB8C00;
+	font-size: 36px;
+	text-align: center;
+    vertical-align: middle;
+}
+
+.material-icons.acfiblue {
+	color: #00BFFF;
+	font-size: 1.3em;
+	text-align: center;
+    vertical-align: middle;
+}
+
+.mas-acfi {
+	margin: auto;
+	width: 50%;
+}
+
+/* ---------------- Fin Activos Fijos ---------------  */
+
+.ver-mas-producto {
+	color: #F8F8FF;
+}
+
+
+/* ************** Caja Menor *********************** */
+
+#caja-menor {
+	background-image: url(/static/landing/img/caja-menor.jpg);
+	padding-bottom: 300px;
+	background-repeat: no-repeat;
+}
+
+
+/* ************** Fin Caja Menor ******************* */
+
+#FB8C00
+#00BFFF
+#F8F8FF
+#FFFFFF
+#FF00FF
+#299cff
+#666666
