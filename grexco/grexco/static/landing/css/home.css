@@ -1,119 +1,210 @@
 body {
 	font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
 }	
 
 nav {
 	background-color: #ffff;
+	font-size: 1em;
 }
 
-
-.nav-link {
-	color: #299cff;	
+.material-icons.menu {
+	color: #16aae2;
+	font-size: 36px;
+	text-align: center;
+    vertical-align: middle;
 }
 
-#bienvenida {
-	padding-top: 50px;
-	padding-bottom: 50px;
+.dropdown-productos { 
+	color: #16aae2;
+	padding-left: 5px;
+ }
+
+#welcome {
+	margin-top: 70px;
+	background-color: #299cff;
+
 }
 
-#bienvenida-txt {
+.welcome {
+    background-color: black;
+    color: white;
+    margin-top: 200px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-right: 10px
+    padding-left: 20px;
+    padding-right: 20px;
+    opacity: 0.95;
+    font-size: 0.95em;
+}
+
+#grexco {
+	background-color: #f7f9f8;
+	height: 400%;
+	width: 100%;
+	padding: 50px 50px 50px 50px;
+	font-size: 0.95em;
 	color: #666666;
 }
 
-#titulo-bienvenida {
-	margin: auto;
-	width: 60%;
+.title-grexco {
+	text-align: center;
 }
 
-#acerca-de {
-	background-color: #299cff;
-	padding-top: 30px;
+.text-grexco {
+	text-align: justify;
+}
+
+#contenedor-productos {
+	background-color: black;
+	color: #F8F8FF;
+	padding-top: 10px; 
 	padding-bottom: 30px;
 }
 
-.acerca-de-titulo {
-	margin: auto;
-	width: 50%;
-	margin-bottom: 20px;
+.title-productos {
+	text-align: center;
+	padding-top: 30px;
+	padding-bottom: 50px;
+	font-size: 1.9em;
 }
 
-.acerca-de-contenido {
+.productos {
+	padding: 10px 20px 20px 50px;
+	font-size: 1.5em;
+	text-align: center;
 	color: #F8F8FF;
-	padding-left: 50px;
-	padding-right: 50px;
 }
 
-/* ---------------- Activos Fijos ---------------  */
+.material-icons.icon-productos {
+	color: #F8F8FF;
+	font-size: 64px;
+	text-align: center;
+    vertical-align: middle;
+}
 
 #activos-fijos {
-	background-image: url(/static/landing/img/activos-fijos.jpg);
-	padding-bottom: 300px;
-	background-repeat: no-repeat;
+	background-color: yellow;
+	padding-top: 30px;
+	padding-bottom: 50px;
 }
 
-#activos-fijos-contenido {
-	position: absolute;
-    right: 0px;
-	margin-right: 10px;
-	margin-left: 20px;
+.activos-fijos {
 	background-color: black;
-	opacity: 0.8;
 	color: #F8F8FF;
+	margin-right: 20px;
+	margin-top: 20px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	padding-right: 20px;
 }
 
-.material-icons.md-36.white { 
-/*
-Funcionamiento de Google Icons para cambiar el color, y alinearlos con el texto
-*/
-	color: #F8F8FF;
-	font-size: 36px;
-	text-align: center;
-    vertical-align: middle;
-}
-
-.material-icons.md-36.orange { 
-/*
-Funcionamiento de Google Icons para cambiar el color, y alinearlos con el texto
-*/
-	color: #FB8C00;
-	font-size: 36px;
-	text-align: center;
-    vertical-align: middle;
-}
-
-.material-icons.acfiblue {
-	color: #00BFFF;
-	font-size: 1.3em;
-	text-align: center;
-    vertical-align: middle;
-}
-
-.mas-acfi {
+.colapse {
 	margin: auto;
 	width: 50%;
-}
-
-/* ---------------- Fin Activos Fijos ---------------  */
-
-.ver-mas-producto {
+	text-align: center;
 	color: #F8F8FF;
 }
 
+.material-icons.ver-mas.light { 
 
-/* ************** Caja Menor *********************** */
-
-#caja-menor {
-	background-image: url(/static/landing/img/caja-menor.jpg);
-	padding-bottom: 300px;
-	background-repeat: no-repeat;
+	color: #F8F8FF;
+	font-size: 36px;
+	text-align: center;
+    vertical-align: middle;
 }
 
+.material-icons.ver-mas.dark { 
 
-/* ************** Fin Caja Menor ******************* */
+	color: black;
+	font-size: 36px;
+	text-align: center;
+    vertical-align: middle;
+}
 
-#FB8C00
+#mas-activos-fijos {
+	margin: auto;
+	width: 50%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.material-icons.orange.done {
+	color: orange;
+	font-size: 36px;
+	text-align: center;
+    vertical-align: middle;
+}
+
+.material-icons.blue.list {
+	color: #00BFFF;
+	font-size: 24px;
+	text-align: center;
+    vertical-align: middle;
+}
+
+.item-lista-acfi {
+	padding-bottom: 7px;
+}
+
+#caja-menor {
+	background-color: #299cff;
+}
+
+.caja-menor {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-right: 20px;
+	padding-top: 10px;
+	background-color: black;
+	color: #F8F8FF;
+}
+
+#mas-caja-menor {
+	padding: 20px 20px 20px 20px;
+}
+
+#contabilidad {
+	background-color: #F8F8FF;
+}
+
+.contabilidad {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-left: 10px;
+	padding-top: 10px;
+	background-color: black;
+	color: #F8F8FF;
+}
+
+#mas-contabilidad {
+	padding-top: 20px;
+}
+
+#nomina {
+	background-color: #299cff;
+}
+
+#nomina a {
+	color: black;
+}
+
+.nomina {
+	background-color: #F8F8FF;
+	margin: 30px 20px 20px 20px ;
+	padding-top: 10px;
+}
+
+.desc-product {
+	font-size: 14.5px;
+	text-align: justify;
+}
+
+#mas-nomina {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
 #00BFFF
 #F8F8FF
 #FFFFFF

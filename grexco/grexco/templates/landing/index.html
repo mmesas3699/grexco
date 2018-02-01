@@ -2,50 +2,370 @@
 <html lang="en">
 <head>
   {% load static %}
-  <title>Grexco S.A.S.</title>
+  <title>GREXCO S.A.S.</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="{% static 'landing/css/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'landing/css/home.css' %}">
 
-<!-- Load boostrap -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Load boostrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
- </head>
-<body>
+</head>
+<body">
 <!-- Barra de navegación -->
-  <nav class="navbar navbar-expand-md">
+  <nav class="navbar navbar-expand-md fixed-top">
     <!-- Brand -->
-    <a class="navbar-brand" href="#"><img src="{% static 'landing/img/Logo.jpg' %}" alt=""></a>
+    <a class="navbar-brand" href="#"><img src="{% static 'landing/img/Logo.jpg' %}" alt="logo" style="width:150px;"></a>
 
     <!-- Toggler/collapsibe Button -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-      <span class="navbar-toggler-icon"></span>
+      <i class="material-icons menu">menu</i>
     </button>
 
     <!-- Navbar links -->
     <div class="collapse navbar-collapse " id="collapsibleNavbar">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="#"><b>Inicio</b></a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><b>Grexco</b></a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><b>Productos</b></a></li> 
-        <li class="nav-item"><a class="nav-link" href="#"><b>Soporte</b></a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><b>Contáctenos</b></a></li>
+        <li class="nav-item"><a class="nav-link text-primary" href="#">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link text-primary" href="#grexco">Grexco</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link text-primary dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Productos</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item text-primary" href="#activos-fijos">Activos Fijos</a>
+            <a class="dropdown-item text-primary" href="#caja-menor">Caja Menor</a>
+            <a class="dropdown-item text-primary" href="#contabilidad">Contabilidad</a>
+            <a class="dropdown-item text-primary" href="#nomina">Nómina</a>
+            <a class="dropdown-item text-primary" href="">Punto de Venta Restaurante</a>
+            <a class="dropdown-item text-primary" href="">Sistema Comercial</a>
+            <a class="dropdown-item text-primary" href="">Sistema Industrial</a>
+            <a class="dropdown-item text-primary" href="">Tesorería</a>
+          </div>
+        </li> 
+        <li class="nav-item"><a class="nav-link text-primary" href="#">Contáctenos</a></li>
+        <li class="nav-item"><a class="nav-link text-primary" href="#">Soporte</a></li>
       </ul>
     </div> 
   </nav>
 <!-- Fin Barra navegación -->
 
 <!-- Contenido -->
-  <div id="bienvenida" class="container-fluid">
-    <h2>BIENVENIDOS A GREXCO S.A.S.</h2>
-    <p>Somos una empresa cuyo objetivo es brindar <b>SOLUCIONES INTEGRALES</b> en el área de informática
-
-
-    </p>
-
+  <div id="welcome" class="container-fluid">
+    <div class="row justify-content-end">
+      <div class="col-sm-6 welcome">
+        <h3>BIENVENIDOS A GREXCO S.A.S.</h3>
+        <p>Ofrecemos la <b>MEJOR SOLUCION INTEGRADA</b> del mercado, con la cual se contabilizan
+        automáticamente todos los documentos realizados en los diferentes módulos, con este beneficio
+        se evitan los dobles procesos y se optimiza el tiempo de los usuarios y mejora la productividad
+        de su empresa.
+        </p>
+      </div>
+    </div> 
   </div>
+ 
+  <!-- Grexco -->
+  <div id="grexco" class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+          <h4 class="title-grexco">SOBRE GREXCO</h4>
+          <p class="text-grexco">
+          Somos una empresa cuyo objetivo es brindar SOLUCIONES INTEGRALES en el área de informática, mediante el diseño,
+          desarrollo e implementación de sistemas de información. Contamos con una amplia experiencia en el mercado con más
+          de 25 años de trayectoria empresarial, ya que desde 1988 estamos solucionando a nuestros clientes sus necesidades de
+          información.
+          </p>  
+        </div> 
+        <div class="col-sm-6">
+          <h4 class="title-grexco">¿POR QUE NOSOTROS?</h4>
+          <p class="text-grexco">
+            Tenemos productos estandar acordes a la Legislación Colombiana que se ajustan a las necesidades de empresas Comerciales, Industriales y de Servicios. Diseñamos y desarrollamos a la medida de su organización, o ajustamos 
+            los paquetes existentes a una necesidad particular.            
+          </p>
+        </div>   
+      </div>    
+  </div>
+  <!-- Fin Grexco -->
+
+  <!-- Vista general productos -->
+  <div id="contenedor-productos" class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="title-productos">PRODUCTOS</h4>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-4">
+        <a class="productos" href="#activos-fijos"><i class="material-icons icon-productos">business</i><br>ACTIVOS FIJOS</a>
+      </div>
+      <div class="col-sm-4">
+        <a class="productos" href="#caja-menor"><i class="material-icons icon-productos">attach_money</i><br>CAJA MENOR</a>
+      </div>
+      <div class="col-sm-2"></div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-4">
+        <a class="productos" href="#contabilidad"><i class="material-icons icon-productos">account_balance</i><br>CONTABILIDAD</a>
+      </div>
+      <div class="col-sm-4">
+        <a class="productos" href="#nomina"><i class="material-icons icon-productos">supervisor_account</i><br>NOMINA</a>
+      </div>
+      <div class="col-sm-2"></div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-4">
+        <a class="productos" href="#"><i class="material-icons icon-productos">restaurant</i><br>PUNTO DE VENTA RESTAURANTE</a>
+      </div>
+      <div class="col-sm-4">
+        <a class="productos" href="#"><i class="material-icons icon-productos">local_grocery_store</i><br>SISTEMA COMERCIAL</a>
+      </div>
+      <div class="col-sm-2"></div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-4">
+        <a class="productos" href="#"><i class="material-icons icon-productos">build</i><br>SISTEMA INDUSTRIAL</a>
+      </div>
+      <div class="col-sm-4">
+        <a class="productos" href="#"><i class="material-icons icon-productos">business_center</i><br>TESORERIA</a>
+      </div>
+      <div class="col-sm-2"></div>
+    </div>
+  </div>
+  <!--  Fin vista general productos -->
+  
+  <!-- Productos -->
+    <!-- Activos fijos -->
+      <div id="activos-fijos" class="container-fluid">
+        <div class="row">
+          <div class="activos-fijos col-sm-6">
+            <div class="row">
+              <h4>ACTIVOS FIJOS</h4>
+              <br>
+              <p class="desc-product">Logre el control administrativo y contable con el fin de obtener mejores resultados. El programa de Activos Fijos diseñado por Grexco S.A. permite el registro y mantenimiento de la información de los activos fijos de  su empresa. De esta manera logra el control administrativo y contable que su empresa necesita.</p>
+            </div>
+            <div class="row">
+              <!-- Boton para colapsable -->
+              <a class="colapse" href="#mas-activos-fijos" data-toggle="collapse"><i class="material-icons ver-mas light">keyboard_arrow_down</i>Ver más</a>  
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Div colapsable -->
+      <div id="mas-activos-fijos" class="collapse">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-12">
+              <h3>BENEFICIOS:</h3>
+              <ul style="list-style-type: none; padding-top: 10px;">
+                <li><i class="material-icons orange done">done</i> Proporcione el control administrativo de los activos.</li>
+                <li><i class="material-icons orange done">done</i> Calcule y lleve detalladamente la información contable correspondiente a depreciación, ajuste por inflación,
+                    etc.</li>
+                <li><i class="material-icons orange done">done</i> Produzca la interfaz contable directa con nuestra contabilidad y personalizada para otros sistemas.</li>
+              </ul>
+            </div>
+          </div>
+          <br>
+          <h3>CARACTERISTICAS:</h3>
+          <div class="row">
+            <div class="col-sm-6">
+              <ul style="list-style-type: none; padding-top: 10px;">
+                <li class="item-lista-acfi"><i class="material-icons blue list">list</i> Tablas de códigos básicos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">add_circle</i> Registro de Activos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">zoom_in</i> Consulta de Activos Fijos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">archive</i> Baja de Activos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">plus_one</i> Adiciones de Activos Fijos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">swap_horiz</i> Traslados de Activos Fijos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">extension</i> Mantenimiento de Activos.</li>
+              </ul>
+            </div>
+            <div class="col-sm-6">  
+              <ul style="list-style-type: none; padding-top: 10px;">
+                <li class="item-lista-acfi"><i class="material-icons blue list">account_balance</i>Avalúos de Activos Fijos.</li>
+                
+                <li class="item-lista-acfi"><i class="material-icons blue list">assignment_late</i> Vencimiento de documentos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">local_atm</i> Pólizas de seguro.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">location_city</i> Inventario físico.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">trending_down</i> Depreciación de Activos Fijos.</li>
+                <li class="item-lista-acfi"><i class="material-icons blue list">lock_outline</i> Seguridad.</li>
+              </ul>
+            </div>  
+          </div>          
+        </div>        
+      </div>
+    <!-- Fin activo fijos -->
+    <!-- Caja Menor -->
+      <div id="caja-menor" class="container-fluid">
+          <div class="row justify-content-end">
+            <div class="col-sm-6 caja-menor">
+              <h4>CAJA MENOR</h4>
+              <p class="desc-product">El sistema provee una herramienta de fácil manejo para administrar la caja menor y a su vez genera la contabilización de la misma. Permite la operación y el control detallado de los gastos de la caja menor. Generalmente su manejo implica un volumen muy grande de gastos de pequeñas cuantías, lo que requiere de una inversión grande de tiempo para su administración.</p>
+              
+              <!-- Boton para colapsable -->
+              <div class="row"> 
+                <a class="colapse" href="#mas-caja-menor" data-toggle="collapse"><i class="material-icons ver-mas light">keyboard_arrow_down</i>Ver más</a>  
+              </div>
+            </div> 
+          </div> 
+      </div>
+
+      <!-- Div colapsable -->
+      <div id="mas-caja-menor" class="collapse container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-sm-8">
+            <div class="row">
+              <h4>BENEFICIOS:</h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: none;">
+                <li><i class="material-icons orange done">done</i> Es una herramienta oportuna para la toma de decisiones.</li>
+                <li><i class="material-icons orange done">done</i> El funcionario realiza sus labores con el apoyo del sistema.</il>
+                <li><i class="material-icons orange done">done</i> Optimiza el tiempo de los usuarios en digitación y consulta.</il>
+                <li><i class="material-icons orange done">done</i> Integración sencilla con otros modulos (Excel, Archivo plano y más).</li>
+                <li><i class="material-icons orange done">done</i> Adecuamos la interfaz contable a los requerimientos de otros sistemas contables.</li>
+                <li><i class="material-icons orange done">done</i> Garantía permanente del Sistema.</li>
+                <li><i class="material-icons orange done">done</i> Captura de datos ágil y flexible.</li>
+              </ul>
+            </div>
+            <div class="row">
+              <h4>CARACTERISTICAS:</h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: disc;">
+                <li>Se pueden manejar varias cajas menores simultáneamente en su organización.</li>
+                <li>Definición de los parámetros y montos de cada caja y del usuario asignado a la misma.</li>
+                <li>Posee control de auditoría para el arqueo de cada una.</li>
+                <li>Se definen uno o  todos los conceptos de gastos en caja menor.</li>
+                <li>Controla los anticipos entregados.</li>
+                <li>Se legaliza el anticipo para cada funcionario.</li>
+                <li>Realiza automáticamente el reembolso de la caja menor y contabiliza cada concepto. Si se parametriza, el supervisor tiene la posibilidad de aprobar el reembolso o negarlo, para que sea corregido por el usuario.</li>
+                <li>Estadísticas de número de reembolsos, de gastos en cada reembolso, etc.</li>  
+                <li>Cada usuario puede ver y accesar únicamente su caja menor.</li>
+                <li>El supervisor puede ingresar a hacer auditoria en todas las cajas menores.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Fin Caja Menor -->
+    <!-- Contabilidad -->
+      <div id="contabilidad" class="container-fluid">
+        <div class="row justify-content-start">
+          <div class="col-sm-8  contabilidad">
+            <h4>CONTABILIDAD</h4>
+            <p class="desc-product">La contabilidad Grexco es un sistema de información que registra
+               las transacciones contables de una empresa, en forma ordenada y precisa,
+               para que de ella se conozcan los resultados de la misma. La Contabilidad
+               es un sistema que obliga a organizarse, economiza tiempo, es confiable
+               y se convierte en una excelente herramienta de trabajo.</p>
+            <!-- Boton para colapsable -->
+            <div class="row"> 
+              <a class="colapse" href="#mas-contabilidad" data-toggle="collapse"><i class="material-icons ver-mas light">keyboard_arrow_down</i>Ver más</a>  
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Div colapsable -->
+        <div id="mas-contabilidad" class="container-fluid collapse ">
+          <div class="row justify-content-center"> 
+            <div class="col-sm-8">
+              <div class="row">
+                <h4>BENEFICIOS:</h4>
+              </div>
+              <div class="row">
+                <ul style="list-style-type: none;">
+                  <li><i class="material-icons orange done">done</i> Sofisticado y estricto sistema de seguridad.</li>
+                  <li><i class="material-icons orange done">done</i> No tiene límites para los niveles de las cuentas contables.</li>
+                  <li><i class="material-icons orange done">done</i> Captura de datos ágil y flexible.</li>
+                  <li><i class="material-icons orange done">done</i> Es una herramienta para la toma oportuna de decisiones.</li>
+                  <li><i class="material-icons orange done">done</i> El funcionario realiza sus labores con el apoyo del Sistema.</li>
+                  <li><i class="material-icons orange done">done</i> Optimiza tiempo de trabajo de usuarios en digitación y consulta.</li>
+                  <li><i class="material-icons orange done">done</i> Integración sencilla con otros módulos (txt, Excel, archivo plano, etc.).</li>
+                  <li><i class="material-icons orange done">done</i> Garantía permanente del Sistema.</li>                  
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    <!-- Fin Contabilidad -->
+
+    <!-- Nomina -->
+      <div id="nomina" class="container-fluid">
+        <div class="row justify-content-end">
+          <div class="col-sm-8 nomina">
+            <h4>NOMINA</h4>
+            <p class="desc-product">Es una herramienta de control de los procesos de personal y de las liquidaciones periódicas. Economiza tiempo en la  Administración y control de personal, es estricto en los aspectos laborales, académicos, de salud, de vacaciones, de permisos y sanciones, de control de préstamos. Actualización permanente del programa, con base en las nuevas disposiciones legales y mejoras funcionales para mayor optimización. Sinergia de un número importante de usuarios. Produce los archivos planos para el PILA y los certificados de Ingresos y Retenciones y certificaciones laborales. Apoya al usuario a obtener la información requerida en el mínimo tiempo. 
+            </p>
+            <!-- Boton para colapsable -->
+            <div class="row"> 
+              <a class="colapse" href="#mas-nomina" data-toggle="collapse"><i class="material-icons ver-mas dark">keyboard_arrow_down</i>Ver más</a>  
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Colapsable -->
+      <div id="mas-nomina" class="container-fluid collapse ">
+        <div class="row justify-content-center"> 
+          <div class="col-sm-8">
+            <div class="row">
+              <h4>BENEFICIOS:</h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: none;">
+                <li><i class="material-icons orange done">done</i> Es una herramienta para la toma oportuna de decisiones.</li>
+                <li><i class="material-icons orange done">done</i> Permite manejar la cantidad de empleados directos y de temporales o cooperativas en su empresa.</li>
+                <li><i class="material-icons orange done">done</i> Control de la planta de personal autorizada.</li>
+                <li><i class="material-icons orange done">done</i> Informa los vencimientos de los contratos de trabajo.</li>
+                <li><i class="material-icons orange done">done</i> Pueden conocer el valor de la nómina por departamento.</li>
+                <li><i class="material-icons orange done">done</i> El funcionario realiza sus labores con el apoyo del Sistema.</li>
+                <li><i class="material-icons orange done">done</i> Optimiza tiempo de trabajo de usuarios en digitación y consulta.</li>
+                <li><i class="material-icons orange done">done</i> Integración sencilla con otros módulos (txt, Excel, archivo plano, etc.)</li>
+                <li><i class="material-icons orange done">done</i> Garantía permanente del Sistema.</li>
+              </ul>
+            </div>
+            <div class="row">
+              <h4>CARACTERISTICAS: </h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: disc;">
+                <li>Este Módulo es multiempresas.</li>
+                <li>Múltiples tipos de Nómina.</li>
+                <li>Parametrización de las prestaciones según la legislación laboral.</li>
+                <li>Sistema de Seguridad sofisticado que garantiza que solo usuarios autorizados pueden ingresar al modulo correspondiente. </li>
+                <li>Todos los listados se ven por pantalla.</li>
+                <li>Liquidación de salarios fijos y/o variables.</li>
+                <li>Maneja dotación de empleados.</li>
+                <li>Descuentos por préstamos, cuotas del fondo, liquidaciones periódicas de nómina y novedades.</li>
+                <li>Liquidaciones de cesantías, vacaciones, primas legales o extralegales, incapacidades, viáticos permanentes etc.</li>
+                <li>Liquidación definitiva de prestaciones sociales en la terminación del contrato laboral</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Fin Nomina-->
+
+  <!-- Fin productos -->
+      
+  <!-- Contacto -->
+    <div id="contacto" class="container-fluid">
+      
+    </div>
+  <!-- Fin Contacto -->
 <!-- Fin Contenido -->
 
 </body>

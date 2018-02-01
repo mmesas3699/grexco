@@ -40,3 +40,23 @@ $ python manage.py startapp aplicacion
 - mysite/wsgi.py: El archivo encargado de ser compatible con el servidor web.
 
 
+****** Registrar una aplicación ******
+- En /my-site/my-site/settings.py :
+	
+	INSTALLED_APPS = [
+		'django.contrib.admin',
+	    'django.contrib.auth',
+	    'django.contrib.contenttypes',
+	    'django.contrib.sessions',
+	    'django.contrib.messages',
+	    'django.contrib.staticfiles',
+	>>  'miApp.apps.miAppConfig', 
+	]
+
+>> Especifica el objeto de configuracion de 'mi aplicación (miApp)'. Este se generó en /my-site/miApp/apps.py
+
+
+******* Migraciones *******
+$ python manage.py makemigrations
+$ python manage.py migrate
+
