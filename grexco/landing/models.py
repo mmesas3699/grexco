@@ -13,9 +13,10 @@ class Contact(models.Model):
     empresa = models.CharField(db_column='Emp', max_length=100, null=False)
     email = models.EmailField(db_column='Email')
     mensaje = models.CharField(db_column='Msj', max_length=2000, null=False)
+    fecha = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-    	return self.id
+    	return self.nombre
 
     def get_absolute_url(self):
         """

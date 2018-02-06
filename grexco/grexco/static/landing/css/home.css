@@ -205,6 +205,21 @@ nav {
 	padding-bottom: 20px;
 }
 
+#contacto {
+	padding-top: 30px;
+	padding-bottom: 20px;
+}
+
+footer {
+	background-color: black;
+	color: #F8F8FF; 
+	font-size: 14px;
+}
+
+.footer {
+	padding: 10px 10px 5px 10px;
+}
+
 #00BFFF
 #F8F8FF
 #FFFFFF

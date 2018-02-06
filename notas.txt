@@ -56,7 +56,57 @@ $ python manage.py startapp aplicacion
 >> Especifica el objeto de configuracion de 'mi aplicación (miApp)'. Este se generó en /my-site/miApp/apps.py
 
 
-******* Migraciones *******
+******** Migraciones *******
 $ python manage.py makemigrations
 $ python manage.py migrate
 
+
+******** Shell para verificar los modelos ********
+$ python manage.py shell
+
+
+******** Enviar correos *********
+from django.core.mail import send_mail
+send_mail('Subject here', 'Here is the message.', 'from@example.com', ['to@example.com'], fail_silently=False)
+
+- En settings.py:
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'miguel.mesa@grexco.com.co'
+EMAIL_HOST_PASSWORD = 'grexco02'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+
+******** Sitio administrador **********
+1. Se debe registrar los modelos de cada aplicación en el archivo admin.py correspondiente:
+
+from .models import Author, Genre, Book, BookInstance
+
+admin.site.register(Book)
+admin.site.register(Author)
+admin.site.register(Genre)
+admin.site.register(BookInstance) 
+
+
+******** Crear un super usuario ********
+$ python manage.py createsuperuser
+
+(grexco, grexco02)
+
+
+******** Para que la aplicacion guarde la hora de la ciudad actual en la BD ********
+
+	# Internationalization
+	# https://docs.djangoproject.com/en/2.0/topics/i18n/
+
+		LANGUAGE_CODE = 'en-us'
+
+		TIME_ZONE = 'America/Bogota'
+
+		USE_I18N = True
+
+		USE_L10N = True
+
+		USE_TZ = False

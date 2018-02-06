@@ -6,10 +6,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="{% static 'landing/css/home.css' %}">
-
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="{% static 'landing/js/contacto.js' %}"></script>
+  
   <!-- Load boostrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -363,10 +365,78 @@
       
   <!-- Contacto -->
     <div id="contacto" class="container-fluid">
-      
+      <div class="row justify-content-center">
+        <div id="msj-ok" class="col-sm-8" style="display: none;">
+          <div class="alert alert-success alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Success!</strong> Indicates a successful or positive action.
+          </div>
+        </div>
+        <div id="msj-error" class="col-sm-8" style="display: none;">
+          <div class="alert alert-danger alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Error!</strong> Indicates a successful or positive action.
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <h4>Dejenos un mensaje:</h4>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="nombre">Nombre: </label>
+              <span id="badge-nombre" class="badge badge-danger" style="display: none;">Este campo es requerido</span>
+              <input type="text" class="form-control contacto" id="nombre" maxlength="50">
+            </div>
+            <div class="form-group">
+              <label for="telefono">Telefono: </label>
+              <span id="badge-telefono" class="badge badge-danger" style="display: none;">Este campo es requerido</span>
+              <input type="tel" class="form-control contacto" id="telefono">              
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa: </label>
+              <span id="badge-empresa" class="badge badge-danger" style="display: none;">Este campo es requerido</span>
+              <input type="text" class="form-control contacto" id="empresa" maxlength="100">
+            </div>
+            <div class="form-group">
+              <label for="email">Email: </label>
+              <span id="badge-email" class="badge badge-danger" style="display: none;">Este campo es requerido</span>
+              <input type="email" class="form-control contacto" id="email">
+            </div>
+            <div class="form-group">
+              <label for="mansaje">Mensaje: </label>
+              <span id="badge-mensaje" class="badge badge-danger" style="display: none;">Este campo es requerido</span>
+              <textarea type="text" maxlength="2000" class="form-control contacto" id="mensaje"></textarea>
+            </div>
+
+          <!-- Mensaje de confirmación envío formulario -->
+            <div class="alert alert-success" id="mensaje-enviado" style="display: none;">
+              <strong>Su mensaje se envio correctamente!</strong>
+            </div>
+            <div class="alert alert-danger" id="mensaje-no-enviado" style="display: none;">
+              <strong>Su mensaje NO se envio!</strong>
+            </div>
+
+            <div class="row justify-content-center">
+              <button id="enviar" type="submit" class="btn btn-primary">Enviar</button>  
+            </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   <!-- Fin Contacto -->
 <!-- Fin Contenido -->
-
+  <footer>
+    <div class="container-fluid footer">
+      <div class="row" style="padding-left: 20px;">
+        <p>info@grexco.com.co <br>
+           PBX: (1) 235 11 80 <br>
+           Bogotá - Colombia</p>  
+      </div>
+      <div class="row justify-content-end">
+        <p style="font-size: 12px; padding-right: 10px;">GREXCO S.A.S Todos los derechos reservados 2018.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

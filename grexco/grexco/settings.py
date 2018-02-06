@@ -89,7 +89,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -120,8 +119,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -132,3 +130,11 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ( os.path.join('grexco/static'), )
 
+# Email
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'miguel.mesa@grexco.com.co'
+EMAIL_HOST_PASSWORD = 'grexco02'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
