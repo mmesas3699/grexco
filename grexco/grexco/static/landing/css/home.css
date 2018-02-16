@@ -31,7 +31,7 @@ nav {
     margin-top: 200px;
     margin-bottom: 10px;
     margin-right: 10px;
-    margin-right: 10px
+    margin-right: 10px;
     padding-left: 20px;
     padding-right: 20px;
     opacity: 0.95;
@@ -200,6 +200,11 @@ nav {
 	text-align: justify;
 }
 
+.desc-product-black {
+	font-size: 14.5px;
+	text-align: justify;
+	color: #F8F8FF;
+}
 #mas-nomina {
 	padding-top: 20px;
 	padding-bottom: 20px;
@@ -219,6 +224,29 @@ footer {
 .footer {
 	padding: 10px 10px 5px 10px;
 }
+
+#restaurante {
+	
+}
+
+.restaurante {
+	background-color: black;
+	margin: 30px 20px 20px 20px ;
+	padding-top: 10px;
+}
+
+#sistema-comercial {
+	background-color: black;
+
+}
+
+.sistema-comercial {
+	margin: 30px 20px 20px 20px ;
+	padding-top: 10px;
+	background-color: white;
+	opacity: 1;
+}
+
 
 #00BFFF
 #F8F8FF

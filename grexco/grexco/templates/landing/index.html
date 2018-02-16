@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="{% static 'landing/css/home.css' %}">
+  <link rel="icon" type="image/gif/png" href="{% static 'landing/img/icono.png' %}">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -41,13 +42,12 @@
             <a class="dropdown-item text-primary" href="#caja-menor">Caja Menor</a>
             <a class="dropdown-item text-primary" href="#contabilidad">Contabilidad</a>
             <a class="dropdown-item text-primary" href="#nomina">Nómina</a>
-            <a class="dropdown-item text-primary" href="">Punto de Venta Restaurante</a>
-            <a class="dropdown-item text-primary" href="">Sistema Comercial</a>
-            <a class="dropdown-item text-primary" href="">Sistema Industrial</a>
-            <a class="dropdown-item text-primary" href="">Tesorería</a>
+            <a class="dropdown-item text-primary" href="#restaurante">Punto de Venta Restaurante</a>
+            <a class="dropdown-item text-primary" href="#sistema-comercial">Sistema Comercial</a>
+            <a class="dropdown-item text-primary" href="#industrial">Sistema Industrial</a>
           </div>
         </li> 
-        <li class="nav-item"><a class="nav-link text-primary" href="#">Contáctenos</a></li>
+        <li class="nav-item"><a class="nav-link text-primary" href="#contacto">Contáctenos</a></li>
         <li class="nav-item"><a class="nav-link text-primary" href="#">Soporte</a></li>
       </ul>
     </div> 
@@ -70,7 +70,7 @@
  
   <!-- Grexco -->
   <div id="grexco" class="container-fluid">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-sm-6">
           <h4 class="title-grexco">SOBRE GREXCO</h4>
           <p class="text-grexco">
@@ -92,60 +92,47 @@
   <!-- Fin Grexco -->
 
   <!-- Vista general productos -->
-  <div id="contenedor-productos" class="container-fluid">
-    <div class="row">
-      <div class="col-sm-12">
+  <div class="container-fluid" style="background-color: black;">
+    <div class="row justify-content-center">
+      <div class="col-sm-8" style="text-align: center; color: white;">
         <h4 class="title-productos">PRODUCTOS</h4>
       </div>
     </div>
-    
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-4">
+    <div class="row justify-content-center" >
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
         <a class="productos" href="#activos-fijos"><i class="material-icons icon-productos">business</i><br>ACTIVOS FIJOS</a>
+      </div> 
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
+        <a class="productos" href="#caja-menor"><i class="material-icons icon-productos">attach_money</i><br>CAJA MENOR</a> 
       </div>
-      <div class="col-sm-4">
-        <a class="productos" href="#caja-menor"><i class="material-icons icon-productos">attach_money</i><br>CAJA MENOR</a>
-      </div>
-      <div class="col-sm-2"></div>
     </div>
     <br>
-    <br>
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-4">
+    <div class="row justify-content-center" >
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
         <a class="productos" href="#contabilidad"><i class="material-icons icon-productos">account_balance</i><br>CONTABILIDAD</a>
+      </div> 
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
+        <a class="productos" href="#nomina"><i class="material-icons icon-productos">supervisor_account</i><br>NOMINA</a> 
       </div>
-      <div class="col-sm-4">
-        <a class="productos" href="#nomina"><i class="material-icons icon-productos">supervisor_account</i><br>NOMINA</a>
-      </div>
-      <div class="col-sm-2"></div>
     </div>
     <br>
-    <br>
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-4">
-        <a class="productos" href="#"><i class="material-icons icon-productos">restaurant</i><br>PUNTO DE VENTA RESTAURANTE</a>
+    <div class="row justify-content-center" >
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
+        <a class="productos" href="#restaurante"><i class="material-icons icon-productos">restaurant</i><br>PUNTO DE VENTA RESTAURANTE</a>
+      </div> 
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
+        <a class="productos" href="#sistema-comercial"><i class="material-icons icon-productos">local_grocery_store</i><br>SISTEMA COMERCIAL</a>
       </div>
-      <div class="col-sm-4">
-        <a class="productos" href="#"><i class="material-icons icon-productos">local_grocery_store</i><br>SISTEMA COMERCIAL</a>
-      </div>
-      <div class="col-sm-2"></div>
     </div>
     <br>
-    <br>
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-4">
-        <a class="productos" href="#"><i class="material-icons icon-productos">build</i><br>SISTEMA INDUSTRIAL</a>
+    <div class="row justify-content-center" >
+      <div class="col-sm-3" style="text-align: left; margin: 10px 50px 10px 50px;">
+        <a class="productos" href="#industrial"><i class="material-icons icon-productos">build</i><br>SISTEMA INDUSTRIAL</a>
       </div>
-      <div class="col-sm-4">
-        <a class="productos" href="#"><i class="material-icons icon-productos">business_center</i><br>TESORERIA</a>
-      </div>
-      <div class="col-sm-2"></div>
     </div>
+    <br>
   </div>
+    
   <!--  Fin vista general productos -->
   
   <!-- Productos -->
@@ -263,6 +250,7 @@
         </div>
       </div>
     <!-- Fin Caja Menor -->
+    
     <!-- Contabilidad -->
       <div id="contabilidad" class="container-fluid">
         <div class="row justify-content-start">
@@ -361,6 +349,215 @@
       </div>
     <!-- Fin Nomina-->
 
+    <!-- Punto de venta restaurante -->
+      <div id="restaurante" class="container-fluid">
+        <div class="row justify-content-start">
+          <div class="col-sm-6 restaurante">
+            <h4 style="color: #F8F8FF;">PUNTO DE VENTA RESTAURANTE</h4>
+            <p class="desc-product-black">
+              El punto de venta es un sistema POS para restaurantes que incluye el manejo
+              de las cuentas por cada mesa, descargando del inventario cuando se factura
+              y posteriormente se realizada al final de la jornada el cierre de caja.
+              Posee estadísticas de consumo e interfaz contable para envío a la contabilidad 
+              de la compañía. Además posee un módulo de administración que debe estar instalado
+              en la oficina principal, donde se centraliza toda la información de los diferentes
+              puntos de venta de la empresa. El sistema maneja código de barras.
+              La interfaz del Sistema es muy fácil de manejar y en una sola pantalla se hacen todas
+              las operaciones de la aplicación.
+            </p>
+            <!-- Boton para colapsable -->
+            <div class="row"> 
+              <a class="colapse" href="#mas-restutante" data-toggle="collapse"><i class="material-icons ver-mas light">keyboard_arrow_down</i>Ver más</a>  
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Colapsable -->
+      <div id="mas-restutante" class="container-fluid collapse ">
+        <div class="row justify-content-center"> 
+          <div class="col-sm-8">
+            <div class="row">
+              <h4>BENEFICIOS:</h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: none;">
+                <li><i class="material-icons orange done">done</i> Registro y control de los consumos por mesa.</li>
+                <li><i class="material-icons orange done">done</i> Control del inventario en cada punto de venta.</li>
+                <li><i class="material-icons orange done">done</i> Manejo de códigos de barras para el ingreso y la salida de las mercancías.</li>
+                <li><i class="material-icons orange done">done</i> Utilícelo fácilmente en sistema Windows.</li>
+                <li><i class="material-icons orange done">done</i> Manejo de listas de precios definida en el módulo del administrador,
+                  que no puede ser modificada por el cajero del punto de venta.</li>
+                <li><i class="material-icons orange done">done</i> El cajero esta asociado al usuario autorizado y su clave.</li>
+                <li><i class="material-icons orange done">done</i> Información siempre actualizada y en línea con la contabilidad.</li>
+                <li><i class="material-icons orange done">done</i> Maneja control de tiempos en atención al cliente.</li>
+                <li><i class="material-icons orange done">done</i> Sistema sugiere cantidades a comprar de acuerdo con stocks mínimos sugeridos.</li>
+              </ul>
+            </div>
+            <div class="row">
+              <h4>CARACTERISTICAS: </h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: disc;">
+                <li>Definición de los parámetros y montos de cada caja y del usuario asignado a la misma</li>
+                <li>Realice operaciones de entradas y salidas de Almacén, ajustes y control del Inventario que incluye la carga inicial 
+                    del mismo y el control de información propiamente dicho.</li>
+                <li>Realice a diario el cuadre de caja donde se relacionan las facturas registradas y los valores detallados por cada
+                    forma de pago sacando el informe correspondiente.</li>
+                <li>El sistema maneja la facturación por mostrador, la que descarga automáticamente del inventario y actúa como recibo
+                    de caja al reconocer el pago de estricto contado, manejando varias formas de pago como: efectivo, tarjetas débito, crédito, cheques, bonos, cheques de Sodexho Pas, etc.</li>
+                <li>Sistema con base de datos que incluye los vendedores, clientes permanentes y ocasionales, proveedores y en general
+                    todas las personas que tienen relación con la empresa.</li>
+                <li>Facilidad en manejo de vendedores permitiendo crear una ficha básica con datos como nombre, cédula o Nit,
+                    dirección, teléfono.</li>
+                <li>Controla la provisión de efectivo entregada. Posee control de auditoría para el arqueo de cada caja.</li>
+                <li>El supervisor puede ingresar a hacer auditoria en todas las cajas.</li>
+                <li>Se puede integrar con el módulo de inventarios y compras.</li>
+                <li>Obtenga estadísticas Ventas por fecha, por referencia, por día de la semana, por hora, etc.</li>
+                <li>El sistema posee la Parametrización de la contabilización de todos los movimientos, haciéndolo directamente en la
+                    contabilidad cuando sea centralizada la información en la oficina Principal.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Fin Punto de venta restaurante -->
+
+    <!-- Sistema Comercial -->
+      <div id="sistema-comercial" class="container-fluid">
+        <div class="row justify-content-end">
+          <div class="col-sm-6 sistema-comercial">
+            <h4>SISTEMA COMERCIAL</h4>
+            <p class="desc-product">
+              Nuestra Solución permite la administración y control de compañías comercializadoras de Productos y Servicios, desde
+              compras hasta ventas, pasando por registro clientes, proveedores, manejo de inventarios, liquidación y valorización de
+              importaciones, manejo y control de sucursales, cartera de proveedores, cartera de clientes, control de bancos, caja
+              menor, y análisis de  datos, integrándose en línea con la Contabilidad. Adaptado a las leyes Colombianas, es seguro para
+              el usuario. Ideal para Empresas Importadoras, Comercializadoras, Distribuidoras, Ferreterías, Industrias Farmacéuticas, 
+              etc.
+            </p>
+            <!-- Boton para colapsable -->
+            <div class="row"> 
+              <a class="colapse" href="#mas-comercial" data-toggle="collapse"><i class="material-icons ver-mas dark">keyboard_arrow_down</i>Ver más</a>  
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colapsable -->
+      <br>
+      <div id="mas-comercial" class="container-fluid collapse ">
+        <div class="row justify-content-center"> 
+          <div class="col-sm-8">
+            <div class="row">
+              <h4>BENEFICIOS:</h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: none;">
+                <li><i class="material-icons orange done">done</i> Es una herramienta para la toma oportuna de decisiones.</li>
+                <li><i class="material-icons orange done">done</i> Información siempre actualizada y en línea con la contabilidad.</li>
+                <li><i class="material-icons orange done">done</i> Sistema integrado de todas la operaciones de la compañia.</li>
+                <li><i class="material-icons orange done">done</i> Controla los procesos: Administrativos, Financieros, y Contables de la compañia.</li>
+                <li><i class="material-icons orange done">done</i> Estados financieros oportunos.</li>
+                <li><i class="material-icons orange done">done</i> Facilidad en la definición de todos los documentos y su elaboración.</li>
+                <li><i class="material-icons orange done">done</i> El funcionario realiza sus labores con el apoyo del sistema.</li>
+                <li><i class="material-icons orange done">done</i> Optimiza tiempo de trabajo de usuarios en digitación y consulta.</li>
+                <li><i class="material-icons orange done">done</i> Integración sencilla con otros módulos (txt, Excel, achivo plano, etc).</li>
+                <li><i class="material-icons orange done">done</i> Garantía permanente del sistema.</li>
+              </ul>
+            </div>
+            <div class="row">
+              <h4>CARACTERISTICAS: </h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: disc;">
+                <li> Este módulo es multiempresas.</li>
+                <li> Definición de todos los documentos.</li>
+                <li> Sistema de seguridad sofisticado que garantiza que solo usuarios autorizados pueden ingresar al módulo correspondiente.</li>
+                <li> Todos los listados se ven por la pantalla.</li>
+                <li> Seguimiento permanente a presupuestos de ventas.</li>
+                <li> Estadisticas de facturación.</li>
+                <li> Información diaria de pedidos tomados a los clientes por vendedor.</li>
+                <li> Control de pedidos despachados y por despachar.</li>
+                <li> Información actualizada de facturación y cuentas por cobrar, por cliente y consolidadas.</li>
+                <li> Informe de recuados diarios por vendedor y consolidado.</li>
+                <li> Permite listar inventarios costeados (promedio ponderado) y de cantidades de productos terminados en las diferentes bodegas.</li>
+                <li> Sugerido de compras basado en existencias.</li>
+                <li> Información detallada de las compras de la compañia.</li>
+                <li> Análisis comportamiento proveedores, con sus precios y cumplimiento.</li>
+                <li> Control de las cajas menores de la compañia.</li>
+                <li> Consulta permanente de los saldos bancarios.</li>
+                <li> Perfecto para compañias comercializadoras de productos y servicios.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Fin Sistema Comercial -->
+
+    <!-- Sistema Industrial -->
+      <div id="industrial" class="container-fluid">
+        <div class="row justify-content-start">
+          <div class="col-sm-6" class="industrial">
+            <h4>SISTEMA INDUSTRIAL</h4>
+            <p class="desc-product">
+              El sistema pretende determinar y controlar los costos de producción tanto de materiales como de mano de obra y las necesidades de compra de materias primas para cumplir con la producción.
+              <br>
+              Sistema integrado desarrollado para empresas industriales. Planifique y controle todos los procesos operativos y administrativos dentro de su empresa. Ideal para industria Metalmecánica, Ensambladoras, Alimenticias, Manufacturera, 
+              Fábricas de muebles.
+            </p>
+            <!-- Boton para colapsable -->
+            <div class="row"> 
+              <a class="colapse" href="#mas-industrial" data-toggle="collapse"><i class="material-icons ver-mas dark">keyboard_arrow_down</i>Ver más</a>  
+            </div>
+          </div>
+        </div>
+      </div>
+     <!-- Colapsable -->
+      <br>
+      <div id="mas-industrial" class="container-fluid collapse ">
+        <div class="row justify-content-center"> 
+          <div class="col-sm-8">
+            <div class="row">
+              <h4>BENEFICIOS:</h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: none;">
+                <li><i class="material-icons orange done">done</i> Solución completa para satifacer sus necesidades de manufactura.</li>
+                <li><i class="material-icons orange done">done</i> Permite medir el desempeño de su planta de producción.</li>
+                <li><i class="material-icons orange done">done</i> Obtenga información valorizada del costo directo e indirecto de producción.</li>
+                <li><i class="material-icons orange done">done</i> Información siempre actualizada y en línea con la contabilidad.</li>
+                <li><i class="material-icons orange done">done</i> Sus inventarios NO estarán por encima de sus necesidades.</li>
+                <li><i class="material-icons orange done">done</i> Es una herramienta oportuna para la toma de decisiones.</li>
+                <li><i class="material-icons orange done">done</i> Facilidad en la definición de todos los documentos y su elaboración.</li>
+                <li><i class="material-icons orange done">done</i> El funcionario realiza sus labores con el apoyo del sistema.</li>
+                <li><i class="material-icons orange done">done</i> Optimiza tiempo de trabajo de usuarios en digitación y consulta.</li>
+                <li><i class="material-icons orange done">done</i> Garantia permanente del sistema.</li>
+                <li><i class="material-icons orange done">done</i> Necesidades de compra mensuales de acuerdo con el programa de producción.</li>
+              </ul>
+            </div>
+            <div class="row">
+              <h4>CARACTERISTICAS: </h4>
+            </div>
+            <div class="row">
+              <ul style="list-style-type: disc;">
+                <li> Es módulo multiempresas.</li>
+                <li> Sistema de seguridad sofisticado permite que solo usuarios autorizados ingresen al módulo correspondiente.</li>
+                <li> Todos los listados se ven por la pantalla.</li>
+                <li> Lista inventario de productos terminados costeados y en cantidades en las diferentes bodegas.</li>
+                <li> Definición de la explisión de materiales de todas las partes fabricadas o ensambladas.</li>
+                <li> Registro de la secuencia de operaciones para fabricar un producto.</li>
+                <li> Simulación del costo de un producto terminado basado en una explosión de materiales.</li>
+                <li> Costeo de materias primas, productos en proceso y producto terminado.</li>
+                <li> Programación de la producción por pedidos y para stock.</li>
+                <li> Control de retrabajos o reprocesos realizados por terceros.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Fin Sistema Industrial -->
   <!-- Fin productos -->
       
   <!-- Contacto -->
@@ -380,8 +577,7 @@
         </div>
         <div class="col-sm-8">
           <h4>Dejenos un mensaje:</h4>
-          <form method="POST">
-            {% csrf_token %}
+          <form>
             <div class="form-group">
               <label for="nombre">Nombre: </label>
               <span id="badge-nombre" class="badge badge-danger" style="display: none;">Este campo es requerido</span>
@@ -413,7 +609,7 @@
               <strong>Su mensaje se envio correctamente!</strong>
             </div>
             <div class="alert alert-danger" id="mensaje-no-enviado" style="display: none;">
-              <strong>Su mensaje NO se envio!</strong>
+              <strong>Su mensaje NO se envió! Por favor intentelo nuevamente.</strong>
             </div>
 
             <div class="row justify-content-center">
