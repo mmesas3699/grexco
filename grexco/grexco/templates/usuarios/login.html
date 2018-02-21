@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/gif/png" href="{% static 'landing/img/icono.png' %}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- <script src="{% static 'landing/js/contacto.js' %}"></script> -->
+  
+    <!-- Load boostrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+    <style>
+  	  body
+  	  {
+  	    background-color: #E6E6E6; 
+  	  }
+
+  	  .contenedor
+  	  {
+	    background-color: white;
+	    border-radius: 8px;
+	    margin-top: 10%;
+	    margin-right: 3%;
+	    margin-left: 3%;
+	    box-shadow: 1px 1px 10px 0.2px #888888;
+	    padding-top: 15px;
+	    padding-bottom: 40px;
+	  }
+
+	  img
+	  {
+		width: 300px;
+	  }
+
+	  hr
+	  {
+	  	width: 95%;
+	  	border-color: #48BBF9;
+	  	padding: 5	px;
+	  }
+
+	  .formulario
+	  {
+		margin-top: 50px;
+		padding-left: 10px;
+		padding-right: 10px;
+	  }
+
+	  .btn-submit
+	  {
+	  	background-color: #48BBF9;
+	  	border: none;
+	  	text-align: center;
+	  	padding-top: 5px;
+	  	padding-bottom: 5px;
+	  	width: 35%;
+	  	color: white;
+	  	margin-top: 15px;
+	  	box-shadow: 1px 1px 8px 0.5px #888888;
+	  	font-size: 18px;
+	  }
+
+	  .btn-submit:hover
+	  {
+		border: 1px solid #16AAE2;
+	  }
+
+
+    </style>
+  </head>
+  <body>
+  	<div class="container-fluid">
+  	  <div class="row justify-content-center">
+  	   
+  	   <!-- Contenedor -->	
+  	  	<div class="col-md-5 contenedor">
+  	  	  <img class="img-fluid mx-auto d-block" src="{% static 'landing/img/Logo.jpg' %}" alt="logo">
+  	  	  <hr>
+          <div id="formulario">
+          	<form action="" class="formulario">
+          	  <div class="form-group row">
+          	  	<label for="usr" class="col-sm-3 col-form-label">Usuario</label>
+          	  	<div class="col-sm-9">
+          	  	  <input type="text" class="form-control" placeholder="Usuario">          	  		
+          	  	</div>
+          	  </div>
+          	  <div class="form-group row">
+          	  	<label for="pwd" class="col-sm-3 col-form-label">Contraseña</label>
+          	  	<div class="col-sm-9">
+          	  		<input type="password" class="form-control" placeholder="Contraseña">          	  		
+          	  	</div>
+          	  </div>
+          	  <div class="row justify-content-center">
+          	    <button type="submit" class="btn-submit">Ingresar</button>	
+          	  </div>
+          	</form>
+          </div>
+  	  	</div>
+       <!-- Fin contenedor -->
+
+  	  </div>
+  	</div>
+  </body>
+</html>
