@@ -1,0 +1,83 @@
+
+.topbar {
+	background-color: #00BFFF;
+	padding: 5px 0px 5px 0px;
+	font-size: 20px;
+	text-align: right;
+	border-bottom: 2px solid white;
+	border-bottom-color: white;
+}
+
+.logo {
+	font-size: 18px;
+	color: white;
+}
+
+.user {
+	font-size: 18px;
+	color: white;
+}
+
+.dropdown-menu{
+	padding: 0px 5px 0px 5px;
+}
+
+#nav {
+	background-color: #666666;
+}
+
+li>a {
+	color: #F8F8FF;
+	font-size: 18px;
+	width: 100%;
+	text-align: left;
+
+}
+
+li>a:hover {
+	color: #00BFFF;
+	text-decoration: none;
+}
+
+#contenido {
+	background-color: #E6E6E6;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.tarjeta {
+	background-color: white;
+	padding: 3px 3px 3px 3px;
+	border: 1px solid lightgrey ;
+	border-radius: 6px;
+}
+
+.tarjeta>h5 {
+	text-align: center;
+}
+
+#proximos {
+	color: red;
+}
+
+#pendientes {
+	color: orange;
+}
+
+#resueltos {
+	color: blue;
+}
+
+footer {
+	background-color: black;
+	color: #F8F8FF;
+}
+
+#FB8C00
+#00BFFF
+#F8F8FF
+#FFFFFF
+#FF00FF
+#299cff
+#666666
+#E6E6E6

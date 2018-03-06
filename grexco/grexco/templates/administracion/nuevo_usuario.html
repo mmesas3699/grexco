@@ -1,0 +1,26 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static 'administracion/css/nuevo_usuario.css' %}"> 
+{% endblock %}
+
+{% block content %}
+
+	<div class="form-nuevo-usuario">
+		<h2>Nuevo usuario</h2>
+		<hr>
+		<p>Tipo de usuario:</p>
+		<select name="" id="">
+			<option value="">Cliente</option>
+			<option value="">Soporte</option>
+			<option value="">Tecnología</option>
+		</select>
+		<div>
+			<input type="select">
+
+		</div>
+	</div>
+	
+{% endblock %}

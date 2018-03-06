@@ -19,5 +19,5 @@ from django.urls import path
 from . import views as vw
 
 urlpatterns = [
-    path('login/', vw.LoginView.as_view(), name='login')
+    path('login/', vw.LoginView.as_view(), name='UsuariosLogin')
 ]

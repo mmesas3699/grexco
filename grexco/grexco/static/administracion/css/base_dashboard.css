@@ -1,0 +1,112 @@
+body {
+    font-family: 'Roboto';
+}
+
+nav {
+	height: 45px;
+}
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 150px  924px;
+  grid-template-rows: 550px;
+  background-color: #2196F3;
+}
+
+/* div que contiene el menú */
+.sidebar {
+  background-color: black;
+}
+
+
+/* Menu */ 
+.menu {
+	padding: 10px 0px 10px 0px;
+}
+
+
+/* Estilos para los items del menu */
+.items-menu {
+	padding: 8px;
+	color: white;
+}
+
+
+/* Estilos cuando pasa el mouse por encima de un item-menu  */ 
+.items-menu:hover {
+	background-color: #56CCF2;
+}
+
+
+.items-menu:hover .dropbtn {
+	background-color: #56CCF2;
+}
+
+.material-icons.icon-usuarios {
+	color: #F8F8FF;
+	font-size: 28px;
+	text-align: center;
+    vertical-align: middle;
+}
+
+.dropbtn {
+    background-color: black;
+    color: white;
+    font-size: 16.5px;
+    border: none;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+	font-size: 15px;
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd}
+
+/* Show the dropdown menu on hover */
+.items-menu:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #56CCF2;
+}
+
+
+/* Estilos para el boton nuevo del item-menu Usuarios */
+#usuarios-nuevo {
+	border-bottom: 0.2px solid black;
+}
+
+.icon-add {
+	font-size: 15px;
+	text-align: center;
+    vertical-align: middle;
+}
+
+
+/* Contenido de cada menu */
+.contenido {
+	background-color: #E5E5E5;
+	padding: 5px;
+}
