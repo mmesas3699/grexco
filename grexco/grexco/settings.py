@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'grexco',                      # Or path to database file if using sqlite3.
         'USER': 'grexco',                      # Not used with sqlite3.
         'PASSWORD': 'grexco',                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '127.0.0.1',                   # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '3306', 
         'OPTIONS': {
             'charset' : 'utf8',

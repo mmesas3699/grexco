@@ -2,24 +2,83 @@
 
 {% load static %}
 
-{% block css %}
+{% block js-css %}
 	<link rel="stylesheet" type="text/css" href="{% static 'administracion/css/nuevo_usuario.css' %}"> 
+	<script src="{% static 'administracion/js/nuevo_usuario.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
-	<div class="form-nuevo-usuario">
+	<div class="contenedor-nuevo-usuario">
 		<h2>Nuevo usuario</h2>
 		<hr>
-		<p>Tipo de usuario:</p>
-		<select name="" id="">
-			<option value="">Cliente</option>
-			<option value="">Soporte</option>
-			<option value="">Tecnología</option>
-		</select>
 		<div>
-			<input type="select">
-
+			<label for="">Tipo de usuario:</label>
+			<select name="" id="">
+				<option value="none">Seleccione un tipo de usuario</option>
+				<option value="cliente">Cliente</option>
+				<option value="soporte">Soporte</option>
+				<option value="tecnologia">Tecnología</option>
+			</select>
+		</div>		
+		<div id="form-cliente">
+			<div>
+				<div>
+					<form action="">
+						<div class="flex-row">
+							<div class="flex-column">
+								<div class="form-cliente-item">
+									<label for=""><i class="asterisco">*</i> Empresa: </label>
+									<span>Falta el nombre de la empresa</span>
+									<input type="text">
+								</div>
+								<div class="form-cliente-item">
+									<label for=""><i class="asterisco">*</i> Dirección: </label>
+									<span>Falta la dirección</span>
+									<input type="text">
+								</div>
+								<div class="form-cliente-item">
+									<label for=""><i class="asterisco">*</i> Nombre contacto:</label>
+									<span>Falta el nombre de contacto</span>
+									<input type="text" name="" id="">
+								</div>
+							</div>
+							<div class="flex-column">
+								<div class="form-cliente-item">
+									<label for=""><i class="asterisco">*</i> NIT: </label>
+									<span>Falta el NIT</span>
+									<input type="text">
+								</div>
+								<div class="form-cliente-item">
+									<label for=""><i class="asterisco">*</i> Teléfono: </label>
+									<span>Falta el teléfono</span>
+									<input type="text" name="" id="">
+								</div>
+								<div class="form-cliente-item">
+									<label for=""><i class="asterisco">*</i> Correo contacto:</label>
+									<span>Falta el correo de contacto</span>
+									<input type="text" name="" id="">
+								</div>
+							</div>
+						</div>
+						<div class="form-cliente-item">
+							<label for=""><i class="asterisco">*</i> Nombre usuario:</label>
+							<span>Falta el nombre de usuario</span>
+							<div>
+								<input type="text" name="" id="nom_usuario">@grexco.com.co
+							</div>
+						</div>
+						<p class="requerido"> * Campo requerido</p>
+						<input class="boton" type="submit" value="Guardar">
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="form-soporte">
+			<p>Soporte</p>
+		</div>
+		<div id="form-tecnologia">
+			<p>Tecnología</p>
 		</div>
 	</div>
 	
