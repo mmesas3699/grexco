@@ -10,7 +10,7 @@ nav {
 .grid-container {
   display: grid;
   grid-template-columns: 15%  85%;
-  grid-template-rows: 600px;
+  grid-template-rows: 670px;
   background-color: #2196F3;
 }
 
@@ -64,7 +64,9 @@ nav {
 
 .dropdown-content {
     display: none;
+    /* position: absolute; */
     position: absolute;
+    /* left: 50px; */
     background-color: white;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -94,9 +96,9 @@ nav {
 }
 
 
-/* Estilos para el boton nuevo del item-menu Usuarios */
-#usuarios-nuevo {
-	border-bottom: 0.2px solid black;
+/* Estilos para el link/botón nuevo */
+.nuevo {
+    border-bottom: 0.2px solid black;
 }
 
 .icon-add {
@@ -109,5 +111,4 @@ nav {
 /* Contenido de cada menu */
 .contenido {
 	background-color: #E5E5E5;
-	padding: 5px;
 }

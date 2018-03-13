@@ -38,19 +38,31 @@
 		<div class="menu">
 			<div class="items-menu">
 				<div class="dropdown">
-  					<button class="dropbtn"><i class="material-icons icon-usuarios">supervisor_account</i> Usuarios</button>
-					  <div class="dropdown-content">
-					    <div id="usuarios-nuevo">
-					    	<a href="{% url 'new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
-					    </div>
-					    <a href="#">Clientes</a>
-					    <a href="#">Soporte</a>
-					    <a href="#">Tecnología</a>
-				      </div>
+					  <div>
+							<button class="dropbtn"><i class="material-icons icon-usuarios">supervisor_account</i> Usuarios</button>
+							<div class="dropdown-content">
+								<div id="usuarios-nuevo">
+									<a class="nuevo" href="{% url 'new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
+								</div>
+								<a href="#">Clientes</a>
+								<a href="#">Soporte</a>
+								<a href="#">Tecnología</a>
+							</div>
+					  </div>
 			    </div>
 			</div>
 			<div class="items-menu">
-				clientes
+					<div class="dropdown">
+						<div>
+							<button class="dropbtn"><i class="material-icons icon-usuarios">supervisor_account</i> Clientes</button>
+							<div class="dropdown-content">
+								<div id="usuarios-nuevo">
+									<a class="nuevo" href="#"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
+								</div>
+								<a href="#">Consulta</a>
+							</div>
+						</div>
+					</div>
 			</div>
 			<div class="items-menu">
 				otros....

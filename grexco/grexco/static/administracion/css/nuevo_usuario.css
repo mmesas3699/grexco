@@ -1,6 +1,6 @@
 .contenedor-nuevo-usuario {
     width: 60%;
-    padding: 15px 15px 15px 15px;   
+    padding: 5px 15px 15px 15px;   
     margin: 20px 20px 20px 20px;
     background-color: white;
     box-shadow: 1px 1px 10px grey;
@@ -41,12 +41,12 @@ select {
     flex: 50%;
 }
 
-.form-cliente-item {
+.form-item {
     padding: 8px;
     margin-right: 15px;
 }
 
-.form-cliente-item > input {
+.form-item > input {
     width: 100%;
     margin-top: 7px;
     margin-right: 5px;
@@ -70,13 +70,10 @@ select {
 
 /* Estilos para los mensajes de errores de los campos */
 span {
+    margin: 3px 0px 3px 0px;
     display: none;
-    font-size: 15px;
-    background-color: crimson;
-    color: white;
-    padding: 3px 10px 3px ;
-    margin-left: 10px;
-    border-radius: 3px;
+    font-size: 12px;
+    color:crimson;
 }
 
 .asterisco {
@@ -88,7 +85,7 @@ span {
     color: red;
 }
 
-.boton {
+.btn-save {
     width: 100%;
     padding: 6px;
     margin-top: 10px;
@@ -100,6 +97,6 @@ span {
     cursor: pointer;
 }
 
-.boton:hover {
+.btn-save:hover {
     box-shadow: 1px 1px 10px grey;
 }

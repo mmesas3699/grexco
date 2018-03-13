@@ -1,5 +1,9 @@
 $(document).ready(function () {
    
+    /*
+    Oculta o muestra los formularios dependiendo
+    de la opción elegida en el 'select'.
+    */
     $('select').change(function (e) { 
        e.preventDefault()
     
@@ -23,11 +27,12 @@ $(document).ready(function () {
        };    
    });
 
+
    	/* 
-	Verifica que los campos del formulario de contacto NO
+	Verifica que los campos del formulario NO
 	estén vacios.	
 	*/ 
-	$(".contacto").focusout(function() {
+	$("input").focusout(function() {
         var valor = $(this).val();
         if (valor.length == 0) {
             $(this).siblings('span').show();
