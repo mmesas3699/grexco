@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 from django.views.generic import TemplateView
+from django.contrib.auth import authenticate, login, logout
+from administracion.views import DashboardView
+
 
 # Create your views here.
 
@@ -8,3 +11,17 @@ from django.views.generic import TemplateView
 class LoginView(TemplateView):
     """docstring for LoginView"""
     template_name = 'usuarios/login.html'
+
+    def post(self, request):
+        usrname = request.POST['name']
+        pwd = request.POST['pwd']
+        print('aca voy')
+        user = authenticate(request, username=usrname, password=pwd)
+
+        if user is not None:
+            login(request, user)
+            print('success')
+            return redirect('administracion:dashboard')
+        else:
+            return HttpResponse('Datos invalidos')
+

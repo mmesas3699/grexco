@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',  # Contiene el nucleo del framework de autentucación
+    'django.contrib.auth',  # Contiene el nucleo del framework de autenticación
     'django.contrib.contenttypes',  # Permite que los permisos se asocien a los modulos creados
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -108,6 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTH_USER_MODEL = 'usuarios.GrexcoUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -140,4 +141,4 @@ EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-CSRF_USE_SESSIONS = False
+CSRF_USE_SESSIONS = True 

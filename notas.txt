@@ -2,7 +2,7 @@ Conectar Mysql y Django: https://www.digitalocean.com/community/tutorials/how-to
 
 Conceder acceso a usuarios a Mysql: https://chartio.com/resources/tutorials/how-to-grant-all-privileges-on-a-database-in-mysql/
 
-Crear Data base: CREATE DATABASE `my-db` CHARACTER SET utf8 COLLATE utf8_general_ci;	
+Crear Data base: CREATE DATABASE grexco CHARACTER SET utf8 COLLATE utf8_general_ci;	
 Check Mysql services:
 	$ sudo service mysql status
 	$ sudo service mysql stop
@@ -93,12 +93,15 @@ admin.site.register(BookInstance)
 ******** Crear un super usuario ********
 $ python manage.py createsuperuser
 
-(grexco, grexco02)
+(supergrexco, Gx10admin)
 
 
 ******** Usuario Administrador Grexco *******
-AdmsGrexco
-Gx10admin
+from django.contrib.auth.models import User
+>>> user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+## if you have the Django admin installed, you can also create users interactively.
+
+
 
 ******** Para que la aplicacion guarde la hora de la ciudad actual en la BD ********
 

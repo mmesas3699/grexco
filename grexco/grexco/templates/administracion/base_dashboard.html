@@ -25,8 +25,9 @@
 <body>
 <!-- TOP BAR -->
   <nav>
-  	<a href="{% url 'dashboard'%}">
+  	<a href="{% url 'administracion:dashboard'%}">
 			<img src="{% static 'landing/img/Logo.jpg' %}" alt="logo" style="width:150px";>
+			{{request.user.username}} <a href="{% url 'usuarios:logout'%}">Logout</a>
 		</a> 
   </nav>
 <!-- FIN TOP BAR  -->
@@ -42,7 +43,7 @@
 							<button class="dropbtn"><i class="material-icons icon-usuarios">supervisor_account</i> Usuarios</button>
 							<div class="dropdown-content">
 								<div id="usuarios-nuevo">
-									<a class="nuevo" href="{% url 'new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
+									<a class="nuevo" href="{% url 'administracion:new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
 								</div>
 								<a href="#">Clientes</a>
 								<a href="#">Soporte</a>
