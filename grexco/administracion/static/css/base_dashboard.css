@@ -2,8 +2,62 @@ body {
     font-family: 'Roboto';
 }
 
-nav {
-	height: 45px;
+.nav-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    height: 45px;
+}
+
+
+.dropdown {
+	position: relative;
+    display: inline-block;
+}
+
+/* boton del usuario loggeado */
+.account-btn {
+    background-color: white;
+    padding: 0px;
+    border-style: none;
+    cursor: pointer;
+}
+
+/* icono account_box */
+.material-icons.account_box {
+    font-family: 'Material Icons';
+    color: black;
+    font-size: 40px;
+}  
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    border-radius: 3px;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 0px 5px 1px grey;
+    z-index: 1;
+}
+
+.dropdown-menu a {
+	font-size: 15px;
+    color: black;
+    padding: 5px 5px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu a:hover {
+	background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown:hover .account-btn {
+    background-color: white;
 }
 
 
@@ -27,31 +81,8 @@ nav {
 
 
 /* Estilos para los items del menu */
-.items-menu {
+.menu-item {
 	padding: 6px 4px 6px 4px;
-	color: white;
-}
-
-.active {
-    background-color: #56CCF2;
-} 
-
-
-/* Estilos cuando pasa el mouse por encima de un item-menu  */ 
-.items-menu:hover {
-	background-color: #56CCF2;
-}
-
-
-.items-menu:hover .dropbtn {
-	background-color: #56CCF2;
-}
-
-.material-icons.icon-usuarios {
-	color: #F8F8FF;
-	font-size: 28px;
-	text-align: center;
-    vertical-align: middle;
 }
 
 .dropbtn {
@@ -59,8 +90,14 @@ nav {
     width: 100%;
     color: white;
     font-size: 16.5px;
+    padding: 6px 0px 6px 4px;
     text-align: left;
     border: none;
+    cursor: pointer;
+}
+
+.active {
+	background-color: dodgerblue; 
 }
 
 .dropdown-content {
@@ -69,32 +106,47 @@ nav {
     border-radius: 2px;
 }
 
-.dropdown-content a {
-	font-size: 15px;
+
+/* Change color of dropdown links on hover */
+.dropdown-content > a:hover {
+	background-color: #ddd;
+}
+
+/*  */
+.container-new {
+	padding: 3px;
+}
+
+/* Estilos para el link/botón nuevo */
+.add-item {
+	color: red;
+	font-size: 17px;
+	text-decoration: none;
+}
+
+.add-item:hover {
+	background-color: white;
+}
+
+.dropdown-content > a {
+	font-size: 16px;
     color: black;
-    padding: 10px 10px;
+    padding: 5px 0px 5px 7px;
     text-decoration: none;
     display: block;
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-    background-color: #56CCF2;
+hr {
+	width: 100%;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
-
-
-/* Estilos para el link/botón nuevo */
-.nuevo {
-    border-bottom: 0.2px solid black;
-}
-
-.icon-add {
-	font-size: 15px;
-	text-align: center;
+.material-icons.icon-add {
+	font-size: 21px;
+	padding: 0px 9px 0px 30px;
     vertical-align: middle;
+    float: left;
+    color: red;
 }
 
 

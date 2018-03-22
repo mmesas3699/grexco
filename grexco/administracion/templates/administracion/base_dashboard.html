@@ -8,14 +8,15 @@
   <!-- CSS -->
   <link rel="stylesheet" type="text/css" href="{% static '/css/base_dashboard.css' %}">  
 
-	<!-- Jquery -->
+  <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="{% static '/js/base_dashboard.js' %}"></script>
+  
+  <script src="{% static '/js/base_dashboard.js' %}"></script>
 
   {% block js-css %}
 
   {% endblock %}
-    
+	
   <!-- Google Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -25,12 +26,22 @@
 </head>
 <body>
 <!-- TOP BAR -->
-  <nav>
-  	<a href="{% url 'administracion:dashboard'%}">
-			<img src="{% static 'landing/img/Logo.jpg' %}" alt="logo" style="width:150px";>
-			{{request.user.username}} <a href="{% url 'usuarios:logout'%}">Logout</a>
-		</a> 
-  </nav>
+  <div class="nav-container">
+		<div>
+		  <a href="{% url 'administracion:dashboard'%}">
+			<img src="{% static '/img/logo.jpg' %}" alt="logo" style="width:150px";>
+		  </a>
+		</div>
+  		<div>
+		  <div class="dropdown" style="float: right;">
+		  	<button type="button" class="account-btn"><i class="material-icons account_box">account_box</i></button>
+		  	<div class="dropdown-menu">
+		    	<a class="" href="#"><b>Usuario:</b> {{request.user.username}}</a>
+		    	<a href="{% url 'usuarios:logout'%}">Cerrar sesión</a>
+		  	</div>	
+		  </div>
+		</div>
+  </div>
 <!-- FIN TOP BAR  -->
 
 <!-- CONTENIDO -->
@@ -39,32 +50,30 @@
 	<!-- SIDEBAR -->
 	<div class="sidebar">
 		<div class="menu">
-			<div class="items-menu">
-				<button class="dropbtn">Usuarios<i class="material-icons arrow_drop_down">arrow_drop_down</i></button>
+			<div class="menu-item">
+				<button class="dropbtn">Usuarios</button>
 				<div class="dropdown-content">
-					<div id="usuarios-nuevo">
-						<a class="nuevo" href="{% url 'administracion:new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
+					<div class="container-new">
+						<a class="add-item" href="{% url 'administracion:new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
 					</div>
+					<hr style="width: 93%;">
 					<a href="#">Clientes</a>
 					<a href="#">Soporte</a>
 					<a href="#">Tecnología</a>
 				</div>
 			</div>
-			<div class="items-menu">
-					<div class="dropdown">
-						<div>
-							<button class="dropbtn">Clientes</button>
-							<div class="dropdown-content">
-								<div id="usuarios-nuevo">
-									<a class="nuevo" href="{% url 'administracion:nuevo_cliente' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
-								</div>
-								<a href="#">Consulta</a>
-							</div>
-						</div>
-					</div>
+			<div class="menu-item">
+			    <button class="dropbtn">Clientes</button>
+				<div class="dropdown-content">
+				  <div class="container-new">
+				    <a class="add-item" href="{% url 'administracion:nuevo_cliente' %}"><i class="material-icons icon-add">add_circle_outline</i>Nuevo</a>
+				  </div>
+				  <hr style="width: 93%;">
+				  <a href="">Empresas</a>
+				</div>
 			</div>
 			<div class="items-menu">
-				otros....
+				<p>otros....</p>
 			</div>
 		</div>
 	</div>
