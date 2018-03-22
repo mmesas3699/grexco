@@ -15,13 +15,11 @@ class LoginView(TemplateView):
     def post(self, request):
         usrname = request.POST['name']
         pwd = request.POST['pwd']
-        print('aca voy')
         user = authenticate(request, username=usrname, password=pwd)
-
+        
         if user is not None:
             login(request, user)
-            print('success')
             return redirect('administracion:dashboard')
         else:
-            return HttpResponse('Datos invalidos')
+            return HttpResponse('Datos invalidos o usuario inactivo')
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'landing.apps.LandingConfig',
     'usuarios.apps.UsuariosConfig',
+    'administracion.apps.AdministracionConfig',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'grexco.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'grexco/templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,14 +79,14 @@ WSGI_APPLICATION = 'grexco.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'grexco',                      # Or path to database file if using sqlite3.
-        'USER': 'grexco',                      # Not used with sqlite3.
-        'PASSWORD': 'grexco',                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                   # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306', 
+        'NAME': 'grexco_pru',     # Or path to database file if using sqlite3.
+        'USER': 'sa',             # Not used with sqlite3.
+        'PASSWORD': 'Grexco02',   # Not used with sqlite3.
+        'HOST': '',               # Set to empty string for localhost.
+        'PORT': '3306',
         'OPTIONS': {
-            'charset' : 'utf8',
-            'use_unicode' : True,
+            'charset': 'utf8',
+            'use_unicode': True,
         },
     }
 }
@@ -130,7 +131,8 @@ STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = ( os.path.join('grexco/static'), )
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Email
 
@@ -141,4 +143,4 @@ EMAIL_PORT = 465
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-CSRF_USE_SESSIONS = True 
+CSRF_USE_SESSIONS = True

@@ -56,7 +56,6 @@ select {
     padding: 6px;
 }
 
-
 /* Input nombre de usuario */
 #nom_usuario {
     width: 23%;
@@ -86,6 +85,7 @@ span {
 }
 
 .btn-save {
+    display: none;
     width: 100%;
     padding: 6px;
     margin-top: 10px;

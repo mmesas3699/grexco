@@ -9,7 +9,7 @@ nav {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 15%  85%;
+  grid-template-columns: 13%  87%;
   grid-template-rows: 670px;
   background-color: #2196F3;
 }
@@ -28,9 +28,13 @@ nav {
 
 /* Estilos para los items del menu */
 .items-menu {
-	padding: 8px;
+	padding: 6px 4px 6px 4px;
 	color: white;
 }
+
+.active {
+    background-color: #56CCF2;
+} 
 
 
 /* Estilos cuando pasa el mouse por encima de un item-menu  */ 
@@ -52,26 +56,17 @@ nav {
 
 .dropbtn {
     background-color: black;
+    width: 100%;
     color: white;
     font-size: 16.5px;
+    text-align: left;
     border: none;
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
 }
 
 .dropdown-content {
     display: none;
-    /* position: absolute; */
-    position: absolute;
-    /* left: 50px; */
     background-color: white;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 4px;
+    border-radius: 2px;
 }
 
 .dropdown-content a {
@@ -84,11 +79,6 @@ nav {
 
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ddd}
-
-/* Show the dropdown menu on hover */
-.items-menu:hover .dropdown-content {
-    display: block;
-}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {

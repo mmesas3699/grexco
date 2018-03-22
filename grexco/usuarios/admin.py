@@ -1,7 +1,12 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import TypeUser
+from .models import (TiposUsuarios,
+                     Plataformas,
+                     Empresas,
+                     EmpresasUsuarios,)
 
 # Register your models here.
 
-admin.site.register(TypeUser)
+admin.site.register(TiposUsuarios)
+admin.site.register(Plataformas)
+admin.site.register(Empresas)
+admin.site.register(EmpresasUsuarios)

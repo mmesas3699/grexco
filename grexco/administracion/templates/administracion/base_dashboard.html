@@ -6,10 +6,11 @@
   <title>Administración</title>
   {% load static %}
   <!-- CSS -->
-  <link rel="stylesheet" type="text/css" href="{% static 'administracion/css/base_dashboard.css' %}">  
+  <link rel="stylesheet" type="text/css" href="{% static '/css/base_dashboard.css' %}">  
 
 	<!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="{% static '/js/base_dashboard.js' %}"></script>
 
   {% block js-css %}
 
@@ -34,31 +35,28 @@
 
 <!-- CONTENIDO -->
 <div class="grid-container">
-  <!-- SIDEBAR -->
+	
+	<!-- SIDEBAR -->
 	<div class="sidebar">
 		<div class="menu">
 			<div class="items-menu">
-				<div class="dropdown">
-					  <div>
-							<button class="dropbtn"><i class="material-icons icon-usuarios">supervisor_account</i> Usuarios</button>
-							<div class="dropdown-content">
-								<div id="usuarios-nuevo">
-									<a class="nuevo" href="{% url 'administracion:new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
-								</div>
-								<a href="#">Clientes</a>
-								<a href="#">Soporte</a>
-								<a href="#">Tecnología</a>
-							</div>
-					  </div>
-			    </div>
+				<button class="dropbtn">Usuarios<i class="material-icons arrow_drop_down">arrow_drop_down</i></button>
+				<div class="dropdown-content">
+					<div id="usuarios-nuevo">
+						<a class="nuevo" href="{% url 'administracion:new-user' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
+					</div>
+					<a href="#">Clientes</a>
+					<a href="#">Soporte</a>
+					<a href="#">Tecnología</a>
+				</div>
 			</div>
 			<div class="items-menu">
 					<div class="dropdown">
 						<div>
-							<button class="dropbtn"><i class="material-icons icon-usuarios">supervisor_account</i> Clientes</button>
+							<button class="dropbtn">Clientes</button>
 							<div class="dropdown-content">
 								<div id="usuarios-nuevo">
-									<a class="nuevo" href="#"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
+									<a class="nuevo" href="{% url 'administracion:nuevo_cliente' %}"><i class="material-icons icon-add">add_circle_outline</i> Nuevo</a>
 								</div>
 								<a href="#">Consulta</a>
 							</div>

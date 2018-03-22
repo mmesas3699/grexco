@@ -2,7 +2,9 @@ Conectar Mysql y Django: https://www.digitalocean.com/community/tutorials/how-to
 
 Conceder acceso a usuarios a Mysql: https://chartio.com/resources/tutorials/how-to-grant-all-privileges-on-a-database-in-mysql/
 
-Crear Data base: CREATE DATABASE grexco CHARACTER SET utf8 COLLATE utf8_general_ci;	
+- Crear Data base: CREATE DATABASE grexco CHARACTER SET utf8 COLLATE utf8_general_ci;	
+- Dar permisos a un usuario: GRANT ALL PRIVILEGES ON grexco.*  TO 'grexco'@'localhost';
+- CREATE USER 'nombre_usuario'@'localhost' IDENTIFIED BY 'tu_contrasena';
 Check Mysql services:
 	$ sudo service mysql status
 	$ sudo service mysql stop

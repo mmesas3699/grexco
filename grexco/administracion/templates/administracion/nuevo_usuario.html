@@ -3,8 +3,8 @@
 {% load static %}
 
 {% block js-css %}
-	<link rel="stylesheet" type="text/css" href="{% static 'administracion/css/nuevo_usuario.css' %}"> 
-	<script src="{% static 'administracion/js/nuevo_usuario.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static '/css/nuevo_usuario.css' %}"> 
+	<script src="{% static '/js/nuevo_usuario.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -27,6 +27,7 @@
 			<div>
 				<div>
 					<form action="">
+						{% csrf_token %}
 						<div class="flex-row">
 							
 							<!-- Columna 1 -->
@@ -48,9 +49,16 @@
 
 								<!-- Item -->
 								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Nombre contacto:</label>
-									<span>Falta el nombre de contacto</span>
+									<label for=""><i class="asterisco">*</i> Nombre:</label>
+									<span>Falta el nombre del contacto</span>
 									<input type="text" name="" id="frm-cli-contact-name">
+								</div>
+
+								<!-- Item -->
+								<div class="form-item">
+									<label for=""><i class="asterisco">*</i> Nombre usuario:</label>
+    								<span>Falta el nombre de usuario</span>
+									<input type="text" name="" id="frm-cli-username">
 								</div>
 
 							</div>
@@ -70,7 +78,14 @@
 								<div class="form-item">
 									<label for=""><i class="asterisco">*</i> Teléfono: </label>
 									<span>Falta el teléfono</span>
-									<input type="text" name="" id="frm-cli-number-phone">
+									<input type="text" name="" id="frm-cli-phone">
+								</div>
+
+								<!-- Item -->
+								<div class="form-item">
+									<label for=""><i class="asterisco">*</i> Apellido:</label>
+									<span>Falta el apellido del contacto</span>
+									<input type="text" name="" id="frm-cli-contact-name">
 								</div>
 
 								<!-- Item -->
@@ -82,18 +97,9 @@
 							<!-- Fin columna 2 -->
 						</div>
 
-						<!-- Item -->
-						<div class="form-item">
-							<label for=""><i class="asterisco">*</i> Nombre usuario:</label>
-							<div>
-								<span>Falta el nombre de usuario</span>
-								<input type="text" name="" id="frm-cli-username">@grexco.com.co
-							</div>
-						</div>
-
 						<!-- Disclaimer y botón Guardar -->
 						<p class="requerido"> * Campo requerido</p>
-						<input id="save-user" class="btn-save" type="submit" value="Guardar">
+
 					</form>
 				</div>
 			</div>
@@ -144,7 +150,6 @@
 
 					<!-- Disclaimer y botón Guardar -->
 					<p class="requerido"> * Campo requerido</p>
-					<input id="save-client" class="btn-save" type="submit" value="Guardar">
 
 				</div>
 			  </form>
@@ -156,6 +161,8 @@
 		<div id="form-tecnologia">
 			<p>Tecnología</p>
 		</div>
+
+		<input id="save-user" class="btn-save" type="submit" value="Guardar">
 	</div>
 	
 {% endblock %}
