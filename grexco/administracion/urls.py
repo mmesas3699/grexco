@@ -17,4 +17,9 @@ urlpatterns = [
         views.CrearClienteView.as_view(),
         name='nuevo_cliente'
     ),
+    path(
+        'plataformas/nuevo',
+        views.CrearPlataformasView.as_view(),
+        name='nueva_plataforma'
+    )
 ]

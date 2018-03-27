@@ -2,8 +2,8 @@ Conectar Mysql y Django: https://www.digitalocean.com/community/tutorials/how-to
 
 Conceder acceso a usuarios a Mysql: https://chartio.com/resources/tutorials/how-to-grant-all-privileges-on-a-database-in-mysql/
 
-- Crear Data base: CREATE DATABASE grexco CHARACTER SET utf8 COLLATE utf8_general_ci;	
-- Dar permisos a un usuario: GRANT ALL PRIVILEGES ON grexco.*  TO 'grexco'@'localhost';
+- Crear Data base: CREATE DATABASE grexco_pru CHARACTER SET utf8 COLLATE utf8_general_ci;	
+- Dar permisos a un usuario: GRANT ALL PRIVILEGES ON grexco_pru.*  TO 'sa'@'localhost';
 - CREATE USER 'nombre_usuario'@'localhost' IDENTIFIED BY 'tu_contrasena';
 Check Mysql services:
 	$ sudo service mysql status
@@ -32,16 +32,6 @@ $ pip install mysqlclient
 $ python manage.py startapp aplicacion
 
 
-******* Carpetas Django *********
-- mysite/: Directorio que contiene el projecto. Se puede cambiar el nombre en cualquier momento sin afectar el proyecto.
-- mysite/mysite/: Directorio del paquete que contiene el projecto. Es un paquete python y se usará para importar cualquier cosa dentro
-                  de el.
-- mysite/__init__.py: Un archivo requerido para que Python trate a este directorio como un paquete.
-- mysite/settings.py: Opciones/configuraciones para este proyecto de Django.
-- mysite/urls.py: La declaración de las URL para este proyecto de Django; una "tabla de contenidos".
-- mysite/wsgi.py: El archivo encargado de ser compatible con el servidor web.
-
-
 ****** Registrar una aplicación ******
 - En /my-site/my-site/settings.py :
 	
@@ -53,10 +43,7 @@ $ python manage.py startapp aplicacion
 	    'django.contrib.messages',
 	    'django.contrib.staticfiles',
 	>>  'miApp.apps.miAppConfig', 
-	]
-
->> Especifica el objeto de configuracion de 'mi aplicación (miApp)'. Este se generó en /my-site/miApp/apps.py
-
+	>> Especifica el objeto de configuracion de 'mi aplicación (miApp)'. Este se generó en /my-site/miApp/apps.py
 
 ******** Migraciones *******
 $ python manage.py makemigrations
@@ -98,11 +85,15 @@ $ python manage.py createsuperuser
 (supergrexco, Gx10admin)
 
 
-******** Usuario Administrador Grexco *******
+******** Crear usuarios  ********
 from django.contrib.auth.models import User
->>> user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-## if you have the Django admin installed, you can also create users interactively.
+user = User.objects.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword', **extra_fields)
 
+·· Cambiar la contraseña:
+	>>> from django.contrib.auth.models import User
+	>>> u = User.objects.get(username='john')
+	>>> u.set_password('new password')
+	>>> u.save()
 
 
 ******** Para que la aplicacion guarde la hora de la ciudad actual en la BD ********
@@ -119,12 +110,3 @@ from django.contrib.auth.models import User
 		USE_L10N = True
 
 		USE_TZ = False
-
-
-******** MODELOS ********
-Un modelo es la fuente única y definitiva de información sobre sus datos. Contiene los campos y comportamientos esenciales
-de los datos que está almacenando. En general, cada modelo se asigna a una sola tabla de base de datos.
-
-	* Cada modelo es una clase de python que hereda de  django.db.models.Model.
-	* Cada atributo del modelo representa un campo de base de datos.
-	

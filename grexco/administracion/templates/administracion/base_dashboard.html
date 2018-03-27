@@ -63,13 +63,24 @@
 				</div>
 			</div>
 			<div class="menu-item">
-			    <button class="dropbtn">Clientes</button>
+			  <button class="dropbtn">Clientes</button>
 				<div class="dropdown-content">
 				  <div class="container-new">
 				    <a class="add-item" href="{% url 'administracion:nuevo_cliente' %}"><i class="material-icons icon-add">add_circle_outline</i>Nuevo</a>
 				  </div>
 				  <hr style="width: 93%;">
 				  <a href="">Empresas</a>
+				</div>
+			</div>
+			<div class="menu-item">
+				<button class="dropbtn">Plataformas</button>
+				<div class="dropdown-content">
+					<div class="container-new">
+						<a class="add-item" href="{% url 'administracion:nueva_plataforma' %}">
+						<i class="material-icons icon-add">add_circle_outline</i>Nuevo</a>
+					</div>
+					<hr style="width: 93%;">
+					<a href="">Consulta</a>
 				</div>
 			</div>
 			<div class="items-menu">

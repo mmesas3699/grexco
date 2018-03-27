@@ -1,0 +1,31 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block js-css %}
+	<link rel="stylesheet" type="text/css" href="{% static '/css/nueva_plataforma.css' %}"> 
+	<script src="{% static '/js/nueva_plataforma.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+      <h3>Nueva Plataforma</h3>
+      <hr>
+      <form action="" id="frm-platform" class="frm">
+        {% csrf_token %}
+        <div class="frm-item">
+          <label for="">Nombre:</label>
+          <input type="text" id="inp-name" class="inp" placeholder="En MAYUSCULAS, sin caracteres especiales (/*._)"
+           maxlength=15>
+        </div>
+        <div class="frm-item">
+          <label for="">Versión:</label>
+          <input type="text" id="inp-version" class="inp" maxlength=15>
+        </div>
+        <p class="success" style="display: none;">Los datos se guardaron correctamente</p>
+        <p class="error" style="display: none;">Los datos ya existen</p>
+        <input type="submit" value="Guardar" id="guardar">
+      </form>
+    </div>
+{% endblock %}

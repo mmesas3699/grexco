@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
-from usuarios.models import TiposUsuarios, Empresas, Plataformas, EmpresasUsuarios
+from administracion.models import UsuariosGrexco, Empresas, Plataformas
 
 
 # Create your views here.
@@ -19,7 +19,7 @@ class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'administracion/dashboard.html'
 
     def test_func(self):
-        return self.request.user.tiposusuarios.tipo == 'A'
+        return self.request.user.usuariosgrexco.tipo == 'A'
 
 
 class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -27,7 +27,7 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'administracion/nuevo_usuario.html'
 
     def test_func(self):
-        return self.request.user.tiposusuarios.tipo == 'A'
+        return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
         body = dict(request.POST)
@@ -45,5 +45,34 @@ class CrearClienteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'administracion/nuevo_cliente.html'
 
     def test_func(self):
-        return self.request.user.tiposusuarios.tipo == 'A'
-       
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+
+class  CrearPlataformasView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    login_url = 'usuarios:login'
+    template_name = 'administracion/nueva_plataforma.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        nombre = data['plt-name'][0]
+        version = data['plt-version'][0]
+        
+        plataforma = Plataformas.objects.filter(nombre=nombre, version=version)
+        print(plataforma)
+        
+        if plataforma.exists() == True:
+            return JsonResponse({"error": "Los datos ya existen"}, status=400)
+        else:
+            plt = Plataformas()
+            plt.nombre = nombre
+            plt.version = version
+            
+            try:
+                plt.save()
+                return JsonResponse({"ok": "ok"})
+            except:
+                return JsonResponse({"error": "Ocurrio un error al grabar los datos"},)
+
