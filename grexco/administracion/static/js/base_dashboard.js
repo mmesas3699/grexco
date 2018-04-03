@@ -3,4 +3,9 @@ $(document).ready(function (){
         $(this).siblings().toggle();
         $(this).toggleClass("active");
     });
+
+    $( function()
+    {
+        $( "#menu" ).menu();
+    });
 });

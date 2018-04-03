@@ -58,9 +58,9 @@ $(document).ready(function () {
         })
         .fail(function(data, status)
         {
-            // alert(data["error"], status);
-            $('.success').hide();
-            $('.error').show();
+            alert(data.response, status);
+            //$('.success').hide();
+            //$('.error').show();
         })
     });
 

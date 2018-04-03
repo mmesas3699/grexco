@@ -16,15 +16,18 @@
         {% csrf_token %}
         <div class="frm-item">
           <label for="">Nombre:</label>
+          <span>Falta el nombre</span>
           <input type="text" id="inp-name" class="inp" placeholder="En MAYUSCULAS, sin caracteres especiales (/*._)"
            maxlength=15>
         </div>
         <div class="frm-item">
           <label for="">Versión:</label>
+          <span>Falta la versión</span>
           <input type="text" id="inp-version" class="inp" maxlength=15>
         </div>
+        <i class="ast">Todos los campos son obligatorios</i>
         <p class="success" style="display: none;">Los datos se guardaron correctamente</p>
-        <p class="error" style="display: none;">Los datos ya existen</p>
+        <p class="error" style="display: none;"></p>
         <input type="submit" value="Guardar" id="guardar">
       </form>
     </div>

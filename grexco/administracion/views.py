@@ -60,6 +60,9 @@ class  CrearPlataformasView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
         nombre = data['plt-name'][0]
         version = data['plt-version'][0]
         
+        if len(nombre) == 0 or len(version) == 0:
+            return JsonResponse({"error": "Los campos estan vacios"}, status=400)
+        
         plataforma = Plataformas.objects.filter(nombre=nombre, version=version)
         print(plataforma)
         
@@ -74,5 +77,8 @@ class  CrearPlataformasView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
                 plt.save()
                 return JsonResponse({"ok": "ok"})
             except:
-                return JsonResponse({"error": "Ocurrio un error al grabar los datos"},)
+                return JsonResponse(
+                        {"error": "Ocurrio un error al grabar los datos"},
+                        status=400
+                    )
 

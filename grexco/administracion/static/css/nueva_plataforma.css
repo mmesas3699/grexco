@@ -48,6 +48,17 @@ input[type=submit]:hover {
 
 }
 
+.ast {
+    color: red;
+    font-size: 13px;
+}
+
+span {
+    color: red;
+    font-size: 13px;
+    display: none
+}
+
 .success {
     width: 100%;
     padding: 7px;
