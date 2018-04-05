@@ -32,13 +32,13 @@ $(document).ready(function () {
 
     
     // Envia los datos por ajax:
-    $("#guardar").click(function(e) 
+    $("#save").click(function(e) 
     {
         e.preventDefault();
        
         var platform = {
-            'plt-name': $('#inp-name').val(),
-            'plt-version': $('#inp-version').val(),
+            'name': $('#name').val(),
+            'version': $('#version').val(),
         }
         
         $.ajax(
@@ -58,9 +58,9 @@ $(document).ready(function () {
         })
         .fail(function(data, status)
         {
-            alert(data.response, status);
-            //$('.success').hide();
-            //$('.error').show();
+            // alert(data.response, status);
+            $('.success').hide();
+            $('.error').show();
         })
     });
 

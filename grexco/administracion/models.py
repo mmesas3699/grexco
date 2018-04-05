@@ -28,7 +28,7 @@ class UsuariosGrexco(models.Model):
     Este modelo extiende los datos del modelo User.
     Se crea para poder restringir el acceso a las vistas dependiendo
     del tipo de usuario que este loggeado.
-    Use un OneToOneField para crear una relación entre el tipo de usuario
+    Se usa un OneToOneField para crear una relación entre el tipo de usuario
     y el usuario (User).
 
     ** Importante

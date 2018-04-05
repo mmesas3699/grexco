@@ -19,7 +19,12 @@ urlpatterns = [
     ),
     path(
         'plataformas/nuevo',
-        views.CrearPlataformasView.as_view(),
-        name='nueva_plataforma'
+        views.CreatePlatformView.as_view(),
+        name='nueva_plataforma' 
+    ),
+    path(
+        'plataformas/',
+        views.PlatformView.as_view(),
+        name='plataformas'
     )
 ]

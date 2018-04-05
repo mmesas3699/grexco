@@ -5,9 +5,30 @@
 	vertical-align: middle;
 }
 
+/* Botón con el icono para el usuario loggeado */
 .btn-user {
 	float: right;
 	font-size: 14px;
 	color: white;
 	padding: 1px;
+}
+
+.item-menu {
+	margin: 2px 0px 2px 0px;
+}
+
+.menu-icons {
+	font-size: 0.8em;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+
+.icon-nuevo {
+	font-size: 48px;
+	color: dodgerblue;
+}
+
+.container-menu {
+	padding: 5px;
 }

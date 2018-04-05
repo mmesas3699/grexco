@@ -1,0 +1,30 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block js-css %}
+  <script>
+    
+  </script>
+{% endblock %}
+
+{% block content %}
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Versión</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for plataforma in plataformas %}
+        <tr>
+          <th>{{ plataforma.nombre }}</th>
+          <th>{{ plataforma.version }}</th>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

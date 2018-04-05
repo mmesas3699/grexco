@@ -23,6 +23,13 @@ class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
 
 class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    El orden para crear un usuario:
+        1. Plataforma
+        2. Empresa
+        3. User
+        4. UsuariosGrexco
+    """
     login_url = 'usuarios:login'
     template_name = 'administracion/nuevo_usuario.html'
 
@@ -48,29 +55,50 @@ class CrearClienteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         return self.request.user.usuariosgrexco.tipo == 'A'
 
 
-class  CrearPlataformasView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar plataformas
+    """
     login_url = 'usuarios:login'
-    template_name = 'administracion/nueva_plataforma.html'
+    template_name = 'administracion/platforms.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, *args, **kwargs):
+        plataforma = Plataformas.objects.all()
+
+        return {'plataformas': plataforma}
+
+
+class  CreatePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para crear plataformas
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/new_platform.html'
 
     def test_func(self):
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
         data = dict(request.POST)
-        nombre = data['plt-name'][0]
+        name = data['name'][0]
         version = data['plt-version'][0]
         
-        if len(nombre) == 0 or len(version) == 0:
+        if len(name) == 0 or len(version) == 0:
             return JsonResponse({"error": "Los campos estan vacios"}, status=400)
         
-        plataforma = Plataformas.objects.filter(nombre=nombre, version=version)
-        print(plataforma)
+        plataforma = Plataformas.objects.filter(nombre=name, version=version)
+        
+        # Punto de control
+        #print(plataforma)
         
         if plataforma.exists() == True:
             return JsonResponse({"error": "Los datos ya existen"}, status=400)
         else:
             plt = Plataformas()
-            plt.nombre = nombre
+            plt.nombre = name
             plt.version = version
             
             try:
@@ -81,4 +109,3 @@ class  CrearPlataformasView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
                         {"error": "Ocurrio un error al grabar los datos"},
                         status=400
                     )
-

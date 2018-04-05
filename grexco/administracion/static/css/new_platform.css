@@ -1,0 +1,51 @@
+.form-container {
+    margin: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid lightgrey;
+}
+
+hr {
+    width: 100%;
+}
+
+.form {
+    margin-top: 50px;
+}
+
+.disclaimer {
+    margin: 10px 0px 10px 0px;
+    color: red;
+    font-size: 13px;
+}
+
+span {
+    color: red;
+    font-size: 13px;
+    display: none
+}
+
+.success {
+    width: 100%;
+    padding: 7px;
+    color: white;
+    font-size: 16px;
+    background-color: MediumSeaGreen;
+    border: 1px solid MediumSeaGreen;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.error {
+    width: 100%;
+    padding: 7px;
+    color: white;
+    font-size: 16px;
+    background-color: crimson;
+    border: 1px solid crimson;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+

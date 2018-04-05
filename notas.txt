@@ -4,7 +4,7 @@ Conceder acceso a usuarios a Mysql: https://chartio.com/resources/tutorials/how-
 
 - Crear Data base: CREATE DATABASE grexco_pru CHARACTER SET utf8 COLLATE utf8_general_ci;	
 - Dar permisos a un usuario: GRANT ALL PRIVILEGES ON grexco_pru.*  TO 'sa'@'localhost';
-- CREATE USER 'nombre_usuario'@'localhost' IDENTIFIED BY 'tu_contrasena';
+- CREATE USER 'sa'@'localhost' IDENTIFIED BY 'Grexco02';
 Check Mysql services:
 	$ sudo service mysql status
 	$ sudo service mysql stop
