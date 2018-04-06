@@ -87,15 +87,19 @@ class TiemposRespuesta(models.Model):
 
 
 class Aplicaciones(models.Model):
-    nombre = models.CharField(max_length=10, blank=False)
+    nombre = models.CharField(max_length=30,
+                              blank=False,
+                              unique=True,
+                              null=False)
 
     def __str__(self):
-        return self.nombre
+        return '{}'.format(self.nombre)
 
 
 class Reportes(models.Model):
     nombre = models.CharField(max_length=40, blank=False)
-    aplicaciones_id =  models.ForeignKey(Aplicaciones, on_delete=models.CASCADE)
+    aplicaciones_id = models.ForeignKey(Aplicaciones,
+                                        on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre
@@ -106,7 +110,7 @@ class Convenios(models.Model):
     empresas_nit = models.ForeignKey(Empresas, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{}, {}".format(
+        return "Empresa: {}, Aplicacion: {}".format(
             self.empresas_nit.nombre,
             self.aplicaciones_id.nombre
         )

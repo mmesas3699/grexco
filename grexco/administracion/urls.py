@@ -20,11 +20,21 @@ urlpatterns = [
     path(
         'plataformas/nuevo',
         views.CreatePlatformView.as_view(),
-        name='nueva_plataforma' 
+        name='nueva_plataforma'
     ),
     path(
         'plataformas/',
         views.PlatformView.as_view(),
         name='plataformas'
+    ),
+    path(
+        'empresas/',
+        views.CompaniesView.as_view(),
+        name='empresas'
+    ),
+    path(
+        'empresas/nuevo',
+        views.CreateCompanyView.as_view(),
+        name='nueva_empresa'
     )
 ]

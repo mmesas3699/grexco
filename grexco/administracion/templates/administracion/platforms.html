@@ -3,28 +3,54 @@
 {% load static %}
 
 {% block js-css %}
-  <script>
-    
-  </script>
+  <!-- Data tables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.js"></script>
+
+  <script src="{% static '/js/platforms.js' %}"></script>
+  <style>
+    .table-container {
+      margin: 20px 0px 20px 0px;
+      padding: 20px;
+    }
+
+    tbody th {
+      font-size: 1em;
+      font-style: normal;
+    }
+
+  </style>
+
 {% endblock %}
 
 {% block content %}
   
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Versión</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for plataforma in plataformas %}
-        <tr>
-          <th>{{ plataforma.nombre }}</th>
-          <th>{{ plataforma.version }}</th>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
+  <div class="row">
+    <div class="col-sm-6">
+      <h4 style="margin: 20px 0px 20px 0px;">Plataformas</h4>
+      <hr>
+      <a class="btn btn-primary btn-sm" href="{% url 'administracion:nueva_plataforma' %}">Nuevo</a>
+      <button class="btn btn-warning btn-sm" id="erase">Eliminar</button> 
+        <div class="table-container table-responsive-sm">
+          
+          <table id="table" class="display table table-sm table-striped table-hover table-bordered">
+            <thead class="thead-dark">
+              <tr style="color: white; font-size: 18px; text-align: center;">
+                <th>Nombre</th>
+                <th>Versión</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for plataforma in plataformas %}
+                <tr style="font-style: normal;">
+                  <th>{{ plataforma.nombre }}</th>
+                  <th>{{ plataforma.version }}</th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        
+        </div>  
+    </div>
+  </div>
 {% endblock %}

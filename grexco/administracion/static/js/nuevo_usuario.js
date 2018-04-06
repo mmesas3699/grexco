@@ -83,7 +83,7 @@ $(document).ready(function () {
         } else if (option == 'soporte') {
             alert(option)
         } else if(option == 'tecnologia') {
-            alert(opcion)
+            alert(option)
         }
 
         

@@ -1,0 +1,153 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block js-css %}
+  <!-- Data tables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/sl-1.2.5/datatables.min.css"/>
+   
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/sl-1.2.5/datatables.min.js"></script>
+
+
+  <script src="{% static '/js/companies.js' %}"></script>
+  <style>
+    .table-container {
+      margin: 20px 0px 20px 0px;
+      padding: 20px;
+    }
+  
+    thead th {
+      font-size: 0.9em;
+      font-style: normal;
+    }
+
+
+    .table-container {
+      font-size: 0.9em;
+      font-style: normal;
+    }
+
+    .modal-content {
+      font-size: 0.95em;
+    }
+
+  </style>
+
+{% endblock %}
+
+{% block content %}
+  
+  <div class="row">
+    <div class="col-sm-10">
+      <h4 style="margin: 20px 0px 20px 0px;">Empresas</h4>
+      <div class="bg-light" style="padding: 7px;">
+        
+      <!-- Botón que abre el modal para crear una nueva empresa -->
+        <button id="btn-new-company" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-new-company">Nuevo</button>
+      
+      <!-- The Modal -->
+        <div class="modal fade" id="modal-new-company">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header bg-light">
+                <h5 class="modal-title">Nueva Empresa</h5>
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <div class="row">
+
+                    <div class="col-7">
+                      <form action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                          <label for="">Nit:</label>
+                          <input id="nit" type="text" class="form-control form-control-sm" placeholder="Sin caracteres especiales (/-.*). Con digito de verificación." maxlength="10">
+                        </div>
+                        <div class="form-group">
+                          <label for="">Nombre:</label>
+                          <input id="nombre" type="text" class="form-control form-control-sm" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                          <label for="">Dirección:</label>
+                          <input id="direccion" type="text" class="form-control form-control-sm" maxlength="150">
+                        </div>
+                        <div class="form-group">
+                          <label for="">Teléfono:</label>
+                          <input id="telefono" type="text" class="form-control form-control-sm" maxlength="12">
+                        </div>
+                    </div>
+                      
+                    <div class="col-5">
+                        <div class="form-group">
+                          <label for="">Plataforma:</label>
+                          <select name="plataforma" id="plataforma" class="custom-select custom-select-sm">
+                            <option value=""></option>
+                            {% for plataforma in plataformas %}
+                              <option value="{{ plataforma.id }}">{{ plataforma.nombre }} - {{ plataforma.version }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Aplicaciones:</label>
+                          <select name="aplicaciones" id="aplicaciones" class="custom-select custom-select-sm" multiple>
+                            {% for aplicacion in aplicaciones  %}
+                              <option value="{{ aplicacion.id }}">{{ aplicacion.nombre }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </form>  
+                    </div>
+
+
+                  </div>  
+                </div>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button id="btn-save" type="button" class="btn btn-primary btn-sm">Guardar</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cerrar</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      <button class="btn btn-warning btn-sm" id="erase">Eliminar</button> 
+      </div>
+
+        <div class="table-container table-responsive-sm">
+          <table id="table" class="display table table-sm table-striped table-hover table-bordered">
+            <thead class="thead-dark">
+              <tr style="color: white; font-size: 18px; text-align: center;">
+                <th>Nit</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Plataforma</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for empresa in empresas %}
+                <tr style="font-style: normal;">
+                  <th>{{ empresa.nit }}</th>
+                  <th>{{ empresa.nombre }}</th>
+                  <th>{{ empresa.direccion }}</th>
+                  <th>{{ empresa.telefono }}</th>
+                  <th>{{ empresa.plataformas_nombre }}</th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        
+        </div>  
+    </div>
+  </div>
+{% endblock %}
