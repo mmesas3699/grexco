@@ -9,160 +9,108 @@
 
 {% block content %}
 
-	<div class="contenedor-nuevo-usuario">
-		<h2>Nuevo usuario</h2>
-		<hr>
-		<div style="margin-top: 8px;"
-			<label for="">Tipo de usuario:</label>
-			<select name="" id="">
-				<option value="none">Seleccione un tipo de usuario</option>
-				<option value="cliente">Cliente</option>
-				<option value="soporte">Soporte</option>
-				<option value="tecnologia">Tecnología</option>
-			</select>
-		</div>	
-		
-		<!-- Formulario nuevo usuario: Cliente -->
-		<div id="form-cliente">
-			<div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-10" style="margin: 7px 0px 0px 0px;">
 				<div>
-					<form action="">
-						{% csrf_token %}
-						<div class="flex-row">
-							
-							<!-- Columna 1 -->
-							<div class="flex-column">
+					<h3>Nuevo usuario</h3>
+				</div>
+				<hr>
+				<div class="form-group row">
+    			<label for="" class="col-sm-2 col-form-label">Tipo de usuario:</label>
+					<div class="col-sm-4">
+      			<select name="" id="tipo-usuario" class="custom-select">
+							<option value="none">Seleccione un tipo de usuario</option>
+							<option value="cliente">Cliente</option>
+							<option value="soporte">Soporte</option>
+							<option value="tecnologia">Tecnología</option>
+						</select>
+    			</div>
+  			</div>
+		  </div>
+		</div>
 
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Empresa: </label>
-									<span>Falta el nombre de la empresa</span>
-									<input type="text" id="frm-cli-company">
-								</div>
+		<div class="row">
+			<div class="col-sm-9">
+				
+				<!-- Form container -->
+				<div class="form-container">
+					
+					<!-- CLIENTE -->	
+					<div id="form-cliente">
+						<h5>Cliente</h5>
+						<br>
+						<form id="cliente" action="">
+							{% csrf_token %}
+							<div class="form-row">
+								<div class="col-sm-8">
+									<div class="form-group row">
+					    			<label for="" class="col-sm-2 col-form-label">Empresa:</label>
+										<div class="col-sm-10">
+					      			<select name="" class="custom-select">
+												<option value="">Seleccione la empresa a la que pertenece</option>
+												
+												{% for empresa in empresas %}
+													<option value="{{ empresa.nit }}">{{ empresa.nombre }}</option>
+												{% endfor %}
 
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Dirección: </label>
-									<span>Falta la dirección</span>
-									<input type="text" id="frm-cli-address">
-								</div>
-
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Nombre:</label>
-									<span>Falta el nombre del contacto</span>
-									<input type="text" name="" id="frm-cli-contact-name">
-								</div>
-
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Nombre usuario:</label>
-    								<span>Falta el nombre de usuario</span>
-									<input type="text" name="" id="frm-cli-username">
-								</div>
-
-							</div>
-							<!-- Fin columna 1 -->
-
-							<!-- Columna 2 -->
-							<div class="flex-column">
-
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> NIT: </label>
-									<span>Falta el NIT</span>
-									<input type="text" id="frm-cli-nit">
-								</div>
-
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Teléfono: </label>
-									<span>Falta el teléfono</span>
-									<input type="text" name="" id="frm-cli-phone">
-								</div>
-
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Apellido:</label>
-									<span>Falta el apellido del contacto</span>
-									<input type="text" name="" id="frm-cli-contact-name">
-								</div>
-
-								<!-- Item -->
-								<div class="form-item">
-									<label for=""><i class="asterisco">*</i> Correo contacto:</label><span>Falta el correo de contacto</span>
-									<input type="text" name="" id="frm-cli-email">
+											</select>
+					    			</div>
+	  							</div>
 								</div>
 							</div>
-							<!-- Fin columna 2 -->
-						</div>
+							<h6>Datos del responsable</h6>
+							<div class="form-row bg-light" style="padding: 7px; border-radius: 4px;">
+								<div class="col">
+									<div class="form-group">
+										<label for="">Nombre</label>
+										<span>Falta el nombre del responsable</span>
+										<input type="text" class="form-control form-control-sm" maxlength="30">
+									</div>
+									<div class="form-group">
+										<label for="">Cargo</label>
+										<span>Falta el cargo del responsable</span>
+										<input type="text" class="form-control form-control-sm" maxlength="30">
+									</div>
+								</div>
+								<div class="col">
+									<div class="form-group">
+										<label for="">Apellido</label>
+										<span>Falta el apellido del responsable</span>
+										<input type="text" class="form-control form-control-sm" maxlength="150">
+									</div>
+									<div class="form-group">
+										<label for="">Teléfono</label>
+										<span>Falta el teléfono del responsable</span>
+										<input type="text" class="form-control form-control-sm" maxlength="15">										
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label for="" class="align-middle">Nombre de usuario</label>
+										<span>Falta el nombre de usuario</span>
+										<input type="text" class="form-control form-control-sm" maxlength="11">
+									</div>
+								</div>
+							</div>
+							<p class="requerido"> * Todos los campos son requeridos</p>
+							<button type="button" class="btn btn-primary btn-block">Guardar</button>
+						</form>
+					</div>
+					<!-- Fin CLIENTE -->
 
-						<!-- Disclaimer y botón Guardar -->
-						<p class="requerido"> * Campo requerido</p>
-
-					</form>
+					<div>
+						
+					</div>
 				</div>
+				<!-- Fin form container -->
+									
 			</div>
 		</div>
-		<!-- Fin formulario nuevo usuario: Cliente -->
 
-		<!-- Formulario nuevo usuario: Soporte -->
-		<div id="form-soporte">
-			<div>
-			  <form action="">
-			  	<div class="flex-row">
-
-					<!-- Columna 1 -->
-					<div class="flex-column">
-						
-						<!-- Item -->
-						<div class="form-item">
-						  <label for=""><i class="asterisco">*</i> Primer nombre:</label>
-						  <span>Este campo es obligatorio</span>
-						  <input type="text" name="" id="frm-sop-first-name">
-					    </div>
-						
-						<!-- Item -->
-						<div class="form-item">
-							<label for=""><i class="asterisco">*</i> Primer apellido:</label>
-							<span>Este campo es obligatorio</span>
-							<input type="text" name="" id="frm-sop-surname">
-						</div>
-
-					</div>
-
-					<!-- Columna 2 -->
-					<div class="flex-column">
-						
-						<!-- Item -->
-						<div class="form-item">
-							<label for="">Segundo nombre:</label>
-							<input type="text" name="" id="frm-sop-second-name">
-						</div>
-
-						<!-- Item -->
-						<div class="form-item">
-							<label for="">Segundo apellido:</label>
-							<input type="text" name="" id="frm-sop-second-surname">
-						</div>
-
-					</div>
-
-					<!-- Disclaimer y botón Guardar -->
-					<p class="requerido"> * Campo requerido</p>
-
-				</div>
-			  </form>
-			</div>
-		</div>
-		<!-- Fin formulario nuevo usuario: Soporte -->
-
-
-		<div id="form-tecnologia">
-			<p>Tecnología</p>
-		</div>
-
-		<input id="save-user" class="btn-save" type="submit" value="Guardar">
 	</div>
-	
+
 {% endblock %}

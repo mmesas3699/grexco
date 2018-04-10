@@ -57,6 +57,7 @@ class UsuariosGrexco(models.Model):
     es_coordinador = models.BooleanField(default=False)
     telefono = models.CharField(max_length=15, default=0)
     extension = models.IntegerField(default=0)
+    cargo = models.CharField(max_length=30)
     empresas_nit = models.ForeignKey(Empresas, on_delete=models.CASCADE)
 
     def __str__(self):

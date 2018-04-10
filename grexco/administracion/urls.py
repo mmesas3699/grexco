@@ -13,11 +13,6 @@ urlpatterns = [
         name='new-user'
     ),
     path(
-        'usuarios/nuevo/cliente',
-        views.CrearClienteView.as_view(),
-        name='nuevo_cliente'
-    ),
-    path(
         'plataformas/nuevo',
         views.CreatePlatformView.as_view(),
         name='nueva_plataforma'

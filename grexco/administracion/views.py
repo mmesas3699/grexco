@@ -40,6 +40,11 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     def test_func(self):
         return self.request.user.usuariosgrexco.tipo == 'A'
 
+    def get_context_data(self):
+        empresas = Empresas.objects.all()
+
+        return {'empresas': empresas}
+
     def post(self, request, *args, **kwargs):
         body = dict(request.POST)
 
@@ -49,14 +54,6 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             return JsonResponse({"error": "El nombre del usuario ya existe"})
         else:
             return JsonResponse({"ok": "El nombre esta disponible"})
-
-
-class CrearClienteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    login_url = 'usuarios:login'
-    template_name = 'administracion/nuevo_cliente.html'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
 
 
 class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -122,7 +119,7 @@ class CreatePlatformView(LoginRequiredMixin,
 
 class CompaniesView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
-    Vista para crear plataformas
+    Vista consultar empresas
     """
     login_url = 'usuarios:login'
     template_name = 'administracion/companies.html'
@@ -142,7 +139,10 @@ class CompaniesView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
 class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
-    Vista para crear empresas
+    Vista para crear empresas:
+    Orden:
+        1. Crear la plataforma.
+        2. Crear la empresa.
     """
     login_url = 'usuarios:login'
 
@@ -152,12 +152,15 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         data = dict(request.POST)
 
-        print(len(data['nombre'][0]))
+        for k, v in data.items():
+            if len(data[k][0]) == 0:
+                mensaje = 'El campo {} esta vacio'.format(k.capitalize())
+                return JsonResponse(
+                    {'error': mensaje}, status=400
+                )
+                break
 
-        if len(data['nombre'][0]) == 0:
-            return JsonResponse({'error': 'Hay campos vacios'}, status=400)
-
-        """
+        print(data)
         aplicaciones = data['aplicaciones[]']
         plataforma = Plataformas.objects.get(id=int(data['plataforma'][0]))
         empresa = Empresas(
@@ -167,7 +170,7 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             telefono=data['telefono'][0],
             plataformas_nombre=plataforma
         )
-
+        """
         try:
             empresa.save()
 
@@ -178,9 +181,12 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 convenio.empresas_nit = empresa
                 convenio.save()
 
-            return JsonResponse({"ok": "ok"})
+            return JsonResponse(
+                {"ok": "Los datos de guardaron correctamente."}
+            )
         except Exception as e:
             return JsonResponse(
                 {"error": e},
                 status=400
-            )"""
+            )
+        """

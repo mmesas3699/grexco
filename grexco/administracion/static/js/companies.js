@@ -68,10 +68,13 @@ $(document).ready( function ()
                 "telefono": $("#telefono").val(),
                 "plataforma": $("#plataforma").val(),
                 "aplicaciones": $("#aplicaciones").val(),
-            };   
+            };
 
-        var empresa = JSON.stringify(data);
-        console.log(empresa)
+        // var data = $('#nueva-empresa').serialize(); 
+        
+        console.log(data)
+        // var empresa = JSON.stringify(data);
+        // console.log(empresa)
         
         $.ajax(
         {
@@ -83,17 +86,17 @@ $(document).ready( function ()
         })
         .done(function(data, status)
         {
-            // alert(data["ok"], status);
-            $('.success').show();
-            $('.error').hide();
-            
+            $('#alerta-ok').text(data.responseJSON['ok'])
+            $('#alerta-err').hide();
+            $('#alerta-ok').show();
+
         })
         .fail(function(data, status)
         {
             console.log(data.responseJSON)
-            alert(data.responseJSON, toString(data.status));
-            // $('.success').hide();
-            // $('.error').show();
+            $('#alerta-err').text(data.responseJSON['error'])
+            $('#alerta-ok').hide();
+            $('#alerta-err').show();
         });
 
     });

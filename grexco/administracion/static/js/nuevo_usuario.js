@@ -21,7 +21,7 @@ $(document).ready(function () {
     Oculta o muestra los formularios dependiendo
     de la opción elegida en el 'select'.
     */
-    $('select').change(function (e) { 
+    $('select#tipo-usuario').change(function (e) { 
        e.preventDefault()
     
        var option = $(this).val()
@@ -70,7 +70,7 @@ $(document).ready(function () {
         e.preventDefault();
         $(this).prop('disabled', true);
         
-        var option = $('option:selected').val()
+        var option = $('select#tipo-usuario').val()
         
         var user = {}
 
