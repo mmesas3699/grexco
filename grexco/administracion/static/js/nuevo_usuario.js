@@ -29,22 +29,22 @@ $(document).ready(function () {
             $('#form-cliente').hide();
             $('#form-soporte').hide();
             $('#form-tecnologia').hide();
-            $('#save-user').hide();
+            $('button#guardar').hide();
        } else if (option == 'cliente') {
             $('#form-cliente').show();
             $('#form-soporte').hide();
             $('#form-tecnologia').hide();
-            $('#save-user').show();
+            $('button#guardar').show();
        } else if (option == 'soporte') {
             $('#form-soporte').show();
             $('#form-cliente').hide();
             $('#form-tecnologia').hide();
-            $('#save-user').show();
+            $('button#guardar').show();
        } else {
             $('#form-soporte').hide();
             $('#form-cliente').hide();
             $('#form-tecnologia').show();
-            $('#save-user').show();
+            $('button#guardar').show();
        };    
    });
 
@@ -65,48 +65,53 @@ $(document).ready(function () {
 
     
     // Envia los datos por ajax:
-    $("#save-user").click(function(e) 
+    $("button#guardar").click(function(e) 
     {
         e.preventDefault();
-        $(this).prop('disabled', true);
         
-        var option = $('select#tipo-usuario').val()
-        
-        var user = {}
-
-        if (option == 'cliente') {
-            user = {
-                "username" : $("#username").val(),
-                
+        if ($('select#tipo-usuario').val() == 'cliente'){
+            data = {
+                "tipo_usuario": $('select#tipo-usuario').val(),
+                "empresa": $('form#cliente  select#empresa').val(),
+                "nombre": $('form#cliente  input#nombre').val(),
+                "apellido": $('form#cliente  input#apellido').val(),
+                "cargo": $('form#cliente  input#cargo').val(),
+                "telefono": $('form#cliente  input#telefono').val(),
+                "extension": $('form#cliente  input#extension').val(),
+                "email": $('form#cliente  input#email').val(),
+                "nombre_usuario": $('form#cliente  input#nombre-usuario').val(),
             }
+
+            console.log(data)
+
+            $.ajax({
+                url: '',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                async: 'False',
+            })
+            .done(function(msj, status){
+                // console.log(msj);
+                // console.log(msj.ok);
+                $('#alerta-ok').text(msj.ok)
+                $('#alerta-err').hide();
+                $('#alerta-ok').show();
+
+            })
+            .fail(function(err, status){
+                // console.log(err);
+                $('#alerta-err').text(err.responseJSON['error'])
+                $('#alerta-ok').hide();
+                $('#alerta-err').show();
+            })
              
-        } else if (option == 'soporte') {
+        } else if (option == 'soporte'){
             alert(option)
-        } else if(option == 'tecnologia') {
+        } else if(option == 'tecnologia'){
             alert(option)
         }
 
-        
-        $.ajax(
-        {
-            url: '',
-            type: 'POST',
-            dataType: 'json',
-            data: user,
-            async: 'False',
-        })
-        .done(function(json, status)
-        {
-            alert(json["ok"], status);
-        })
-        .fail(function(e)
-        {
-            alert(e);
-        })
-        .always(function()
-        {
-            alert("complete");
-        });
     });
 
 });

@@ -61,7 +61,10 @@ class UsuariosGrexco(models.Model):
     empresas_nit = models.ForeignKey(Empresas, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "usuario: {user_id}, tipo: {tipo}".format(user_id=self.user_id.username, tipo=self.tipo)
+        return "usuario: {user_id}, tipo: {tipo}".format(
+            user_id=self.user_id.username,
+            tipo=self.tipo
+        )
 
 
 class PrioridadesRespuesta(models.Model):

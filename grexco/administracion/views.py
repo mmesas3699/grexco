@@ -9,8 +9,8 @@ from administracion.models import (UsuariosGrexco,
                                    Aplicaciones,
                                    Convenios)
 
-
 # Create your views here.
+
 
 class LoginView(TemplateView):
     """docstring for LoginView"""
@@ -29,10 +29,9 @@ class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     El orden para crear un usuario:
-        1. Plataforma
-        2. Empresa
-        3. User
-        4. UsuariosGrexco
+        1. Tener creada la: Empresa
+        2. User
+        3. UsuariosGrexco
     """
     login_url = 'usuarios:login'
     template_name = 'administracion/nuevo_usuario.html'
@@ -46,14 +45,57 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         return {'empresas': empresas}
 
     def post(self, request, *args, **kwargs):
-        body = dict(request.POST)
+        data = dict(request.POST)
 
-        user = User.objects.filter(username=body['username'][0])
+        user = User.objects.filter(username=data['nombre_usuario'][0])
+        if len(user) != 0:
+            return JsonResponse(
+                {"error": "El nombre de usuario ya existe"},
+                status=400,
+            )
 
-        if user:
-            return JsonResponse({"error": "El nombre del usuario ya existe"})
-        else:
-            return JsonResponse({"ok": "El nombre esta disponible"})
+        tipo_usuario = data['tipo_usuario'][0]
+        if tipo_usuario == 'cliente':
+            try:
+                user = User.objects.create_user(
+                    username=data['nombre'][0],
+                    password='123456',
+                    email=data['email'][0],
+                )
+            except Exception as e:
+                print(e)
+                return JsonResponse(
+                    {"error": "Ocurrio un error al crear el usuario: {}".format(e)},
+                    status=400,
+                )
+
+            empresa = Empresas.objects.get(nit=data['empresa'][0])
+            ug = UsuariosGrexco(
+                user_id=user,
+                tipo='C',
+                telefono=data['telefono'][0],
+                extension=data['extension'][0],
+                cargo=data['cargo'][0],
+                empresas_nit=empresa
+            )
+            try:
+                ug.save()
+            except Exception as e:
+                mensaje = "Ocurrio un error al guardar el tipo de usuario: {}".format(e)
+                print(e)
+                user.delete()
+                return JsonResponse(
+                    {"error": mensaje},
+                    status=400,
+                )
+
+            mensaje = "Se creo el usuario {}".format(ug.user_id.username)
+            print(mensaje)
+            return JsonResponse({'ok': mensaje})
+        elif tipo_usuario == 'soporte':
+            pass
+        elif tipo_usuario == 'tecnologia':
+            pass
 
 
 class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -160,7 +202,6 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 )
                 break
 
-        print(data)
         aplicaciones = data['aplicaciones[]']
         plataforma = Plataformas.objects.get(id=int(data['plataforma'][0]))
         empresa = Empresas(
@@ -170,7 +211,7 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             telefono=data['telefono'][0],
             plataformas_nombre=plataforma
         )
-        """
+
         try:
             empresa.save()
 
@@ -181,12 +222,6 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 convenio.empresas_nit = empresa
                 convenio.save()
 
-            return JsonResponse(
-                {"ok": "Los datos de guardaron correctamente."}
-            )
+            return JsonResponse({"ok": "Los datos de guardaron correctamente."})
         except Exception as e:
-            return JsonResponse(
-                {"error": e},
-                status=400
-            )
-        """
+            return JsonResponse({"error": e}, status=400)
