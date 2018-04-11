@@ -16,13 +16,13 @@
 /* Contenedor del formulario nuevo usuario soporte */ 
 #form-soporte {
     display: none;
-    margin-top: 25px;
+    padding-top: 10px;
 }
 
 /* Contenedor del formulario nuevo usuario tecnologia */
 #form-tecnologia {
     display: none;
-    margin-top: 25px;
+    margin-top: 10px;
 }
 
 select {

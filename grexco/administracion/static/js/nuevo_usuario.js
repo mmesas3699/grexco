@@ -3,7 +3,7 @@ $(document).ready(function () {
     /* Captura la cookie necesaria para el csrf token */    
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         
-    function csrfSafeMethod(method) {
+    function csrfSafeMethod(method){
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
@@ -21,7 +21,7 @@ $(document).ready(function () {
     Oculta o muestra los formularios dependiendo
     de la opción elegida en el 'select'.
     */
-    $('select#tipo-usuario').change(function (e) { 
+    $('select#tipo-usuario').change(function (e){ 
        e.preventDefault()
     
        var option = $(this).val()
@@ -30,23 +30,27 @@ $(document).ready(function () {
             $('#form-soporte').hide();
             $('#form-tecnologia').hide();
             $('button#guardar').hide();
+            $('div.alert').hide();
        } else if (option == 'cliente') {
             $('#form-cliente').show();
             $('#form-soporte').hide();
             $('#form-tecnologia').hide();
             $('button#guardar').show();
+            $('div.alert').hide();
        } else if (option == 'soporte') {
             $('#form-soporte').show();
             $('#form-cliente').hide();
             $('#form-tecnologia').hide();
             $('button#guardar').show();
+            $('div.alert').hide();
        } else {
             $('#form-soporte').hide();
             $('#form-cliente').hide();
             $('#form-tecnologia').show();
             $('button#guardar').show();
+            $('div.alert').hide();
        };    
-   });
+    });
 
 
    	/* 
@@ -81,37 +85,49 @@ $(document).ready(function () {
                 "email": $('form#cliente  input#email').val(),
                 "nombre_usuario": $('form#cliente  input#nombre-usuario').val(),
             }
-
-            console.log(data)
-
-            $.ajax({
-                url: '',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-                async: 'False',
-            })
-            .done(function(msj, status){
-                // console.log(msj);
-                // console.log(msj.ok);
-                $('#alerta-ok').text(msj.ok)
-                $('#alerta-err').hide();
-                $('#alerta-ok').show();
-
-            })
-            .fail(function(err, status){
-                // console.log(err);
-                $('#alerta-err').text(err.responseJSON['error'])
-                $('#alerta-ok').hide();
-                $('#alerta-err').show();
-            })
-             
-        } else if (option == 'soporte'){
-            alert(option)
-        } else if(option == 'tecnologia'){
-            alert(option)
+        } else if ($('select#tipo-usuario').val() == 'soporte'){
+            data = {
+                "tipo_usuario": $('select#tipo-usuario').val(),
+                "nombre": $('form#soporte  input#nombre').val(),
+                "apellido": $('form#soporte  input#apellido').val(),
+                "extension": $('form#soporte  input#extension').val(),
+                "email": $('form#soporte  input#email').val(),
+                "nombre_usuario": $('form#soporte  input#nombre-usuario').val(),   
+                "es-coordinador": $('form#soporte input#es-coordinador').val(),
+            }
+        } else if($('select#tipo-usuario').val() == 'tecnologia'){
+            data = {
+                "tipo_usuario": $('select#tipo-usuario').val(),
+                "nombre": $('form#tecnologia  input#nombre').val(),
+                "apellido": $('form#tecnologia  input#apellido').val(),
+                "extension": $('form#tecnologia  input#extension').val(),
+                "email": $('form#tecnologia input#email').val(),
+                "nombre_usuario": $('form#tecnologia  input#nombre-usuario').val(),   
+                "es-coordinador": $('form#tecnologia input#es-coordinador').val(),
+            }
         }
 
+        console.log(data)
+        
+        $.ajax({
+            url: '',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            async: 'False',
+        })
+        .done(function(msj, status){
+            // console.log(msj);
+            // console.log(msj.ok);
+            $('#alerta-ok').text(msj.ok)
+            $('#alerta-err').hide();
+            $('#alerta-ok').show();
+        })
+        .fail(function(err, status){
+            // console.log(err);
+            $('#alerta-err').text(err.responseJSON['error'])
+            $('#alerta-ok').hide();
+            $('#alerta-err').show();
+        })       
     });
-
 });

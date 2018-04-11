@@ -48,6 +48,7 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         data = dict(request.POST)
 
         user = User.objects.filter(username=data['nombre_usuario'][0])
+        print(user)
         if len(user) != 0:
             return JsonResponse(
                 {"error": "El nombre de usuario ya existe"},
@@ -58,9 +59,11 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         if tipo_usuario == 'cliente':
             try:
                 user = User.objects.create_user(
-                    username=data['nombre'][0],
+                    username=data['nombre_usuario'][0],
                     password='123456',
                     email=data['email'][0],
+                    first_name=data['nombre'][0],
+                    last_name=data['apellido'][0],
                 )
             except Exception as e:
                 print(e)
@@ -93,9 +96,104 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             print(mensaje)
             return JsonResponse({'ok': mensaje})
         elif tipo_usuario == 'soporte':
-            pass
+            try:
+                user = User.objects.create_user(
+                    username=data['nombre_usuario'][0],
+                    password='grexco02',
+                    email=data['email'][0],
+                    first_name=data['nombre'][0],
+                    last_name=data['apellido'][0],
+                )
+            except Exception as e:
+                print(e)
+                return JsonResponse(
+                    {"error": "Ocurrio un error al crear el usuario: {}".format(e)},
+                    status=400,
+                )
+
+            empresa = Empresas.objects.get(nit='8000497311')
+            if data['es-coordinador'][0] == 'on':
+                ug = UsuariosGrexco(
+                    user_id=user,
+                    tipo='C',
+                    extension=data['extension'][0],
+                    cargo='Soporte',
+                    empresas_nit=empresa,
+                    es_coordinador=True,
+                )
+            else:
+                ug = UsuariosGrexco(
+                    user_id=user,
+                    tipo='C',
+                    extension=data['extension'][0],
+                    cargo='Soporte',
+                    empresas_nit=empresa,
+                    es_coordinador=False,
+                )
+            try:
+                ug.save()
+            except Exception as e:
+                mensaje = "Ocurrio un error al guardar el tipo de usuario: {}".format(e)
+                print(e)
+                user.delete()
+                return JsonResponse(
+                    {"error": mensaje},
+                    status=400,
+                )
+
+            mensaje = "Se creo el usuario {}".format(ug.user_id.username)
+            print(mensaje)
+            return JsonResponse({'ok': mensaje})
         elif tipo_usuario == 'tecnologia':
-            pass
+            try:
+                user = User.objects.create_user(
+                    username=data['nombre_usuario'][0],
+                    password='grexco02',
+                    email=data['email'][0],
+                    first_name=data['nombre'][0],
+                    last_name=data['apellido'][0],
+                )
+            except Exception as e:
+                print(e)
+                return JsonResponse(
+                    {"error": "Ocurrio un error al crear el usuario: {}".format(e)},
+                    status=400,
+                )
+
+            empresa = Empresas.objects.get(nit='8000497311')
+            if data['es-coordinador'][0] == 'on':
+                ug = UsuariosGrexco(
+                    user_id=user,
+                    tipo='C',
+                    extension=data['extension'][0],
+                    cargo='Tecnologia',
+                    empresas_nit=empresa,
+                    es_coordinador=True,
+                )
+            else:
+                ug = UsuariosGrexco(
+                    user_id=user,
+                    tipo='C',
+                    extension=data['extension'][0],
+                    cargo='Soporte',
+                    empresas_nit=empresa,
+                    es_coordinador=False,
+                )
+
+            try:
+                ug.save()
+            except Exception as e:
+                mensaje = "Ocurrio un error al guardar el tipo de usuario: {}".format(e)
+                print(e)
+                user.delete()
+                return JsonResponse(
+                    {"error": mensaje},
+                    status=400,
+                )
+
+            mensaje = "Se creo el usuario {}".format(ug.user_id.username)
+            print(mensaje)
+            return JsonResponse({'ok': mensaje})
 
 
 class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
