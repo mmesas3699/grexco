@@ -7,16 +7,9 @@ app_name = 'administracion'
 urlpatterns = [
     path('login/', views.LoginView.as_view(), name='AdminLogin'),
     path('', views.DashboardView.as_view(), name='dashboard'),
-    path(
-        'usuarios/nuevo/usuario',
-        views.CreateUserView.as_view(),
-        name='new-user'
-    ),
-    path(
-        'plataformas/nuevo',
-        views.CreatePlatformView.as_view(),
-        name='nueva_plataforma'
-    ),
+    path('usuarios/nuevo/usuario/', views.CreateUserView.as_view(), name='nuevo_usuario'),
+    path('usuarios/clientes/', views.ConsultClientsView.as_view(), name='clientes'),
+    path('plataformas/nuevo', views.CreatePlatformView.as_view(), name='nueva_plataforma'),
     path(
         'plataformas/',
         views.PlatformView.as_view(),

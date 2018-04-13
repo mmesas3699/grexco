@@ -68,26 +68,50 @@ class UsuariosGrexco(models.Model):
 
 
 class PrioridadesRespuesta(models.Model):
-
-    codigo = models.CharField(max_length=1, primary_key=True)
-    descripcion = models.CharField(max_length=10)
+    codigo = models.CharField(max_length=2, primary_key=True)
+    descripcion = models.CharField(max_length=20)
 
     def __str__(self):
         return self.descripcion
 
 
 class TiemposRespuesta(models.Model):
-    prioridades_respuesta_codigo = models.ForeignKey(
+    empresa = models.ForeignKey('Empresas', on_delete=models.CASCADE)
+    prioridades_respuesta = models.ForeignKey(
         'PrioridadesRespuesta',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
-    tiempo_horas = models.IntegerField()
+    tiempo_horas = models.IntegerField(null=True)
 
     def __str__(self):
         return "Prioridad: {}, tiempo: {} horas".format(
             self.prioridades_respuesta_codigo,
             self.tiempo_horas,
         )
+
+
+class HorariosSoporte(models.Model):
+    """
+    Cuando se cree en los parametros para las empresas a las que se presta
+    soporte 24Horas va a colocar en los campos 'inicio' y 'fin' = 'null'.
+    Y para las empresas que no se preste servicio algun dia de la semana
+    sera null en los mismos campos para el dia en cuestion.
+    """
+    DIAS = (
+        ('L', 'Lunes'),
+        ('M', 'Martes'),
+        ('MI', 'Miercoles'),
+        ('J', 'Jueves'),
+        ('V', 'Viernes'),
+        ('S', 'Sabado'),
+        ('D', 'Domingo')
+    )
+
+    dia = models.IntegerField()
+    empresa = models.ForeignKey('Empresas', on_delete=models.CASCADE)
+    descripcion = models.CharField(max_length=2, null=False, choices=DIAS)
+    inicio = models.IntegerField(null=True)
+    fin = models.IntegerField(null=True)
 
 
 class Aplicaciones(models.Model):

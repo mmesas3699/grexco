@@ -1,13 +1,16 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.core import serializers
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
-from administracion.models import (UsuariosGrexco,
-                                   Empresas,
-                                   Plataformas,
-                                   Aplicaciones,
-                                   Convenios)
+from administracion.models import (
+    UsuariosGrexco,
+    Empresas,
+    Plataformas,
+    Aplicaciones,
+    Convenios
+)
 
 # Create your views here.
 
@@ -194,6 +197,27 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             mensaje = "Se creo el usuario {}".format(ug.user_id.username)
             print(mensaje)
             return JsonResponse({'ok': mensaje})
+
+
+class ConsultClientsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    login_url = 'usuarios:login'
+    template_name = 'administracion/clientes.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, *args, **kwargs):
+        clientes = UsuariosGrexco.objects.filter(tipo='C')
+        return {'clientes': clientes}
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        nombre_usuario = data['nombre_usuario'][0]
+        usr = UsuariosGrexco.objects.filter(user_id__username=nombre_usuario)
+        print(usr)
+        usuario = serializers.serialize('json', usr)
+        print(usuario)
+        return HttpResponse(usuario, content_type='application/json')
 
 
 class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

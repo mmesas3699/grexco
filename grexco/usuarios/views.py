@@ -25,4 +25,3 @@ class LoginView(TemplateView):
             return redirect('administracion:dashboard')
         else:
             return HttpResponse('Datos invalidos o usuario inactivo')
-

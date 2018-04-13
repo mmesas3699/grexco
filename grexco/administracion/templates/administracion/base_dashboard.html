@@ -27,41 +27,38 @@
 	
 </head>
 <body>
-	
-<!-- Barra de navegacion en dispositivos moviles -->
-<nav class="navbar navbar-expand-md bg-dark navbar-dark  d-block d-sm-none">
-    <div class="container-fluid">	
-    <!-- User -->
-	  <div class="dropdown">
-		<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-36 person">person</i></button>
-	    <div class="dropdown-menu">
-		  <a class="dropdown-item" href="#"><b>Usuario:</b> {{request.user.username}}</a>
-		  <a class="dropdown-item" href="{% url 'usuarios:logout'%}"><b>Cerrar sesión</b></a>
-		</div>
-	  </div>
-			
-	  <!-- Toggler/collapsibe Button -->
-	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-	      <span class="navbar-toggler-icon"></span>
-	  	</button>
-			
-		<!-- Navbar links -->
-		<div class="collapse navbar-collapse" id="collapsibleNavbar">
-		  <ul class="navbar-nav">
-		    <li class="nav-item">
-			  <a class="nav-link" href="#">Link</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="#">Link</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="#">Link</a>
-			</li> 
-		  </ul>
-		</div>
+
+<!-- Nuevo -->
+
+<nav class="navbar navbar-expand-lg bg-dark d-lg-none d-md-block d-sm-block">
+	<div class="container-fluid">	
+	    <!-- User -->
+		  <div class="dropdown">
+				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-36 person">person</i></button>
+		    <div class="dropdown-menu">
+				  <a class="dropdown-item" href="#"><b>Usuario:</b> {{request.user.username}}</a>
+			  	<a class="dropdown-item" href="{% url 'usuarios:logout'%}"><b>Cerrar sesión</b></a>
+				</div>
+		  </div>
+				
+		  <!-- Toggler/collapsibe Button -->
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		    <span><i class="material-icons">reorder</i></span>
+		  </button>
+				
+			<!-- Navbar links -->
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			  <p>links</p>
+				<button class="btn btn-block" type="button" data-toggle="collapse" data-target="#collapse-usuario">Usuario</button>
+				<div class="collapse" id="collapse-usuario">
+					usuario
+				</div>
+			</div>
 	</div> 
 </nav>
 
+<!-- Fin nuevo -->
+	
 
 <!-- Contenido -->
 <div class="container-fluid">
@@ -96,9 +93,9 @@
 				  
 				  <div class="dropdown-menu">
 				    <!-- Dropdown menu links -->
-				    <a class="dropdown-item text-center" href="{% url 'administracion:new-user' %}"><i class="material-icons icon-nuevo" style="font-size: 30px;">person_add</i></a>
+				    <a class="dropdown-item text-center" href="{% url 'administracion:nuevo_usuario' %}"><i class="material-icons icon-nuevo" style="font-size: 30px;">person_add</i></a>
 					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="#">Clientes</a>
+					<a class="dropdown-item" href="{% url 'administracion:clientes' %}">Clientes</a>
 					<a class="dropdown-item" href="#">Soporte</a>
 					<a class="dropdown-item" href="#">Tecnología</a>
 				  </div>
