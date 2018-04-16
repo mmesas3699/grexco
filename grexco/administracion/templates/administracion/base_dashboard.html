@@ -6,30 +6,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{% load static %}
 
-	<!-- JQUERY -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-  	<!-- CSS -->
-  	<link rel="stylesheet" type="text/css" href="{% static '/css/base_dashboard.css' %}">  
-	<!-- <link rel="stylesheet" type="text/css" href="static/css/dashboard.css"> -->
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static '/css/base_dashboard.css' %}">  
 
 	<!-- Google Icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> -->
 
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-	{% block js-css %}
+	{% block css %}
 
 	{% endblock %}
 	
 </head>
-<body>
+<body style="font-size: .875rem;"> 
 
-<!-- Nuevo -->
-
+<!-- Barra de navegación en mobiles -->
 <nav class="navbar navbar-expand-lg bg-dark d-lg-none d-md-block d-sm-block">
 	<div class="container-fluid">	
 	    <!-- User -->
@@ -37,7 +31,7 @@
 				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-36 person">person</i></button>
 		    <div class="dropdown-menu">
 				  <a class="dropdown-item" href="#"><b>Usuario:</b> {{request.user.username}}</a>
-			  	<a class="dropdown-item" href="{% url 'usuarios:logout'%}"><b>Cerrar sesión</b></a>
+			  	<a class="dropdown-item" href="{% url 'usuarios:logout'%}">Cerrar sesión</a>
 				</div>
 		  </div>
 				
@@ -56,82 +50,131 @@
 			</div>
 	</div> 
 </nav>
+<!-- Fin barra de navegación en mobiles -->
 
-<!-- Fin nuevo -->
-	
-
-<!-- Contenido -->
+<!-- Cuerpo -->
 <div class="container-fluid">
 		
 	<!-- Top Nav -->
-	<div class="row bg-dark d-none d-sm-block d-md-block d-xl-block top-nav clearfix p-1" style="color: white; height:50px;">
-	  <div class="col">
-				<a href="{% url 'administracion:dashboard'%}" class="float-left">
-					<img src="{% static '/img/logo.jpg' %}" alt="logo" style="width:150px";>
-				</a>
+	<div class="row bg-dark d-none d-sm-block d-md-block d-xl-block sticky-top top-nav clearfix p-1"
+			 style="color: white; height:50px;">
+		<div class="col">
+			<div>
+				<a href="/a/">Grexco</a>
+			</div>
 			<div class="dropdown">
-				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-36 person">person</i></button>
-				<div class="dropdown-menu">
-					<a class="dropdown-item" href="#"><b>Usuario:</b> {{request.user.username}}</a>
-					<a class="dropdown-item" href="{% url 'usuarios:logout'%}"><b>Cerrar sesión</b></a>
+				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-28 person">person</i></button>
+				<div class="dropdown-menu p-0">
+	     		<a class="dropdown-item" href="#">Usuario: {{ request.user.username }}</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="{% url 'usuarios:logout'%}">Cerrar sesión</a>
 				</div>
 			</div>
 		</div>
-	</div> <!-- Fin top nav -->
-
-	<!-- Cuerpo --> 
+	</div>
+	<!-- Fin top nav -->
+	
+	<!-- Contenido -->
 	<div class="row">
-						
-		<!-- Sidebar  -->  
-			<div class="col-sm-2 d-sm-none d-md-block d-none d-sm-block container-menu bg-light">
-				
+		<!-- sidebar -->
+		<div class="col-md-2 d-none d-md-block bg-light sidebar">
+			<div class="sidebar-sticky p-0 pt-2">
 				<!-- Usuarios -->
-				<div class="btn-group dropright item-menu">
-				  <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				  	<i class="material-icons menu-icons">supervisor_account</i>Usuarios
-				  </button>
-				  
-				  <div class="dropdown-menu">
-				    <!-- Dropdown menu links -->
-				    <a class="dropdown-item text-center" href="{% url 'administracion:nuevo_usuario' %}"><i class="material-icons icon-nuevo" style="font-size: 30px;">person_add</i></a>
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="{% url 'administracion:clientes' %}">Clientes</a>
-					<a class="dropdown-item" href="#">Soporte</a>
-					<a class="dropdown-item" href="#">Tecnología</a>
-				  </div>
+				<div class="m-1">
+					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold" 
+									type="button" 
+									data-toggle="collapse" 
+									data-target="#collapseUsuarios"
+									style="font-size: 15px;">
+						Usuarios
+						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
+						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
+  				</button>
+  				<div class="collapse" id="collapseUsuarios">
+	  				<div class="card card-body p-2">
+	  					<a href="{% url 'administracion:nuevo_usuario' %}" 
+	  						 class="m-auto">
+								<i class="material-icons md-24">person_add</i>
+	  					</a>
+	  					<hr class="m-1">
+	  					<div>
+	  						<ul class="list-group listas-menu">
+	  							<li class="list-group-item p-0">
+	  								<a href="{% url 'administracion:clientes' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+	  									Clientes
+	  								</a>
+	  							</li>
+	  							<li class="list-group-item p-0">
+	  								<a href="" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+	  									Soporte
+	  								</a>
+	  							</li>
+	  							<li class="list-group-item p-0">
+	  								<a href="" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+	  									Tecnología
+	  								</a>
+	  							</li>
+	  						</ul>	  						
+	  					</div>
+	  				</div>
+					</div>
 				</div>
 
 				<!-- Clientes -->
-				<div class="btn-group dropright item-menu">
-					<button style="width: 100%;" type="button" class="btn btn-light btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true", aria-expanded="false"><i class="material-icons menu-icons">work</i>Clientes </button>
-
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="{% url 'administracion:empresas' %}">Empresas</a>
-						<a class="dropdown-item" href="{% url 'administracion:plataformas' %}">Plataformas </a>
+				<div class="m-1">
+					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold" 
+									type="button" 
+									data-toggle="collapse" 
+									data-target="#collapseClientes"
+									style="font-size: 15px;">
+									Clientes
+						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
+						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
+					</button>
+					<div class="collapse" id="collapseClientes">
+						<div class="card card-body p-2">
+							<div>
+								<ul class="list-group listas-menu">
+									<li class="list-group-item p-0">
+										<a href="{% url 'administracion:nueva_plataforma' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+											Plataformas
+										</a>
+									</li>
+									<li class="list-group-item p-0">
+										<a href="{% url 'administracion:empresas' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+											Empresas
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>							
-			
-			</div> <!-- Fin Sidebar -->
-			
+				</div>
 
-		<!-- Work area -->
-			<div class="col-sm-10">
-				{% block content %}
-
-				{% endblock %}
-			
-			</div> <!-- Fin work area -->
+			</div>			
+		</div>			
+		<!-- Fin sidebar -->
 		
-	</div> <!-- Fin cuerpo -->
-
-</div> <!-- Fin contenido -->
-
-<!-- Footer -->
-<div class="row">
-	<div class="col">
-		<p>footer</p>
+		<main class="col-md-9">
+			{% block content %}
+			{% endblock %}
+		</main>
+	
 	</div>
-</div> 
-		
+	<!-- Fin contenido -->
+
+</div>
+<!-- Fin cuerpo -->
+
+<!-- JQUERY -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="{% static '/js/base_dashboard.js' %}"></script>
+
+	{% block js %}
+
+	{% endblock %}
+
 </body>
 </html>

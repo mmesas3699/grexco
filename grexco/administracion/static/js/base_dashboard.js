@@ -1,11 +1,11 @@
 $(document).ready(function (){
-    $(".dropbtn").click(function(){
-        $(this).siblings().toggle();
+
+    $(".menu-btn").click(function(){
         $(this).toggleClass("active");
     });
 
-    $( function()
-    {
-        $( "#menu" ).menu();
+    $(".menu-btn").click(function(event) {
+		$(this).children('i.arrow').toggle();
     });
+
 });

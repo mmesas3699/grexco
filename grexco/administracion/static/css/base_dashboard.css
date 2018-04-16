@@ -1,6 +1,41 @@
+body {
+  font-size: .875rem;
+}
 
-.material-icons.md-36.person {
-	font-size: 36px;
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* Behind the navbar */
+  padding: 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 48px; /* Height of navbar */
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+
+.material-icons.md-22 {
+	font-size: 22px;
+}
+
+.material-icons.md-24 {
+	font-size: 24px;
+}
+
+ul.listas-menu li:hover {
+	background-color: #f0f0f0;
+}
+
+.material-icons.person {
 	color: white;
 	vertical-align: middle;
 }
