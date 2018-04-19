@@ -136,7 +136,7 @@
 							<div>
 								<ul class="list-group listas-menu">
 									<li class="list-group-item p-0">
-										<a href="{% url 'administracion:nueva_plataforma' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+										<a href="{% url 'administracion:plataformas' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
 											Plataformas
 										</a>
 									</li>
@@ -156,8 +156,11 @@
 		<!-- Fin sidebar -->
 		
 		<main class="col-md-9">
-			{% block content %}
-			{% endblock %}
+			<div class="container-fluid">
+				{% block content %}
+				
+				{% endblock %}
+			</div>
 		</main>
 	
 	</div>

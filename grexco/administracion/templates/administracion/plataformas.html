@@ -1,0 +1,70 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+  <!-- Data tables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" 
+          src="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.js"></script>
+  <script src="{% static '/js/plataformas.js' %}"></script>
+{% endblock%}
+
+{% block content %}
+  {% csrf_token %}
+  <div class="row ">
+    <div class="col-sm-7 pt-1 pl-3">
+      <h4 class="m-2">Plataformas</h4>
+      <hr class="m-1 w-100">
+
+      <!-- Barra de opciones -->
+      <div class="bg-light rounded" style="padding: 7px;">
+        <a class="btn btn-primary btn-sm" href="{% url 'administracion:nueva_plataforma' %}">Nuevo</a>
+        <button class="btn btn-warning btn-sm" id="eliminar">Eliminar</button> 
+      </div>
+      <!-- Fin Barra de opciones -->
+
+      <!-- Alertas -->
+      <div id='alerta-ok' class="alert alert-warning alert-dismissible fade show m-2" role="alert" style="display: none;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div id='alerta-error' class="alert alert-danger alert-dismissible fade show m-2" role="alert" style="display: none;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Fin Alertas -->
+
+      <!-- Tabla -->
+      <div class="table-responsive-sm mt-5">
+        <table id="tabla-plataformas" class="display table table-sm table-striped table-hover table-bordered">
+          <thead class="thead-dark">
+            <tr class="text-center">
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Versión</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for plataforma in plataformas %}
+              <tr>
+                <td>{{ plataforma.id }}</td>
+                <td>{{ plataforma.nombre }}</td>
+                <td>{{ plataforma.version }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- Fin Tabla -->
+    
+    </div>
+  </div>
+{% endblock %}

@@ -5,11 +5,25 @@ from django.contrib.auth.models import User
 
 
 class Plataformas(models.Model):
+    id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=30, null=False, blank=False)
     version = models.CharField(max_length=20, null=False, blank=False)
 
     def __str__(self):
-        return " {}:{} ".format(self.nombre, self.version)
+        return "{}:{}".format(self.nombre, self.version)
+
+
+class Aplicaciones(models.Model):
+    id = models.SmallIntegerField(primary_key=True)
+    nombre = models.CharField(
+        max_length=30,
+        blank=False,
+        unique=True,
+        null=False
+    )
+
+    def __str__(self):
+        return '{}'.format(self.nombre)
 
 
 class Empresas(models.Model):
@@ -17,7 +31,7 @@ class Empresas(models.Model):
     nombre = models.CharField(max_length=100, blank=False, null=False)
     direccion = models.CharField(max_length=150, blank=False, null=False)
     telefono = models.CharField(max_length=12, null=False)
-    plataformas_nombre = models.ForeignKey(Plataformas, on_delete=models.CASCADE)
+    plataforma = models.ForeignKey(Plataformas, on_delete=models.PROTECT)
 
     def __str__(self):
         return 'Empresa: %s' % (self.nombre)
@@ -52,13 +66,13 @@ class UsuariosGrexco(models.Model):
         ('A', 'Administrador')
     )
 
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(User, on_delete=models.PROTECT)
     tipo = models.CharField(max_length=1, null=False, choices=TIPOS_DE_USUARIO)
     es_coordinador = models.BooleanField(default=False)
     telefono = models.CharField(max_length=15, default=0)
     extension = models.IntegerField(default=0)
     cargo = models.CharField(max_length=30)
-    empresas_nit = models.ForeignKey(Empresas, on_delete=models.CASCADE)
+    empresa = models.ForeignKey(Empresas, on_delete=models.PROTECT)
 
     def __str__(self):
         return "usuario: {user_id}, tipo: {tipo}".format(
@@ -76,11 +90,8 @@ class PrioridadesRespuesta(models.Model):
 
 
 class TiemposRespuesta(models.Model):
-    empresa = models.ForeignKey('Empresas', on_delete=models.CASCADE)
-    prioridades_respuesta = models.ForeignKey(
-        'PrioridadesRespuesta',
-        on_delete=models.CASCADE,
-    )
+    empresa = models.ForeignKey('Empresas', on_delete=models.PROTECT)
+    prioridades_respuesta = models.ForeignKey('PrioridadesRespuesta', on_delete=models.PROTECT)
     tiempo_horas = models.IntegerField(null=True)
 
     def __str__(self):
@@ -92,8 +103,8 @@ class TiemposRespuesta(models.Model):
 
 class HorariosSoporte(models.Model):
     """
-    Cuando se cree en los parametros para las empresas a las que se presta
-    soporte 24Horas va a colocar en los campos 'inicio' y 'fin' = 'null'.
+    Cuando se cree en los parametros una empresas a la que se prestará
+    soporte 24Horas va a colocar en los campos 'inicio' y 'fin' = '0'.
     Y para las empresas que no se preste servicio algun dia de la semana
     sera null en los mismos campos para el dia en cuestion.
     """
@@ -107,35 +118,28 @@ class HorariosSoporte(models.Model):
         ('D', 'Domingo')
     )
 
+    empresa = models.ForeignKey('Empresas', on_delete=models.PROTECT)
     dia = models.IntegerField()
-    empresa = models.ForeignKey('Empresas', on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=2, null=False, choices=DIAS)
     inicio = models.IntegerField(null=True)
     fin = models.IntegerField(null=True)
 
 
-class Aplicaciones(models.Model):
-    nombre = models.CharField(max_length=30,
-                              blank=False,
-                              unique=True,
-                              null=False)
 
-    def __str__(self):
-        return '{}'.format(self.nombre)
 
 
 class Reportes(models.Model):
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40, blank=False)
-    aplicaciones_id = models.ForeignKey(Aplicaciones,
-                                        on_delete=models.CASCADE)
+    aplicacion = models.ForeignKey('Aplicaciones', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.nombre
 
 
 class Convenios(models.Model):
-    aplicaciones_id = models.ForeignKey(Aplicaciones, on_delete=models.CASCADE)
-    empresas_nit = models.ForeignKey(Empresas, on_delete=models.CASCADE)
+    aplicacion = models.ForeignKey(Aplicaciones, on_delete=models.PROTECT)
+    empresa = models.ForeignKey(Empresas, on_delete=models.PROTECT)
 
     def __str__(self):
         return "Empresa: {}, Aplicacion: {}".format(

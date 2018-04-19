@@ -1,0 +1,54 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="{% static '/css/nueva_plataforma.css' %}"> 
+{% endblock %}
+
+{% block js %}
+	<script src="{% static '/js/nueva_plataforma.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-6 pt-1 pl-3">
+    <h4 class="m-2">Nueva Plataforma</h4>
+    <hr class="m-1 w-100">
+    
+    <!-- Barra de opciones -->
+    <div class="bg-light rounded" style="padding: 7px;">
+      <a href="{% url 'administracion:plataformas' %}" class="btn btn-sm btn-dark p-0" role="button" data-toggle="tooltip" data-placement="top" title="Atrás">
+        <i class="material-icons align-middle md-22 pl-2 pr-2">arrow_back</i>
+      </a>
+    </div>
+    <!-- Fin Barra de opciones  -->
+
+    <!-- Contenedor del formulario -->
+    <div class="form-container mt-4">
+      <!-- Formulario -->
+      <form action="" class="p-3">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Nombre:</label>
+          <input type="text" class="form-control" id="nombre" placeholder="En MAYUSCULAS, sin caracteres especiales (/*._)" maxlength=30>
+          <span>Falta el nombre</span>             
+        </div>
+        <div class="form-group">
+          <label for="version">Version:</label>
+          <input type="text" class="form-control" id="version" maxlength=20>
+          <span>Falta la versión</span>
+        </div>
+        <p class="disclaimer">Todos los campos son obligatorios</p>
+        <p class="success" style="display: none;">Los datos se guardaron correctamente</p>
+        <p class="error" style="display: none;"></p>
+        <button type="submit" id="save" class="btn btn-primary btn-block">Guardar</button>
+      </form>
+      <!-- Fin formulario -->
+    </div>  
+  
+  </div>    
+</div>
+
+{% endblock %}

@@ -1,7 +1,6 @@
-
-$(document).ready( function ()
-{
-	/* Captura la cookie necesaria para el csrf token */    
+$(document).ready(function () {
+   
+    /* Captura la cookie necesaria para el csrf token */    
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
         
     function csrfSafeMethod(method) {
@@ -17,31 +16,34 @@ $(document).ready( function ()
         }
     });
 
-    /* Da las propiedades de DataTables a la tabla seleccionada */
-    $('#table').DataTable(
-    {
-    	paging: false,
-    	select: true,
-    	"language":
-    	{
-  			"search": "Buscar",
-  			"info": "",
- 		}
+   	/* 
+	Verifica que los campos del formulario NO
+	estén vacios.	
+	*/ 
+	$("input").focusout(function() {
+        var valor = $(this).val();
+        if (valor.length == 0) {
+            $(this).siblings('span').show();
+        }
+        else {
+            $(this).siblings('span').hide();
+        };
     });
 
-
+    
     // Envia los datos por ajax:
-    $("#erase").click(function(e) 
+    $("#save").click(function(e) 
     {
         e.preventDefault();
        
-        var data = $("selected").text()
-
-        console.log(data)
+        var platform = {
+            'nombre': $('input#nombre').val(),
+            'version': $('input#version').val(),
+        }
         
         $.ajax(
         {
-            url: '/a/plataformas/eliminar',
+            url: '',
             type: 'POST',
             dataType: 'json',
             data: platform,
@@ -50,6 +52,7 @@ $(document).ready( function ()
         .done(function(data, status)
         {
             // alert(data["ok"], status);
+            $('.success').text(data.ok);  
             $('.success').show();
             $('.error').hide();
             
@@ -58,6 +61,7 @@ $(document).ready( function ()
         {
             // alert(data.response, status);
             $('.success').hide();
+            $('.error').text(data.responseJSON['error']);
             $('.error').show();
         })
     });

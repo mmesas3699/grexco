@@ -1,17 +1,10 @@
 .form-container {
-    margin: 20px;
-    background-color: white;
-    padding: 10px;
     border-radius: 4px;
     border: 1px solid lightgrey;
 }
 
-hr {
-    width: 100%;
-}
-
-.form {
-    margin-top: 50px;
+.md-22 {
+    font-size: 22px;
 }
 
 .disclaimer {
@@ -48,4 +41,3 @@ span {
     box-sizing: border-box;
 
 }
-

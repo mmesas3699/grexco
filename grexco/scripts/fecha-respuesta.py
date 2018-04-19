@@ -1,3 +1,7 @@
+
+fecha_respuesta(hora_caso)
+
+
 import datetime
 
 un_dia = datetime.timedelta(days=1)
