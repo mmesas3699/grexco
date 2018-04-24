@@ -31,7 +31,7 @@
 				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-36 person">person</i></button>
 		    <div class="dropdown-menu">
 				  <a class="dropdown-item" href="#"><b>Usuario:</b> {{request.user.username}}</a>
-			  	<a class="dropdown-item" href="{% url 'usuarios:logout'%}">Cerrar sesión</a>
+			  	<a class="dropdown-item" href="{% url 'administracion:logout'%}">Cerrar sesión</a>
 				</div>
 		  </div>
 				
@@ -67,7 +67,7 @@
 				<div class="dropdown-menu p-0">
 	     		<a class="dropdown-item" href="#">Usuario: {{ request.user.username }}</a>
 					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="{% url 'usuarios:logout'%}">Cerrar sesión</a>
+					<a class="dropdown-item" href="{% url 'administracion:logout'%}">Cerrar sesión</a>
 				</div>
 			</div>
 		</div>
@@ -82,10 +82,10 @@
 				<!-- Usuarios -->
 				<div class="m-1">
 					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold" 
-									type="button" 
-									data-toggle="collapse" 
-									data-target="#collapseUsuarios"
-									style="font-size: 15px;">
+							type="button" 
+							data-toggle="collapse" 
+							data-target="#collapseUsuarios"
+							style="font-size: 15px;">
 						Usuarios
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
@@ -151,6 +151,37 @@
 					</div>
 				</div>
 
+				<!-- Aplicaciones -->
+				<div class="m-1">
+					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold"
+						type="button"
+									data-toggle="collapse" 
+									data-target="#collapseAplicaciones"
+									style="font-size: 15px;">
+									Aplicaciones
+						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
+						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
+					</button>
+					<div class="collapse" id="collapseAplicaciones">
+						<div class="card card-body p-2">
+							<div>
+								<ul class="list-group listas-menu">
+									<li class="list-group-item p-0">
+										<a href="{% url 'administracion:aplicaciones' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+											Aplicaciones
+										</a>
+									</li>
+									<li class="list-group-item p-0">
+										<a href="" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+											Reportes
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>			
 		</div>			
 		<!-- Fin sidebar -->
@@ -171,6 +202,7 @@
 
 <!-- JQUERY -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Bootstrap -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="{% static '/js/base_dashboard.js' %}"></script>

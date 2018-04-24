@@ -19,7 +19,7 @@ class LoginView(TemplateView):
         # print(pwd)
         user = authenticate(request, username=usrname, password=pwd)
         # print(user)
-        
+
         if user is not None:
             login(request, user)
             return redirect('administracion:dashboard')

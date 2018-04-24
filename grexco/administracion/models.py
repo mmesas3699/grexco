@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Plataformas(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.SmallIntegerField(primary_key=True)
     nombre = models.CharField(max_length=30, null=False, blank=False)
     version = models.CharField(max_length=20, null=False, blank=False)
 
@@ -19,7 +19,7 @@ class Aplicaciones(models.Model):
         max_length=30,
         blank=False,
         unique=True,
-        null=False
+        null=False,
     )
 
     def __str__(self):
@@ -123,9 +123,6 @@ class HorariosSoporte(models.Model):
     descripcion = models.CharField(max_length=2, null=False, choices=DIAS)
     inicio = models.IntegerField(null=True)
     fin = models.IntegerField(null=True)
-
-
-
 
 
 class Reportes(models.Model):

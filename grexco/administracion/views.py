@@ -1,8 +1,12 @@
-from django.http import JsonResponse, HttpResponse
-from django.core import serializers
+from django.contrib.auth import authenticate, login, logout
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
+from django.http import JsonResponse, HttpResponse
+from django.core import serializers
 from django.contrib.auth.models import User
+import pyexcel as pe
+
 
 from administracion.models import (
     UsuariosGrexco,
@@ -14,12 +18,218 @@ from administracion.models import (
 
 # Create your views here.
 
+def genera_id(x):
+    """
+    Recibe como parametro un Queryset de:
+    Modelo.objects.last() 
+    """
+    if x is None:
+        return 0
+    else:
+        return x.id + 1
+
 
 class LoginView(TemplateView):
     """docstring for LoginView"""
     template_name = 'administracion/login.html'
 
+    def post(self, request):
+        data = dict(request.POST)
+        # print(data)
+        usuario = authenticate(
+            request,
+            username=data['nombre'][0],
+            password=data['contraseña'][0])
+        print(usuario)
+        if usuario is not None:
+            print('ok')
+            login(request, usuario)
+            # return redirect('administracion:dashboard')
+            return JsonResponse({'ok': 'ok'}, status=200)
+        else:
+            print('error')
+            return JsonResponse({'error' : 'Datos invalidos o usuario inactivo'}, status=400)
 
+
+# ********************
+# *   Plataformas    *
+# ********************
+class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar plataformas
+    """
+    login_url = 'administracion:admin_login'
+    template_name = 'administracion/plataformas.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, *args, **kwargs):
+        plataforma = Plataformas.objects.all()
+
+        return {'plataformas': plataforma}
+
+
+class CreatePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para crear plataformas
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/nueva_plataforma.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        nombre = data['nombre'][0]
+        version = data['version'][0]
+
+        if len(nombre) == 0 or len(version) == 0:
+            return JsonResponse(
+                {"error": "Los campos estan vacios"},
+                status=400
+            )
+
+        plataforma = Plataformas.objects.filter(
+            nombre=nombre.upper(),
+            version=version.upper()
+        )
+
+        if plataforma.exists():
+            return JsonResponse({"error": "Los datos ya existen"}, status=400)
+        else:
+            id = Plataformas.objects.values('id').last()['id'] + 1
+            # print(id)
+            plt = Plataformas(id=id, nombre=nombre.upper(), version=version)
+            # print(plt)
+            try:
+                plt.save()
+            except Exception as e:
+                mensaje = "Ocurrio un error al grabar los datos: {}".format(e)
+                return JsonResponse(
+                    {"error": mensaje},
+                    status=400
+                )
+
+            mensaje = "Se guardo la plataforma: {}".format(plt)
+            return JsonResponse({"ok": mensaje})
+
+
+class DeletePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para eliminar plataformas
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/companies.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kargs):
+        data = dict(request.POST)
+        # print(data)
+        for k, v in data.items():
+            plataforma = Plataformas.objects.get(id=int(data[k][0]))
+            if plataforma:
+                from django.db.models.deletion import ProtectedError
+                # print(plataforma.nombre)
+                try:
+                    plataforma.delete()
+                except ProtectedError as e:
+                    empresa = Empresas.objects.get(plataforma__id=plataforma.id)
+                    msj = "No es posible eliminar: {}-{}. Pertenece a la empresa: {}".format(
+                        plataforma.nombre,
+                        plataforma.version,
+                        empresa.nombre,
+                    )
+                    return JsonResponse({'error': msj}, status=400)
+
+        mensaje = 'Se eliminó la plataforma: {}'.format(plataforma.nombre)
+        return JsonResponse({'ok': mensaje}, status=200)
+
+
+# *****************
+# *  Aplicaciones *
+# *****************
+class AplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar las aplicaciones
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/aplicaciones.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, *args, **kwargs):
+        aplicaciones = Aplicaciones.objects.all()
+        return {'aplicaciones': aplicaciones}
+
+
+class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para crear Aplicaciones
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        """
+        Si POST trae datos se crea la aplicacion por formulario, si no
+        entonces, por archivo Excel.
+        """
+        data = request.POST
+        if len(data) == 1:
+            x = Aplicaciones.objects.last()
+            id = genera_id(x)
+            nombre = data['nombre']
+            app = Aplicaciones(id=id, nombre=nombre)
+
+            if Aplicaciones.objects.filter(nombre=nombre).exists():
+                return JsonResponse({'error': 'La aplicación: {}. Ya existe.'.format(nombre)}, status=400)
+
+            try:
+                app.save()
+            except Exception as e:
+                return JsonResponse({'error': 'Ocurrio un error {}'.format(e)}, status=400)
+
+            return JsonResponse({'ok': 'Se creo la aplicación: {}'.format(nombre)}, status=200)
+        else:
+            file = request.FILES['archivo']
+            file_type = file.name.split('.')[-1]
+            cuenta_guardados = 0
+            no_grabados = []
+            data = pe.iget_records(file_stream=file, file_type=file_type)
+            n_columnas = pe.get_sheet(file_stream=file, file_type=file_type).number_of_rows() - 1
+            for row in data:
+                x = Aplicaciones.objects.last()
+                id = genera_id(x)
+                nombre = row['Aplicaciones']
+                if Aplicaciones.objects.filter(nombre=nombre).exists():
+                    msj = {'err': 'Ya existe', 'app': nombre}
+                    no_grabados.append(msj)
+                else:
+                    app = Aplicaciones(id=id, nombre=nombre)
+                    try:
+                        app.save()
+                    except Exception as e:
+                        return JsonResponse({'error': 'Ocurrio un error: {}'.format(e)}, status=400)
+
+                    cuenta_guardados = cuenta_guardados + 1
+
+            if cuenta_guardados == n_columnas:
+                return JsonResponse({'ok': 'Se grabaron todas las Aplicaciones'}, status=200)
+            else:
+                respuesta = "Se grabaron {} de {}".format(cuenta_guardados, n_columnas)
+                return JsonResponse({'error': {'respuesta': respuesta, 'aplicaciones': no_grabados}}, safe=False, status=400)
+
+
+# ****************
+# *  Dahsboard   *
+# ****************
 class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """docstring for DashboardView"""
     login_url = 'usuarios:login'
@@ -219,102 +429,6 @@ class ConsultClientsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         print(usuario)
         return HttpResponse(usuario, content_type='application/json')
 
-
-class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para consultar plataformas
-    """
-    login_url = 'usuarios:login'
-    template_name = 'administracion/plataformas.html'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def get_context_data(self, *args, **kwargs):
-        plataforma = Plataformas.objects.all()
-
-        return {'plataformas': plataforma}
-
-
-class CreatePlatformView(LoginRequiredMixin,
-                         UserPassesTestMixin,
-                         TemplateView):
-    """
-    Vista para crear plataformas
-    """
-    login_url = 'usuarios:login'
-    template_name = 'administracion/nueva_plataforma.html'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def post(self, request, *args, **kwargs):
-        data = dict(request.POST)
-        nombre = data['nombre'][0]
-        version = data['version'][0]
-
-        if len(nombre) == 0 or len(version) == 0:
-            return JsonResponse(
-                {"error": "Los campos estan vacios"},
-                status=400
-            )
-
-        plataforma = Plataformas.objects.filter(
-            nombre=nombre.upper(),
-            version=version.upper()
-        )
-
-        if plataforma.exists():
-            return JsonResponse({"error": "Los datos ya existen"}, status=400)
-        else:
-            id = Plataformas.objects.values('id').last()['id'] + 1
-            # print(id)
-            plt = Plataformas(id=id, nombre=nombre.upper(), version=version)
-            # print(plt)
-            try:
-                plt.save()
-            except Exception as e:
-                mensaje = "Ocurrio un error al grabar los datos: {}".format(e)
-                return JsonResponse(
-                    {"error": mensaje},
-                    status=400
-                )
-
-            mensaje = "Se guardo la plataforma: {}".format(plt)
-            return JsonResponse({"ok": mensaje})
-
-
-class DeletePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para eliminar plataformas
-    """
-    login_url = 'usuarios:login'
-    template_name = 'administracion/companies.html'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def post(self, request, *args, **kargs):
-        data = dict(request.POST)
-        # print(data)
-        for k, v in data.items():
-            plataforma = Plataformas.objects.get(id=int(data[k][0]))
-            if plataforma:
-                from django.db.models.deletion import ProtectedError
-                # print(plataforma.nombre)
-                try:
-                    plataforma.delete()
-                except ProtectedError as e:
-                    empresa = Empresas.objects.get(plataforma__id=plataforma.id)
-                    msj = "No es posible eliminar: {}-{}. Pertenece a la empresa: {}".format(
-                        plataforma.nombre,
-                        plataforma.version,
-                        empresa.nombre,
-                    )
-                    return JsonResponse({'error': msj}, status=400)
-
-        mensaje = 'Se eliminó la plataforma: {}'.format(plataforma.nombre)
-        return JsonResponse({'ok': mensaje}, status=200)
 
 
 class CompaniesView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):

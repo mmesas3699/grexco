@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Administracion | Login</title>
+
+	<!-- Google Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<style>
+		body {
+			padding-top: 45px;
+			background-color: DimGray;
+		}
+
+		form {
+			background-color: white;
+			border-radius: 4px;
+		}
+
+	</style>
+</head>
+<body class="d-flex justify-content-center">
+{% csrf_token %}
+	<form action="" class="w-100" style="max-width: 420px;">
+		<div class="text-center mb-4">
+			<div class="mt-5">
+				<img src="{% static '/img/logo.jpg' %}" alt="" width="70%">
+				<h3 class="mt-4">Iniciar sesión</h3>
+			</div>
+			<div class="form-group mt-3 pl-5 pr-5">
+				<input type="text" id="usuario" class="form-control" placeholder="Usuario" required autofocus>
+				<input type="password" id="contraseña" class="form-control" placeholder="Contraseña" required>
+				<div class="alert alert-danger p-1 mt-2" role="alert" style="display: none;">
+  					Datos incorrectos o usuario inactivo
+				</div>
+				<button id="ingresar" type="submit" class="btn btn-primary btn-block mt-3">Ingresar</button>
+			</div>
+			<p class="mt-5 mb-3 text-muted">&copy; Grexco S.A.S 2018</p>
+		</div>
+	</form>
+
+<!-- JQUERY -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="{% static '/js/empleados-login.js' %}"></script>
+</body>
+</html>
