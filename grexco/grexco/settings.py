@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'landing.apps.LandingConfig',
     'usuarios.apps.UsuariosConfig',
     'administracion.apps.AdministracionConfig',
+    'tecnologia.apps.TecnologiaConfig',
 ]
 
 MIDDLEWARE = [

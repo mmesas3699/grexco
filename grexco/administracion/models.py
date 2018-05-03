@@ -126,7 +126,7 @@ class HorariosSoporte(models.Model):
 
 
 class Reportes(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=40, blank=False)
     aplicacion = models.ForeignKey('Aplicaciones', on_delete=models.PROTECT)
 
@@ -135,11 +135,11 @@ class Reportes(models.Model):
 
 
 class Convenios(models.Model):
-    aplicacion = models.ForeignKey(Aplicaciones, on_delete=models.PROTECT)
-    empresa = models.ForeignKey(Empresas, on_delete=models.PROTECT)
+    aplicacion = models.ForeignKey(Aplicaciones, related_name='convenios', on_delete=models.PROTECT)
+    empresa = models.ForeignKey(Empresas, related_name='convenios', on_delete=models.PROTECT)
 
     def __str__(self):
         return "Empresa: {}, Aplicacion: {}".format(
-            self.empresas_nit.nombre,
-            self.aplicaciones_id.nombre
+            self.empresa,
+            self.aplicacion
         )

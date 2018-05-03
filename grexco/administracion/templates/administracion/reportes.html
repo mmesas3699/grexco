@@ -1,0 +1,75 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+  <!-- Data tables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+  <style>
+  /* Tooltip Formato archivo Excel */
+  .material-icons.md-24.orange {
+    color: DarkOrange;
+    font-size: 24px;
+  }
+  
+  /* Tooltip Formato archivo Excel on Hover; */ 
+  .material-icons.md-24.orange:hover {
+  color: GoldenRod; 
+  }
+  </style>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+
+  {# <script src="{% static '/js/aplicaciones.js' %}"></script> #}
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="row">
+  <div class="col-sm-7 pt-1 pl-3">
+    <h4 class="m-2">Aplicaciones</h4>
+    <hr class="m-1 w-100">
+
+    <!-- Barra de opciones -->
+    <div class="bg-light rounded" style="padding: 7px;">
+      <button class="btn btn-primary btn-sm" id="nuevo">Nuevo</button>
+      <button class="btn btn-warning btn-sm" id="eliminar">Eliminar</button> 
+    </div>
+    <!-- Fin Barra de opciones -->
+
+    <!-- Alertas  -->
+    <div class="alert alert-success mt-1 p-2" role="alert" style="display: none;" id="alertaEliminarOk"> </div>
+    <div class="alert alert-danger mt-1 p-2" role="alert" style="display: none;" id="alertaEliminarError"> </div>
+    <!-- Fin Alertas -->
+
+    <!-- Tabla aplicaciones -->
+    <div class="table-responsive-sm mt-5">
+      <table id="tabla-aplicaciones" class="display table table-sm table-hover table-striped table-bordered">
+        <thead>
+          <tr class="text-center">
+            <th>ID</th>
+            <th>NOMBRE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for aplicacion in aplicaciones %}
+            <tr>
+              <td>{{ aplicacion.id }}</td>
+              <td>{{ aplicacion.nombre }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- Fin Tabla aplicaciones -->
+  </div>
+</div>
+{% endblock %}

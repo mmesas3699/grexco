@@ -5,14 +5,22 @@
 {% block css %}
   <!-- Data tables -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
   <!-- Font awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  
   <style>
+
+  /* Tooltip Formato archivo Excel */
   .material-icons.md-24.orange {
     color: DarkOrange;
     font-size: 24px;
   }
   
+  /* Tooltip Formato archivo Excel on Hover; */ 
   .material-icons.md-24.orange:hover {
   color: GoldenRod; 
   }
@@ -21,13 +29,14 @@
 {% endblock %}
 
 {% block js %}
-  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+
   <script src="{% static '/js/aplicaciones.js' %}"></script>
 {% endblock%}
 
 {% block content %}
   {% csrf_token %}
-  <div class="row ">
+  <div class="row">
     <div class="col-sm-7 pt-1 pl-3">
       <h4 class="m-2">Aplicaciones</h4>
       <hr class="m-1 w-100">
@@ -40,12 +49,14 @@
       <!-- Fin Barra de opciones -->
 
       <!-- Alerta  -->
+      <div class="alert alert-success mt-1 p-2" role="alert" style="display: none;" id="alertaEliminarOk"> </div>
+      <div class="alert alert-danger mt-1 p-2" role="alert" style="display: none;" id="alertaEliminarError"> </div>
       <!-- Fin Alertas -->
 
-      <!-- Tabla -->
+      <!-- Tabla aplicaciones -->
       <div class="table-responsive-sm mt-5">
-        <table id="tabla-aplicaciones" class="display table table-sm table-striped table-hover table-bordered">
-          <thead class="">
+        <table id="tabla-aplicaciones" class="display table table-sm table-hover table-striped table-bordered">
+          <thead>
             <tr class="text-center">
               <th>ID</th>
               <th>NOMBRE</th>
@@ -61,7 +72,7 @@
           </tbody>
         </table>
       </div>
-      <!-- Fin Tabla -->
+      <!-- Fin Tabla aplicaciones -->
 
       <!-- Modal Nueva Aplicación -->
       <div class="modal" tabindex="-1" id="modalNuevaAplicacion">
@@ -92,8 +103,8 @@
                 </div>
               </div>
               
+              <!-- Seleccionar archivo Excel -->
               <div class="row" id="seleccionarArchivo" style="display: none;">
-                <!-- Seleccionar archivo Excel -->
                 <div class="col-sm-10">
                   <input type="file" class="btn-sm mb-1" id="inpFile" form="frmNuevaAplicacion"> 
                 </div>
@@ -130,10 +141,13 @@
                           </tr>
                         </tbody>
                       </table>
+                      <!-- Fin tabla de ejemplo -->
                     </div>
                   </div>
                 </div>
+                <!-- Fin Tooltip Formato archivo Excel -->
               </div>
+              <!-- Fin seleccionar archivo de Excel -->
               
               <!-- modal footer -->
               <div class="modal-footer p-0 pt-2">
@@ -143,6 +157,65 @@
           </div>
         </div>
       </div>
+      <!-- Fin modal nueva aplicación -->
+      
       <!-- Modal detalle aplicación -->
+      <div class="modal" tabindex="-1" role="dialog" id="modalConsultarAplicacion">
+        <div class="modal-dialog modal-lg" role="document">
+          <!-- Modal content -->
+          <div class="modal-content pt-1 pl-2 pr-2 pb-1">
+            <!-- Modal header -->
+            <div class="modal-header p-1">
+              <h5 class="modal-title" id="tltDetalleAplicacion"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+              <p id="versionActual"></p>
+              <!-- Tabs versions-convenios -->
+              <ul class="nav nav-tabs">
+                <li class="active nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#versiones">Versiones</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#convenios">Convenios</a>
+                </li>
+              </ul>
+              <!-- Contenido tabs versiones-convenios -->
+              <div class="tab-content">
+                <!-- Tab Versiones -->
+                <div id="versiones" class="tab-pane fade show active">
+                  <div class="row">
+                    <div class="col-sm-10 mt-3">
+                      <div class="table-responsive">
+                        <table class="table table-bordered table-sm" id="tblVersiones">
+                          <thead class="bg-light">
+                            <tr class="text-center">
+                              <th>Versión</th>
+                              <th>Fecha</th>
+                            </tr>
+                          </thead>
+                        </table> 
+                      </div>
+                    </div>                          
+                  </div>
+                </div>
+                <!-- Tab Convenios -->
+                <div id="convenios" class="tab-pane fade">
+                  <p>Convenios</p>
+                </div>
+              </div>
+              <!-- Fin Contenido tabas versiones-convenios  -->
+            </div>
+            <!-- Fin Modal body -->
+          </div>
+          <!-- Fin Modal Content -->
+        </div>
+      </div>
+      <!--  Fin Modal detalle aplicación -->
+
+
   </div>
 {% endblock %}

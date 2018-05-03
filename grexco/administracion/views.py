@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import TemplateView
 from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 import pyexcel as pe
 
 
@@ -24,7 +25,7 @@ def genera_id(x):
     Modelo.objects.last() 
     """
     if x is None:
-        return 0
+        return 1
     else:
         return x.id + 1
 
@@ -166,6 +167,43 @@ class AplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         aplicaciones = Aplicaciones.objects.all()
         return {'aplicaciones': aplicaciones}
 
+    def post(self, request, *args, **kwargs):
+        """
+        Retorna la información de: Versión y Convenios, de la aplicación
+        seleccionada.
+        """
+        data = dict(request.POST)
+        id = data['id'][0]
+        app = Aplicaciones.objects.get(id=id)
+
+        convenios = []
+        qry_convenios = app.convenios.values('empresa__nombre', 'empresa__nit').all()
+        if len(qry_convenios) == 0:
+            dic_convenios = {'empresa': 'Esta aplicación no es usada por ningún Cliente.'}
+            convenios.append(dic_convenios)
+        else:
+            for convenio in qry_convenios:
+                dic_convenios = {}
+                dic_convenios['empresa'] = convenio['empresa__nombre']
+                dic_convenios['nit'] = convenio['empresa__nit']
+                convenios.append(dic_convenios)
+
+        versiones = []
+        qry_versiones = app.versiones.values('version', 'fecha').all().order_by('-version')
+        if len(qry_versiones) == 0:
+            dic_versiones = {'version': 'No tiene versiones', 'fecha': 'No tiene versiones'}
+            versiones.append(dic_versiones)
+        else:
+            for ver in qry_versiones:
+                dic_versiones = {}
+                dic_versiones['version'] = ver['version']
+                dic_versiones['fecha'] = ver['fecha'].strftime(format='%Y-%m-%d')
+                versiones.append(dic_versiones)
+
+        aplicacion = {'aplicacion': app.nombre, 'versiones': versiones, 'convenios': convenios}
+        # print(aplicacion)
+        return JsonResponse({'aplicacion': aplicacion}, status=200)
+
 
 class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
@@ -225,6 +263,52 @@ class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
             else:
                 respuesta = "Se grabaron {} de {}".format(cuenta_guardados, n_columnas)
                 return JsonResponse({'error': {'respuesta': respuesta, 'aplicaciones': no_grabados}}, safe=False, status=400)
+
+
+class DeleteAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para eliminar Aplicaciones.
+    Solo si la aplicación no tiene versiones o convenios
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        id = data["aplicacion[0][]"][0]
+
+        try:
+            app = Aplicaciones.objects.get(id=id)
+        except ObjectDoesNotExist:
+            return JsonResponse({'error': 'La aplicacion no existe'}, status=400)
+
+        convenios = app.convenios.all()
+        versiones = app.versiones.all()
+
+        if len(convenios) > 0 or len(versiones) > 0:
+            return JsonResponse(
+                {'error': 'No es posible eliminar {}. Está siendo usada'.format(app.nombre)},
+                status=400
+            )
+        else:
+            app.delete()
+            return JsonResponse({'ok': 'Se eliminó la aplicación: {}'.format(app.nombre)}, status=200)
+
+
+# ********************************
+#        Reportes
+# ********************************
+class ReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista reportes
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/reportes.html'
+
+    def test_func(self):
+        return self.reques.user.usuariosgrexco.tipo == 'A'
 
 
 # ****************
