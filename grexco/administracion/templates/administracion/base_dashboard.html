@@ -54,46 +54,51 @@
 
 <!-- Cuerpo -->
 <div class="container-fluid">
-		
+	
 	<!-- Top Nav -->
-	<div class="row bg-dark d-none d-sm-block d-md-block d-xl-block sticky-top top-nav clearfix p-1"
-			 style="color: white; height:50px;">
-		<div class="col">
-			<div>
-				<a href="/a/">Grexco</a>
+	<div class="row d-none d-lg-block">
+		<nav class="nav bg-dark sticky-top p-1 clearfix" style="width: 100%; height: 50px;">
+			<div class="col">
+				<a href="/a/" class="navbar-brand pl-1" style="color: white; font-size: 22px;">
+					GREXCO S.A.S
+				</a>
 			</div>
-			<div class="dropdown">
-				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-28 person">person</i></button>
-				<div class="dropdown-menu p-0">
-	     		<a class="dropdown-item" href="#">Usuario: {{ request.user.username }}</a>
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="{% url 'administracion:logout'%}">Cerrar sesión</a>
+			<div class="col">				
+				<div class="dropdown">
+					<button class="btn btn-dark float-right p-1 m-0" data-toggle="dropdown">
+						<i class="material-icons person">person</i>
+					</button>
+					<div class="dropdown-menu">
+						<a href="#" class="dropdown-item">{{ request.user.username }}</a>
+						<div class="dropdown-divider"></div>
+						<a href="{% url 'administracion:logout' %}" class="dropdown-item">Cerrar sesión</a>
+					</div>
 				</div>
 			</div>
-		</div>
+		</nav>
 	</div>
 	<!-- Fin top nav -->
 	
 	<!-- Contenido -->
 	<div class="row">
 		<!-- sidebar -->
-		<div class="col-md-2 d-none d-md-block bg-light sidebar">
+		<div class="col-md-2 d-none d-lg-block bg-light sidebar">
 			<div class="sidebar-sticky p-0 pt-2">
+				<h6 class="text-center">Administración</h6>
 				<!-- Usuarios -->
 				<div class="m-1">
 					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold" 
 							type="button" 
 							data-toggle="collapse" 
 							data-target="#collapseUsuarios"
-							style="font-size: 15px;">
-						Usuarios
+							style="font-size: 15px;">	Usuarios
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
   				</button>
+  				<!-- Collapse -->
   				<div class="collapse" id="collapseUsuarios">
-	  				<div class="card card-body p-2">
-	  					<a href="{% url 'administracion:nuevo_usuario' %}" 
-	  						 class="m-auto">
+	  				<div class="card card-body p-1">
+	  					<a href="{% url 'administracion:nuevo_usuario' %}" class="m-auto">
 								<i class="material-icons md-24">person_add</i>
 	  					</a>
 	  					<hr class="m-1">
@@ -101,16 +106,20 @@
 	  						<ul class="list-group listas-menu">
 	  							<li class="list-group-item p-0">
 	  								<a href="{% url 'administracion:clientes' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
-	  									Clientes
+	  								  Clientes
 	  								</a>
 	  							</li>
 	  							<li class="list-group-item p-0">
-	  								<a href="" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
-	  									Soporte
+	  								<a href="#"
+	  									 class="btn btn-sm btn-block p-1 text-dark text-left"
+	  									 role="button">
+	  								  Soporte
 	  								</a>
 	  							</li>
 	  							<li class="list-group-item p-0">
-	  								<a href="" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+	  								<a href="#"
+	  									 class="btn btn-sm btn-block p-1 text-dark text-left"
+	  									 role="button">
 	  									Tecnología
 	  								</a>
 	  							</li>
@@ -131,17 +140,22 @@
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
 					</button>
+					<!-- Collapse -->
 					<div class="collapse" id="collapseClientes">
-						<div class="card card-body p-2">
+						<div class="card card-body p-1">
 							<div>
 								<ul class="list-group listas-menu">
 									<li class="list-group-item p-0">
-										<a href="{% url 'administracion:plataformas' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+										<a href="{% url 'administracion:plataformas' %}"
+											 class="btn btn-sm btn-block p-1 text-dark text-left"
+											 role="button">
 											Plataformas
 										</a>
 									</li>
 									<li class="list-group-item p-0">
-										<a href="{% url 'administracion:empresas' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+										<a href="{% url 'administracion:empresas' %}" 
+											 class="btn btn-sm btn-block p-1 text-dark text-left"
+											 role="button">
 											Empresas
 										</a>
 									</li>
@@ -154,25 +168,30 @@
 				<!-- Aplicaciones -->
 				<div class="m-1">
 					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold"
-						type="button"
+									type="button"
 									data-toggle="collapse" 
 									data-target="#collapseAplicaciones"
 									style="font-size: 15px;">
-									Aplicaciones
+							Aplicaciones
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
 					</button>
+					<!-- Collapse -->
 					<div class="collapse" id="collapseAplicaciones">
-						<div class="card card-body p-2">
+						<div class="card card-body p-1">
 							<div>
 								<ul class="list-group listas-menu">
 									<li class="list-group-item p-0">
-										<a href="{% url 'administracion:aplicaciones' %}" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+										<a href="{% url 'administracion:aplicaciones' %}"
+											 class="btn btn-sm btn-block p-1 text-dark text-left"
+											 role="button">
 											Aplicaciones
 										</a>
 									</li>
 									<li class="list-group-item p-0">
-										<a href="" class="btn btn-sm btn-block p-1 text-dark text-left" role="button">
+										<a href="#" 
+											 class="btn btn-sm btn-block p-1 text-dark text-left" 
+											 role="button">
 											Reportes
 										</a>
 									</li>

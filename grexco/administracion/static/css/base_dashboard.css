@@ -35,17 +35,11 @@ ul.listas-menu li:hover {
 	background-color: #f0f0f0;
 }
 
+/* Botón con el icono para el usuario loggeado */
 .material-icons.person {
 	color: white;
 	vertical-align: middle;
-}
-
-/* Botón con el icono para el usuario loggeado */
-.btn-user {
-	float: right;
-	font-size: 14px;
-	color: white;
-	padding: 1px;
+	font-size: 32px;
 }
 
 .item-menu {
