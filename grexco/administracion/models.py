@@ -1,7 +1,10 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+from django.db import models
 
 # Create your models here.
+
+ubicacion_archivos = FileSystemStorage(location='/home/grexco')
 
 
 class Plataformas(models.Model):
@@ -26,12 +29,23 @@ class Aplicaciones(models.Model):
         return '{}'.format(self.nombre)
 
 
+class Reportes(models.Model):
+    id = models.IntegerField(primary_key=True)
+    nombre = models.CharField(max_length=40, blank=False, unique=True)
+    aplicacion = models.ForeignKey(
+        Aplicaciones, related_name='reportes', on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.nombre
+
+
 class Empresas(models.Model):
     nit = models.CharField(max_length=10, primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     direccion = models.CharField(max_length=150, blank=False, null=False)
     telefono = models.CharField(max_length=12, null=False)
-    plataforma = models.ForeignKey(Plataformas, on_delete=models.PROTECT)
+    plataforma = models.ForeignKey(
+        Plataformas, on_delete=models.PROTECT, related_name='empresas')
 
     def __str__(self):
         return 'Empresa: %s' % (self.nombre)
@@ -104,42 +118,28 @@ class TiemposRespuesta(models.Model):
 class HorariosSoporte(models.Model):
     """
     Cuando se cree en los parametros una empresas a la que se prestará
-    soporte 24Horas va a colocar en los campos 'inicio' y 'fin' = '0'.
+    soporte 24Horas va a colocar en los campos:
+        'inicio' = 00:00 y 'fin' = '23:59'
     Y para las empresas que no se preste servicio algun dia de la semana
     sera null en los mismos campos para el dia en cuestion.
     """
-    DIAS = (
-        ('L', 'Lunes'),
-        ('M', 'Martes'),
-        ('MI', 'Miercoles'),
-        ('J', 'Jueves'),
-        ('V', 'Viernes'),
-        ('S', 'Sabado'),
-        ('D', 'Domingo')
-    )
 
-    empresa = models.ForeignKey('Empresas', on_delete=models.PROTECT)
-    dia = models.IntegerField()
-    descripcion = models.CharField(max_length=2, null=False, choices=DIAS)
-    inicio = models.IntegerField(null=True)
-    fin = models.IntegerField(null=True)
-
-
-class Reportes(models.Model):
-    id = models.IntegerField(primary_key=True)
-    nombre = models.CharField(max_length=40, blank=False)
-    aplicacion = models.ForeignKey('Aplicaciones', on_delete=models.PROTECT)
+    empresa = models.ManyToManyField('Empresas')
+    dia = models.IntegerField(primary_key=True)
+    descripcion = models.CharField(max_length=9, null=False)
+    inicio = models.TimeField(null=True)
+    fin = models.TimeField(null=True)
 
     def __str__(self):
-        return self.nombre
+        return 'Horarios: {}'.format(self.descripcion)
 
 
 class Convenios(models.Model):
-    aplicacion = models.ForeignKey(Aplicaciones, related_name='convenios', on_delete=models.PROTECT)
-    empresa = models.ForeignKey(Empresas, related_name='convenios', on_delete=models.PROTECT)
+    aplicacion = models.ForeignKey(
+        Aplicaciones, related_name='convenios', on_delete=models.PROTECT)
+    empresa = models.ForeignKey(
+        Empresas, related_name='convenios', on_delete=models.PROTECT)
 
     def __str__(self):
         return "Empresa: {}, Aplicacion: {}".format(
-            self.empresa,
-            self.aplicacion
-        )
+            self.empresa, self.aplicacion)

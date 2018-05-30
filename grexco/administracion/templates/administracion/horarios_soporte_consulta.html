@@ -1,0 +1,173 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+<!-- Data tables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+<style>
+  .material-icons.md-18 {
+    font-size: 18px;
+  }
+  
+  .material-icons.md-19 {
+    font-size: 19px;
+  }
+
+</style>
+  
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+
+<script src="{% static '/js/horarios_soporte_detalle.js' %}"></script>
+{% endblock%}
+
+{% block content %}
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-10 pt-2 pl-3">
+      
+      <!-- Breadcrumb -->
+      <div class="row">
+          <nav class="m-0 p-0">
+            <ol class="breadcrumb m-0 pl-3" style="font-size: 20px; background-color: white;">
+              <li class="breadcrumb-item">
+                <a href="{% url 'administracion:horarios_soporte' %}">Horarios de Soporte</a>
+              </li>
+              <li class="breadcrumb-item">{{ horarios.empresa.nombre }}</li>
+            </ol>
+          </nav>
+      </div>
+
+      <!-- Almacena el nit del la empresa  -->
+      <span id="idReporte" class="d-none">{{ horarios.empresa.nit }}</span>
+      
+      <!-- Barra de opciones -->
+      <hr class="w-100 m-0">
+      <div class="bg-muted rounded mt-1" style="padding: 7px;">
+        <button class="btn btn-success btn-sm" id="btnEditarHorarios">
+          <i class="material-icons align-middle md-19 pr-1">edit</i>
+          Editar
+        </button>
+      </div>
+      <!-- Fin Barra de opciones  -->
+      
+      <!-- Alertas Eliminar -->
+      <!-- OK -->
+      <div class="alert alert-warning alert-dismissible fade show mt-1 p-2" id="alertaEliminarOk" style="display: none;">
+        <div class="row">
+          <div class="col-10" id="alertaEliminarOkMensaje">
+          </div>
+          <div class="col-2">
+            <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Error -->
+      <div class="alert alert-danger alert-dismissible fade show mt-1 p-2" id="alertaEliminarError" style="display: none;">
+        <div class="row">
+          <div class="col-10" id="alertaEliminarErrorMensaje">
+          </div>
+          <div class="col-2">
+            <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+              <i class="material-icons">close</i>
+            </button>
+          </div>  
+        </div>
+      </div>
+      <!-- Fin Alertas Eliminar-->
+      
+      <div class="row">
+        <div class="pl-3 mt-3">
+          <div class="col">
+            <div class="card p-4 w-100">    
+              <h5>Horarios:</h5>
+              <table id="tblHorariosSoporte" class="table table-striped table-bordered table-sm" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <td>Indice</td>
+                    <td>Día</td>
+                    <td>Hora Inicio</td>
+                    <td>Hora Fin</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in horarios.horarios %}
+                      <tr>
+                        <td>{{ row.dia }}</td>
+                        <td>{{ row.descripcion }}</td>
+                        <td>{{ row.inicio }}</td>
+                        <td>{{ row.fin }}</td>
+                      </tr>
+                  {% endfor %}
+                </tbody>
+              </table>  
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar nombre Reporte -->
+      <div class="modal" id="modalEditarReporte">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-light">
+              <h5 class="modal-title">{{ reporte.reporte }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="">
+                <div class="form-group">
+                  <label for="nuevoNombreReporte">Nuevo nombre del reporte:</label>
+                  <input type="text" class="form-control" id="inpNuevoNombreReporte">
+                </div>
+              </form>
+              <!-- Alertas -->
+              <div class="row">
+                <div class="col">
+                  <!-- Alerta ok -->
+                  <div class="alert alert-success alert-dismissible fade show p-1" id="alertaOk" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaOkMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Alerta error -->
+                  <div class="alert alert-danger alert-dismissible fade show p-1" id="alertaError" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaErrorMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Fin Alertas -->
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" maxlenght="40" id="btnGuardar">Guardar</button>
+              <button type="button" class="btn btn-secondary" id="btnCerrarModal">Salir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Modal editar nombre Reporte -->
+    </div>
+  </div>
+{% endblock %}

@@ -81,6 +81,7 @@
 	
 	<!-- Contenido -->
 	<div class="row">
+
 		<!-- sidebar -->
 		<div class="col-md-2 d-none d-lg-block bg-light sidebar">
 			<div class="sidebar-sticky p-0 pt-2">
@@ -147,17 +148,15 @@
 								<ul class="list-group listas-menu">
 									<li class="list-group-item p-0">
 										<a href="{% url 'administracion:plataformas' %}"
-											 class="btn btn-sm btn-block p-1 text-dark text-left"
-											 role="button">
-											Plataformas
-										</a>
+											 class="btn btn-sm btn-block p-1 text-dark text-left">Plataformas</a>
 									</li>
 									<li class="list-group-item p-0">
 										<a href="{% url 'administracion:empresas' %}" 
-											 class="btn btn-sm btn-block p-1 text-dark text-left"
-											 role="button">
-											Empresas
-										</a>
+											 class="btn btn-sm btn-block p-1 text-dark text-left">Empresas</a>
+									</li>
+									<li class="list-group-item p-0">
+										<a href="{% url 'administracion:horarios_soporte' %}"
+											 class="btn btn-sm btn-block p-1 text-dark text-left">Horarios de soporte</a>
 									</li>
 								</ul>
 							</div>
@@ -189,7 +188,7 @@
 										</a>
 									</li>
 									<li class="list-group-item p-0">
-										<a href="#" 
+										<a href="{% url 'administracion:reportes' %}" 
 											 class="btn btn-sm btn-block p-1 text-dark text-left" 
 											 role="button">
 											Reportes

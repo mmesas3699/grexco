@@ -1,0 +1,304 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+<!-- Data tables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+<!-- Fontawesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+  .material-icons.md-18 {
+    font-size: 18px;
+  }
+  
+  .material-icons.md-19 {
+    font-size: 22px;
+  }
+  
+  /* Tooltip Formato archivo Excel */
+  .material-icons.md-24.orange {
+    color: DarkOrange;
+    font-size: 24px;
+  }
+    
+  /* Tooltip Formato archivo Excel on Hover; */ 
+  .material-icons.md-24.orange:hover {
+    color: GoldenRod; 
+  }
+</style>
+  
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+
+<script src="{% static '/js/horarios_soporte.js' %}"></script>
+{% endblock%}
+
+{% block content %}
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-10 pt-2 pl-3">
+      <h4 class="m-2">Horarios de Soporte</h4>
+
+      <!-- Barra de opciones -->
+      <hr class="w-100 m-0">
+      <div class="bg-muted rounded mt-1" style="padding: 7px;">
+        <button class="btn btn-sm btn-primary ml-1" id="btnCrearHorarios">
+          <!-- <i class="material-icons align-middle md-19 pr-1">alarm_add</i> -->
+          Nuevo
+        </button>
+        <button class="btn btn-warning btn-sm ml-1" id="btnEliminarHorarios">
+          <!-- <i class="material-icons align-middle md-19">delete</i> -->
+          Eliminar
+        </button>
+      </div>
+      <!-- Fin Barra de opciones  -->
+	    
+      <!-- Alertas Eliminar -->
+      <!-- OK -->
+      <div class="alert alert-warning alert-dismissible fade show mt-1 p-2" id="alertaEliminarOk" style="display: none;">
+        <div class="row">
+          <div class="col-10" id="alertaEliminarOkMensaje">
+          </div>
+          <div class="col-2">
+            <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Error -->
+      <div class="alert alert-danger alert-dismissible fade show mt-1 p-2" id="alertaEliminarError" style="display: none;">
+        <div class="row">
+          <div class="col-10" id="alertaEliminarErrorMensaje">
+          </div>
+          <div class="col-2">
+            <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+              <i class="material-icons">close</i>
+            </button>
+          </div>  
+        </div>
+      </div>
+      <!-- Fin Alertas Eliminar-->
+      
+      <!-- Tabla Horarios de Soporte -->
+      <div class="row mt-4">
+        <div class="col-10">
+          <table id="tblHorariosSoporte" class="table table-striped table-bordered table-sm" style="width:100%">
+            <thead>
+              <tr class="text-center">
+                <td>Nit</td>
+                <td>Empresa</td>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Fin tabla Horarios de soporte -->
+
+      <!-- Modal captura Horarios de Soporte -->
+      <div class="modal" id="modalCapturaHorariosSoporte">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-light">
+              <h5 class="modal-title">Crear Horarios de Soporte</h5>
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Alertas -->
+              <div class="row">
+                <div class="col">
+                  <!-- Alerta ok -->
+                  <div class="alert alert-success alert-dismissible fade show p-1" id="alertaOk" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaOkMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Alerta error -->
+                  <div class="alert alert-danger alert-dismissible fade show p-1" id="alertaError" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaErrorMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Fin Alertas -->
+              
+              <div class="row">
+                <div class="col">
+                  
+                  <!-- Selección de Empresa -->
+                  <div class="row pl-2">
+                    <div class="col-8">
+                      <div class="form-group">
+                        <label for="elegirEmpresa"><i class="pr-1">*</i>Empresa:</label>
+                        <select name="selEmpresa" id="selEmpresa" class="custom-select">
+                          <option value="0">Seleccione una empresa</option>
+                        </select>
+                      </div>
+                    </div>  
+                  </div>
+
+                  <!-- Tabla Nuevo Horario Soporte -->
+                  <div class="row pl-2">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col-11">
+                          <p><i class="pr-1">*</i>Complete la información de los horarios de soporte para la Empresa seleccionada:</p>
+                        </div>
+
+                        <!-- Tooltip Instrución para capturar los horarios de soporte -->
+                        <div class="col-1">
+                          <div class="dropdown">
+                            <button class="btn btn-sm p-1" data-toggle="dropdown" style="background-color: white;">
+                              <i class="material-icons md-24 orange m-0">info</i>
+                            </button>
+                            <div class="dropdown-menu p-2 mb-3 bg-light" style="font-size: 13px; width: 300px !important;">
+                              <div class="container p-0">
+                                <div class="col">
+                                  <div class="row mt-2">
+                                    <div class="card" style="box-shadow: 1px 1px 1px 0px grey">
+                                      <div class="card-body">
+                                        <p class="mb-0"><i>*</i> Cuando se de soporte las 24 Horas digite:</p>
+                                        <p class="pl-4 mb-0"><b>inicio</b> = 00:00 / <b>fin</b> = 23:59</p>
+                                      </div>
+                                    </div>
+                                    <div class="card mt-2" style="box-shadow: 1px 1px 1px 0px grey">
+                                      <div class="card-body">
+                                        <p class="mb-0"><i>*</i>
+                                         Si <b>No</b> da soporte en algún día de la semana no digite ninguna información:
+                                        </p>
+                                        <p class="pl-4 mb-0">Sabado: <b>inicio</b> = --:-- / <b>fin</b> = --:-- </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>  
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- TABLA -->
+                      <table id="tblNuevoHorarioSoporte" class="table table-bordered table-sm display" style="width: 90%;">
+                        <thead  class="thead-light">
+                          <tr>
+                            <th>Indice</th>
+                            <th>Día</th>
+                            <th>Hora inicio soporte</th>
+                            <th>Hora fin soporte</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>0</td>
+                            <td>Lunes</td>
+                            <td>
+                              <input type="time" id="inicio-lunes" name="inicio-lunes" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-lunes" name="fin-lunes" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>1</td>
+                            <td>Martes</td>
+                            <td>
+                              <input type="time" id="inicio-martes" name="inicio-martes" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-martes" name="fin-martes" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Miércoles</td>
+                            <td>
+                              <input type="time" id="inicio-miercoles" name="inicio-miercoles" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-miercoles" name="fin-miercoles" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>Jueves</td>
+                            <td>
+                              <input type="time" id="inicio-jueves" name="inicio-jueves" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-jueves" name="fin-jueves" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>4</td>
+                            <td>Viernes</td>
+                            <td>
+                              <input type="time" id="inicio-viernes" name="inicio-viernes" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-viernes" name="fin-viernes" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>5</td>
+                            <td>Sábado</td>
+                            <td>
+                              <input type="time" id="inicio-sabado" name="inicio-sabado" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-sabado" name="fin-sabado" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>6</td>
+                            <td>Domingo</td>
+                            <td>
+                              <input type="time" id="inicio-domingo" name="inicio-domingo" class="form-control form-control-sm">
+                            </td>
+                            <td>
+                              <input type="time" id="fin-domingo" name="fin-domingo" class="form-control form-control-sm">
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <!-- Fin tabla -->
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: DodgerBlue; display: none;"></i>
+              <button type="submit" class="btn btn-primary" maxlenght="40" id="btnGuardar" style="box-shadow: 0px 2px 7px 1px grey;">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Modal captura Horarios de Soporte -->
+
+		</div>
+  </div>
+{% endblock %}

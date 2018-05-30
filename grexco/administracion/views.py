@@ -1,29 +1,32 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import TemplateView
-from django.shortcuts import redirect
-from django.http import JsonResponse, HttpResponse
-from django.core import serializers
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
+import json
 import pyexcel as pe
 
+from datetime import time
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
+from django.db import transaction
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
 
 from administracion.models import (
-    UsuariosGrexco,
-    Empresas,
-    Plataformas,
-    Aplicaciones,
-    Convenios
-)
+    UsuariosGrexco, Empresas, Plataformas, Aplicaciones,
+    Convenios, Reportes, HorariosSoporte)
+# from scripts import verifica_excel as ve
+
 
 # Create your views here.
-
-def genera_id(x):
+def genera_id(modelo):
     """
-    Recibe como parametro un Queryset de:
-    Modelo.objects.last() 
+    Recibe como parametro un Model de:
+        administracion.Models
     """
+    x = modelo.objects.last()
     if x is None:
         return 1
     else:
@@ -36,25 +39,21 @@ class LoginView(TemplateView):
 
     def post(self, request):
         data = dict(request.POST)
-        # print(data)
         usuario = authenticate(
-            request,
-            username=data['nombre'][0],
+            request, username=data['nombre'][0],
             password=data['contraseña'][0])
-        print(usuario)
+
         if usuario is not None:
-            print('ok')
             login(request, usuario)
-            # return redirect('administracion:dashboard')
             return JsonResponse({'ok': 'ok'}, status=200)
         else:
-            print('error')
-            return JsonResponse({'error' : 'Datos invalidos o usuario inactivo'}, status=400)
+            return JsonResponse(
+                {"error": "Datos invalidos o usuario inactivo"}, status=400)
 
 
-# ********************
-# *   Plataformas    *
-# ********************
+# ****************************************************************************
+# *                            Plataformas                                   *
+# ****************************************************************************
 class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para consultar plataformas
@@ -71,7 +70,8 @@ class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         return {'plataformas': plataforma}
 
 
-class CreatePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class CreatePlatformView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para crear plataformas
     """
@@ -86,38 +86,30 @@ class CreatePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         nombre = data['nombre'][0]
         version = data['version'][0]
 
-        if len(nombre) == 0 or len(version) == 0:
+        if not nombre or not version:
             return JsonResponse(
-                {"error": "Los campos estan vacios"},
-                status=400
-            )
+                {"error": "Los campos estan vacios"}, status=400)
 
         plataforma = Plataformas.objects.filter(
-            nombre=nombre.upper(),
-            version=version.upper()
-        )
+            nombre=nombre.upper(), version=version.upper())
 
         if plataforma.exists():
             return JsonResponse({"error": "Los datos ya existen"}, status=400)
         else:
             id = Plataformas.objects.values('id').last()['id'] + 1
-            # print(id)
             plt = Plataformas(id=id, nombre=nombre.upper(), version=version)
-            # print(plt)
             try:
                 plt.save()
             except Exception as e:
                 mensaje = "Ocurrio un error al grabar los datos: {}".format(e)
-                return JsonResponse(
-                    {"error": mensaje},
-                    status=400
-                )
+                return JsonResponse({"error": mensaje}, status=400)
 
             mensaje = "Se guardo la plataforma: {}".format(plt)
             return JsonResponse({"ok": mensaje})
 
 
-class DeletePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class DeletePlatformView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para eliminar plataformas
     """
@@ -129,30 +121,25 @@ class DeletePlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
     def post(self, request, *args, **kargs):
         data = dict(request.POST)
-        # print(data)
         for k, v in data.items():
             plataforma = Plataformas.objects.get(id=int(data[k][0]))
             if plataforma:
                 from django.db.models.deletion import ProtectedError
-                # print(plataforma.nombre)
                 try:
                     plataforma.delete()
                 except ProtectedError as e:
                     empresa = Empresas.objects.get(plataforma__id=plataforma.id)
-                    msj = "No es posible eliminar: {}-{}. Pertenece a la empresa: {}".format(
-                        plataforma.nombre,
-                        plataforma.version,
-                        empresa.nombre,
-                    )
-                    return JsonResponse({'error': msj}, status=400)
+                    msj = 'No es posible eliminar: {}-{}. Pertenece a la empresa: {}'.format(
+                        plataforma.nombre, plataforma.version, empresa.nombre,)
+                    return JsonResponse({"error": msj}, status=400)
 
         mensaje = 'Se eliminó la plataforma: {}'.format(plataforma.nombre)
-        return JsonResponse({'ok': mensaje}, status=200)
+        return JsonResponse({"ok": mensaje}, status=200)
 
 
-# *****************
-# *  Aplicaciones *
-# *****************
+# ****************************************************************************
+# *                                Aplicaciones                              *
+# ****************************************************************************
 class AplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para consultar las aplicaciones
@@ -221,8 +208,7 @@ class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
         """
         data = request.POST
         if len(data) == 1:
-            x = Aplicaciones.objects.last()
-            id = genera_id(x)
+            id = genera_id(Aplicaciones)
             nombre = data['nombre']
             app = Aplicaciones(id=id, nombre=nombre)
 
@@ -243,8 +229,7 @@ class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
             data = pe.iget_records(file_stream=file, file_type=file_type)
             n_columnas = pe.get_sheet(file_stream=file, file_type=file_type).number_of_rows() - 1
             for row in data:
-                x = Aplicaciones.objects.last()
-                id = genera_id(x)
+                id = genera_id(Aplicaciones)
                 nombre = row['Aplicaciones']
                 if Aplicaciones.objects.filter(nombre=nombre).exists():
                     msj = {'err': 'Ya existe', 'app': nombre}
@@ -268,7 +253,7 @@ class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
 class DeleteAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para eliminar Aplicaciones.
-    Solo si la aplicación no tiene versiones o convenios
+    Solo si la aplicación no tiene versiones, convenios o reportes.
     """
     login_url = 'usuarios:login'
 
@@ -282,24 +267,82 @@ class DeleteAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
         try:
             app = Aplicaciones.objects.get(id=id)
         except ObjectDoesNotExist:
-            return JsonResponse({'error': 'La aplicacion no existe'}, status=400)
+            return JsonResponse(
+                {'error': 'La aplicacion no existe'}, status=400)
 
         convenios = app.convenios.all()
         versiones = app.versiones.all()
+        reportes = app.reportes.all()
 
-        if len(convenios) > 0 or len(versiones) > 0:
+        if len(convenios) > 0 or len(versiones) > 0 or len(reportes):
             return JsonResponse(
                 {'error': 'No es posible eliminar {}. Está siendo usada'.format(app.nombre)},
                 status=400
             )
         else:
             app.delete()
-            return JsonResponse({'ok': 'Se eliminó la aplicación: {}'.format(app.nombre)}, status=200)
+            return JsonResponse(
+                {'ok': 'Se eliminó la aplicación: {}'.format(app.nombre)},
+                status=200)
 
 
-# ********************************
-#        Reportes
-# ********************************
+class ListAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Retorna un JSON con la información (id y nombre) de la aplicación o
+    un archivo de Excel con la misma información dependiendo del 'tipo' que
+    se envie en los parametros que se pasen en el POST al momento
+    de hacer el Request:
+
+    tipo = listado --> JSON
+    tipo = excel   --> Excel
+
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        tipo = data['tipo'][0]
+
+        if tipo == 'listado':
+            qry_aplicaciones = Aplicaciones.objects.values('id', 'nombre').all().order_by('id')
+            aplicaciones = []
+            for aplicacion in qry_aplicaciones:
+                aplicaciones.append(aplicacion)
+
+            return JsonResponse(aplicaciones, status=200, safe=False)
+
+
+class ListExcelAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Retorna un archivo de excel con el listado de las aplicaciones.
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        qry_aplicaciones = Aplicaciones.objects.values(
+            'id', 'nombre').order_by('id')
+        aplicaciones = []
+        for aplicacion in qry_aplicaciones:
+            aplicaciones.append(aplicacion)
+
+        excel = pe.get_sheet(records=aplicaciones)
+        excel.save_as(filename='/tmp/aplicaciones.xlsx')
+        with open('/tmp/aplicaciones.xlsx', 'rb') as excel:
+            response = HttpResponse(excel.read())
+            response['content_type'] = 'application/vnd.ms-excel'
+            response['Content-Disposition'] = 'attachment; filename="/tmp/aplicaciones.xlsx"'
+            return response
+
+
+# ****************************************************************************
+# *                                  REPORTES                                *
+# ****************************************************************************
 class ReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista reportes
@@ -308,12 +351,447 @@ class ReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'administracion/reportes.html'
 
     def test_func(self):
-        return self.reques.user.usuariosgrexco.tipo == 'A'
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        qry_reportes = Reportes.objects.values(
+            'id', 'nombre', 'aplicacion__nombre').all()
+        reportes = []
+        for reporte in qry_reportes:
+            reportes.append(reporte)
+
+        return JsonResponse(reportes, safe=False)
 
 
-# ****************
-# *  Dahsboard   *
-# ****************
+class CreateReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para crear reportes.
+    La vista recibe un JSON con los datos:
+        - tipo (si la aplicación se crea de forma invidual o
+                masivamente por archivo de excel)
+        - nombre (del reporte)
+        - aplicacion (el id de la aplicación a la que pertenece el reporte)
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        tipo = data['tipo'][0]
+
+        # Si el tipo es individual
+        if tipo == 'individual':
+
+            # Id aplicación
+            id_app = data['aplicacion'][0]
+            nombre_reporte = data['nombre'][0].strip()
+
+            # Verifica que los datos no esten vacios
+            if not id_app:
+                return JsonResponse(
+                    {"error": "Debe seleccionar la aplicación a la que pertenece el reporte"},
+                    status=400
+                )
+            elif not nombre_reporte:
+                return JsonResponse(
+                    {"error": "El nombre del reporte es obligatorio"},
+                    status=400
+                )
+
+            # Calcula el Id del reporte
+            id_reporte = genera_id(Reportes)
+
+            # Consulta la aplicación
+            app = Aplicaciones.objects.get(id=id_app)
+
+            # Crea el objeto reporte
+            reporte = Reportes(
+                id=id_reporte, nombre=nombre_reporte, aplicacion=app)
+            try:
+                reporte.save()
+            except IntegrityError:
+                return JsonResponse(
+                    {"error": "¡El reporte '{}' ya existe!".format(reporte.nombre)}, status=400)
+
+            return JsonResponse(
+                {"ok": "Se creó el reporte: '{}'".format(reporte.nombre)},
+                status=200)
+        elif tipo == 'excel':
+            archivo = request.FILES['archivo']
+            tipo_archivo = archivo.name.split('.')[-1]
+
+            # Transforma el archivo de Excel en una Lista de Python
+            # el archivo debe tener dos columnas de datos por cada fila
+            # y ordenado así:
+            #               0               1
+            #      | Nombre reporte | Id aplicación |
+            excel = pe.get_array(
+                file_stream=archivo, file_type=tipo_archivo, start_row=1)
+            cuenta_grabados = 0
+            no_grabados = []
+            n_columnas = len(excel)
+            for fila in excel:
+                nombre_reporte = fila[0]
+                if Reportes.objects.filter(nombre=nombre_reporte).exists():
+                    msj = {'err': 'Ya existe', 'reporte': nombre_reporte}
+                    no_grabados.append(msj)
+                else:
+                    id_reporte = genera_id(Reportes)
+                    aplicacion = Aplicaciones.objects.get(id=fila[1])
+                    reporte = Reportes(
+                        id=id_reporte, nombre=nombre_reporte,
+                        aplicacion=aplicacion)
+                    try:
+                        reporte.save()
+                    except Exception as e:
+                        return JsonResponse(
+                            {'error': 'Ocurrio un error: {}'.format(e)},
+                            status=400)
+
+                    cuenta_grabados = cuenta_grabados + 1
+
+            if cuenta_grabados == n_columnas:
+                return JsonResponse(
+                    {'ok': 'Se grabaron todos los reportes'}, status=200,
+                    safe=False)
+            else:
+                respuesta = "Se grabaron {} de {}".format(
+                    cuenta_grabados, n_columnas)
+                return JsonResponse(
+                    {'error':
+                        {'respuesta': respuesta, 'reportes': no_grabados}},
+                    safe=False,
+                    status=400
+                )
+
+
+class DetailReportView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar el detalle de un Reporte.
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/reportes_detalle.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, **kwargs):
+        id_reporte = kwargs['id']
+        reporte = get_object_or_404(Reportes, id=id_reporte)
+        qry_versiones = reporte.versiones.values(
+            'version', 'fecha').all().order_by('-fecha')
+        qry_incidentes = reporte.incidentes.values('codigo')
+        info_reporte = {
+            'reporte': reporte.nombre,
+            'id': reporte.id,
+            'aplicacion': reporte.aplicacion.nombre,
+            'versiones': dict(qry_versiones),
+            'incidentes': dict(qry_incidentes)}
+
+        return {'reporte': info_reporte}
+
+
+class UpdateReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para editar el nombre de un Reporte.
+
+    Recibe un JSON:
+        {'id': [id], 'nuevo_nombre': [nuevo_nombre]}
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        id_reporte = data['id'][0]
+        nuevo_nombre = data['nuevo_nombre'][0]
+
+        if not Reportes.objects.filter(nombre=nuevo_nombre):
+            if Reportes.objects.filter(id=id_reporte):
+                reporte = Reportes.objects.get(id=id_reporte)
+                nombre_antiguo = reporte.nombre
+
+                # Cambia el nombre del reporte
+                reporte.nombre = nuevo_nombre
+                reporte.save()
+                mensaje = 'El nuevo nombre del reporte "{}" es: {}'.format(nombre_antiguo, nuevo_nombre)
+                return JsonResponse({'ok': mensaje}, status=200)
+            else:
+                return JsonResponse(
+                    {'error': 'No existe el reporte: {}'.format(nombre_antiguo)}, status=400)
+        else:
+            return JsonResponse(
+                {'error': 'Ya existe un reporte con el mismo nombre'}, status=400)
+
+
+class DeleteReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para Eliminar un reporte
+    Recibe por POST un objetoJSON:
+        {'reporte': [id_reporte]}
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        id_reporte = data['reporte'][0]
+
+        if Reportes.objects.filter(id=id_reporte):
+            reporte = Reportes.objects.get(id=id_reporte)
+            try:
+                reporte.delete()
+            except Exception as e:
+                return JsonResponse({'error': e}, status=400)
+
+            mensaje_ok = 'Se eliminó el Reporte: {}'.format(reporte.nombre)
+            return JsonResponse({'ok': mensaje_ok}, status=200)
+        else:
+            return JsonResponse(
+                {'error': '¡El reporte No existe!'}, status=400)
+
+
+# ............................................................................
+# .                        Horarios de soporte                               .
+# ............................................................................
+class HorariosSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar los horarios de soporte por Empresa.
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/horarios_soporte.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+
+class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar los horarios de soporte por Empresa.
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        nit_empresa = data['selEmpresa'][0]
+        horarios = []
+
+        # Recorre el diccionario con los datos de los horarios
+        # y crea una lista Modelos creados con estos datos.
+        if Empresas.objects.filter(nit=nit_empresa):
+            empresa = Empresas.objects.get(nit=nit_empresa)
+            for k, v in data.items():
+                # Las variables: hora_inicio y hora_fin son listas con el
+                # formato: [hora, minuto]
+                #
+                # Lunes
+                if k == 'inicio-lunes':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-lunes'][0][:2]),
+                            int(data['fin-lunes'][0][3:])
+                        ]
+                        lunes = HorariosSoporte(
+                            dia=0,
+                            descripcion='Lunes',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        lunes = HorariosSoporte(
+                            dia=0,
+                            descripcion='Lunes',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(lunes)
+                #
+                # Martes
+                elif k == 'inicio-martes':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-martes'][0][:2]),
+                            int(data['fin-martes'][0][3:])
+                        ]
+                        martes = HorariosSoporte(
+                            dia=1,
+                            descripcion='Martes',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        martes = HorariosSoporte(
+                            dia=1,
+                            descripcion='Martes',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(martes)
+                #
+                # Miercoles
+                elif k == 'inicio-miercoles':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-miercoles'][0][:2]),
+                            int(data['fin-miercoles'][0][3:])
+                        ]
+                        miercoles = HorariosSoporte(
+                            dia=2,
+                            descripcion='Miercoles',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        miercoles = HorariosSoporte(
+                            dia=2,
+                            descripcion='Miercoles',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(miercoles)
+                #
+                # Jueves
+                elif k == 'inicio-jueves':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-jueves'][0][:2]),
+                            int(data['fin-jueves'][0][3:])
+                        ]
+                        jueves = HorariosSoporte(
+                            dia=3,
+                            descripcion='Jueves',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        jueves = HorariosSoporte(
+                            dia=3,
+                            descripcion='Jueves',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(jueves)
+                #
+                # Viernes
+                elif k == 'inicio-viernes':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-viernes'][0][:2]),
+                            int(data['fin-viernes'][0][3:])
+                        ]
+                        viernes = HorariosSoporte(
+                            dia=4,
+                            descripcion='Viernes',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        viernes = HorariosSoporte(
+                            dia=4,
+                            descripcion='Viernes',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(viernes)
+                #
+                # Sabado
+                elif k == 'inicio-sabado':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-sabado'][0][:2]),
+                            int(data['fin-sabado'][0][3:])
+                        ]
+                        sabado = HorariosSoporte(
+                            dia=5,
+                            descripcion='Sabado',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        sabado = HorariosSoporte(
+                            dia=5,
+                            descripcion='Sabado',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(sabado)
+                #
+                # Domingo
+                elif k == 'inicio-domingo':
+                    if v[0]:
+                        hora_inicio = [int(v[0][:2]), int(v[0][3:])]
+                        hora_fin = [
+                            int(data['fin-domingo'][0][:2]),
+                            int(data['fin-domingo'][0][3:])
+                        ]
+                        domingo = HorariosSoporte(
+                            dia=6,
+                            descripcion='Domingo',
+                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            fin=time(hour=hora_fin[0], minute=hora_fin[1])
+                        )
+                    else:
+                        domingo = HorariosSoporte(
+                            dia=6,
+                            descripcion='Domingo',
+                            inicio=None,
+                            fin=None
+                        )
+                    horarios.append(domingo)
+        else:
+            return JsonResponse({'error': 'La empresa no existe'}, status=400)
+
+        with transaction.atomic():
+            try:
+                for horario in horarios:
+                    horario.save()
+                    empresa.horariossoporte_set.add(horario)
+            except Exception as e:
+                return JsonResponse(
+                    {'error': 'Ocurrió un error: {}'.format(e)}, status=400)
+
+            return JsonResponse(
+                {'ok': 'Se guardaron los datos correctamente'}, status=200)
+
+
+class ConsultaHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar el detalle de los horarios de soporte de una Empresa.
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/horarios_soporte_consulta.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, **kwargs):
+        nit = kwargs['nit']
+        qry_empresa = get_object_or_404(Empresas, nit=nit)
+        qry_horarios = qry_empresa.horariossoporte_set.values()
+        empresa = {'nombre': qry_empresa.nombre, 'nit': qry_empresa.nit}
+        info_horarios = {'empresa': empresa, 'horarios': qry_horarios}
+
+        return {'horarios': info_horarios}
+
+
+# *****************************************************************************
+# *                             Dahsboard                                     *
+# *****************************************************************************
 class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """docstring for DashboardView"""
     login_url = 'usuarios:login'
@@ -581,3 +1059,27 @@ class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             return JsonResponse({"ok": "Los datos de guardaron correctamente."})
         except Exception as e:
             return JsonResponse({"error": e}, status=400)
+
+
+class BasicListCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Retorna un listado con los datos basicos de las Empresas.
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        qry_empresas = Empresas.objects.values(
+            'nit',
+            'nombre',
+            'direccion',
+            'telefono',
+            'plataforma__nombre').all()
+
+        empresas = []
+        for empresa in qry_empresas:
+            empresas.append(empresa)
+
+        return JsonResponse({'empresas': empresas}, status=200)

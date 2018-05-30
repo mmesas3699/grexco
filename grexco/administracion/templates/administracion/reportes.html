@@ -3,73 +3,221 @@
 {% load static %}
 
 {% block css %}
-  <!-- Data tables -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+<!-- Data tables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
 
-  <!-- Font awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
- 
-  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<!-- Font awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+<style>
 
-  <style>
   /* Tooltip Formato archivo Excel */
   .material-icons.md-24.orange {
     color: DarkOrange;
     font-size: 24px;
   }
-  
+    
   /* Tooltip Formato archivo Excel on Hover; */ 
   .material-icons.md-24.orange:hover {
-  color: GoldenRod; 
+    color: GoldenRod; 
   }
-  </style>
+
+</style>
 {% endblock %}
 
 {% block js %}
-  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
-
-  {# <script src="{% static '/js/aplicaciones.js' %}"></script> #}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+<script src="{% static '/js/reportes.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 {% csrf_token %}
 <div class="row">
   <div class="col-sm-7 pt-1 pl-3">
-    <h4 class="m-2">Aplicaciones</h4>
+    <h4 class="m-2">Reportes</h4>
     <hr class="m-1 w-100">
 
     <!-- Barra de opciones -->
     <div class="bg-light rounded" style="padding: 7px;">
-      <button class="btn btn-primary btn-sm" id="nuevo">Nuevo</button>
-      <button class="btn btn-warning btn-sm" id="eliminar">Eliminar</button> 
+      <button class="btn btn-primary btn-sm" id="nuevoReporte">Nuevo</button>
+      <button class="btn btn-warning btn-sm" id="eliminarReporte">Eliminar</button> 
     </div>
     <!-- Fin Barra de opciones -->
 
-    <!-- Alertas  -->
-    <div class="alert alert-success mt-1 p-2" role="alert" style="display: none;" id="alertaEliminarOk"> </div>
-    <div class="alert alert-danger mt-1 p-2" role="alert" style="display: none;" id="alertaEliminarError"> </div>
-    <!-- Fin Alertas -->
+    <!-- Alertas Eliminar -->
+    <!-- OK -->
+    <div class="alert alert-warning alert-dismissible fade show mt-1 p-2" id="alertaEliminarOk" style="display: none;">
+      <div class="row">
+        <div class="col-10" id="alertaEliminarOkMensaje">
+        </div>
+        <div class="col-2">
+          <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Error -->
+    <div class="alert alert-danger alert-dismissible fade show mt-1 p-2" id="alertaEliminarError" style="display: none;">
+      <div class="row">
+        <div class="col-10" id="alertaEliminarErrorMensaje">
+        </div>
+        <div class="col-2">
+          <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+            <i class="material-icons">close</i>
+          </button>
+        </div>  
+      </div>
+    </div>
+    <!-- Fin Alertas Eliminar-->
 
-    <!-- Tabla aplicaciones -->
+    <!-- Tabla Reportes -->
     <div class="table-responsive-sm mt-5">
-      <table id="tabla-aplicaciones" class="display table table-sm table-hover table-striped table-bordered">
+      <table id="tblReportes" class="display table table-sm table-hover table-striped table-bordered">
         <thead>
           <tr class="text-center">
-            <th>ID</th>
-            <th>NOMBRE</th>
+            <th>Id</th>
+            <th>Reporte</th>
+            <th>Aplicación</th>
           </tr>
         </thead>
         <tbody>
-          {% for aplicacion in aplicaciones %}
-            <tr>
-              <td>{{ aplicacion.id }}</td>
-              <td>{{ aplicacion.nombre }}</td>
-            </tr>
-          {% endfor %}
         </tbody>
       </table>
     </div>
-    <!-- Fin Tabla aplicaciones -->
+    <!-- Fin Tabla Reportes -->
+
+    <!-- Modal Nuevo Reporte -->
+    <div class="modal" id="modalNuevoReporte" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header p-2 bg-light">
+            <h5>Nuevo Reporte</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <!-- Individual -->
+              <div class="row mb-0 pb-0" id="containerIndividual">
+                <div class="col">
+                  <form action="" id="frmNuevoReporte">
+                    <div class="form-group">
+                      <label for="nombreReporte">Nombre del reporte:</label>
+                      <input type="text" id="inputNombreReporte" class="form-control form-control-sm"
+                             placeholder="Nombre reporte" maxlength="40">
+                      <small style="color: red; display: none;">Este campo es obligatorio</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="aplicacion">Seleccione la aplicación a la que pertenece el reporte</label>
+                      <select id="selectAplicacion" class="custom-select">
+                        <option value="">Seleccione una aplicación</option>
+                      </select>
+                      <small style="color: red; display: none;">Debe seleccionar una aplicación</small>
+                    </div>
+                  </form>
+                </div> 
+              </div>
+              <!-- Alertas -->
+              <div class="row">
+                <div class="col">
+                  <!-- Alerta ok -->
+                  <div class="alert alert-success alert-dismissible fade show p-1" id="alertaOk" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaOkMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Alerta error -->
+                  <div class="alert alert-danger alert-dismissible fade show p-1" id="alertaError" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaErrorMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Fin Alertas -->
+            </div>
+            <hr class="m-0 mb-2">
+            <!-- Botón para seleccionar por archivo de Excel -->
+            <div class="row">
+              <div class="col">
+                <div class="mt-1">
+                  <div class="custom-control custom-checkbox ">
+                    <input type="checkbox" class="custom-control-input" id="checkExcel">
+                    <label class="custom-control-label" for="checkExcel">Por archivo de Excel</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Contenerdor excel -->
+            <div class="row mt-3" id="containerExcel" style="display: none;">
+              <div class="col-sm-10">
+                <input type="file" id="inpNuevoReporteExcel">
+              </div>
+              <!-- Tooltip formato archivo -->
+              <div class="col-sm-2">
+                <div class="dropdown">
+                  <button class="btn btn-sm p-0" data-toggle="dropdown" style="background-color: white;">
+                    <i class="material-icons md-24 orange m-0">info</i>
+                  </button>
+                  <div class="dropdown-menu" style="font-size: 13px; width: 500px !important;">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="p-2 bg-light m-2 rounded" style="box-shadow: 0px 2px 7px 1px grey;">  
+                          <p class="mb-1" style="font-size: 15px;">Formato:</p>
+                          <img src="{% static '/img/formato_excel_nuevo_reporte.png' %}" 
+                               class="m-0" 
+                               alt="Formato Excel" 
+                               style="width: 100%;">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col p-1 mt-3 ml-1 mr-1 rounded">
+                          <a class="btn btn-sm btn-info" href="{% url 'administracion:listado_aplicaciones_excel' %}">Generar listado de Aplicaciones
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div> <!-- Fin tooltip formato archivo -->
+            </div> <!-- Fin contenedor excel -->
+          </div> <!-- Fin modal body -->
+          
+          <!-- Aviso -->
+          <small class="mt-1 ml-4 mb-1" style="color: red;">Todos los campos son obligatorios</small>
+          <!-- Modal footer -->
+          <div class="modal-footer p-1">
+            <button type="button" id="btnGuardarReporte" class="btn btn-sm btn-primary">Guardar</button>
+          </div>
+        
+        </div> <!-- Fin modal content -->
+      </div>
+    </div>
+  <!-- Fin Modal Nuevo Reporte -->
+
+  <!-- Modal consulta Reporte -->
+  <div>
+    
+  </div>
+  <!-- Fin Modal consulta Reporte -->
+  
+
+  
+
   </div>
 </div>
 {% endblock %}
