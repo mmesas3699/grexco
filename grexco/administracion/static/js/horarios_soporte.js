@@ -38,6 +38,22 @@ $(document).ready( function ()
         "select": false,
     });
     
+
+    var tblHorariosSoporte = $("#tblHorariosSoporte").DataTable({
+        "searching": true,
+        "select": 'single',
+        "ajax": {
+            url: '/a/empresas/listado',
+            type: 'get',
+            dataSrc: 'empresas'
+        },
+        columns: [
+            { data: 'nit' },
+            { data: 'nombre' },
+        ]
+    });
+
+
     //Abre el modal para capturar horarios de soporte
     $('#btnCrearHorarios').click(function(event) {
         event.preventDefault();
@@ -51,7 +67,6 @@ $(document).ready( function ()
         });
         $('#modalCapturaHorariosSoporte').modal('show');
     });
-
 
     //Al cerrar el modal 'modalCapturaHorariosSoporte' borra las opciones del select de 
     //empresas. Esto porque cada vez que se abre el modal duplica los
