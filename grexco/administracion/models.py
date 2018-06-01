@@ -96,22 +96,30 @@ class UsuariosGrexco(models.Model):
 
 
 class PrioridadesRespuesta(models.Model):
+    """
+    'A' = 'Alta'
+    'M' = 'Media'
+    'B' = 'Baja'
+    """
     codigo = models.CharField(max_length=2, primary_key=True)
     descripcion = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.descripcion
+        return "Prioridad: {}".format(self.descripcion)
 
 
 class TiemposRespuesta(models.Model):
-    empresa = models.ForeignKey('Empresas', on_delete=models.PROTECT)
-    prioridades_respuesta = models.ForeignKey('PrioridadesRespuesta', on_delete=models.PROTECT)
-    tiempo_horas = models.IntegerField(null=True)
+    empresa = models.ForeignKey(
+        'Empresas', on_delete=models.PROTECT, related_name='tiempos_respuesta')
+    prioridad = models.ForeignKey(
+        'PrioridadesRespuesta', on_delete=models.PROTECT)
+    tiempo = models.IntegerField(default=3)
 
     def __str__(self):
         return "Prioridad: {}, tiempo: {} horas".format(
-            self.prioridades_respuesta_codigo,
-            self.tiempo_horas,
+            self.prioridad,
+            self.tiempo,
+            self.empresa
         )
 
 

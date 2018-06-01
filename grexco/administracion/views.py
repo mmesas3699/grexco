@@ -14,10 +14,15 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from administracion.models import (
-    UsuariosGrexco, Empresas, Plataformas, Aplicaciones,
-    Convenios, Reportes, HorariosSoporte)
-# from scripts import verifica_excel as ve
+from administracion.models import Aplicaciones
+from administracion.models import Convenios
+from administracion.models import Empresas
+from administracion.models import HorariosSoporte
+from administracion.models import Plataformas
+from administracion.models import PrioridadesRespuesta
+from administracion.models import Reportes
+from administracion.models import TiemposRespuesta
+from administracion.models import UsuariosGrexco
 
 
 # Create your views here.
@@ -753,6 +758,9 @@ class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView
                             fin=None
                         )
                     horarios.append(domingo)
+                else:
+                    return JsonResponse(
+                        {'error': 'Los datos no son validos'}, status=400)
         else:
             return JsonResponse({'error': 'La empresa no existe'}, status=400)
 
@@ -787,6 +795,144 @@ class ConsultaHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateV
         info_horarios = {'empresa': empresa, 'horarios': qry_horarios}
 
         return {'horarios': info_horarios}
+
+
+# ............................................................................
+#                     PRIORIDADES DE RESPUESTA                               .
+# ............................................................................
+class PrioridadesRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista que retorna un Json con los datos de las prioridades de respuesta
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request):
+        qry_prio_respuesta = PrioridadesRespuesta.objects.values().all()
+        prioridades = []
+        for prioridad in qry_prio_respuesta:
+            prioridades.append(prioridad)
+
+        return JsonResponse({'prioridades': prioridades}, status=200)
+
+
+# ............................................................................
+#                         TIEMPOS DE RESPUESTA                               .
+# ............................................................................
+class TiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar los tiempos de respuesta por empresa.
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/tiempos_respuesta.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+
+class TiemposRespuestaEmpresas(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Retorna un listado de las empresas que tienen Tiempos de
+    respuesta asignados.
+
+    Select Distinct administracion_empresas.nit,
+        administracion_tiemposrespuesta.empresa_id
+    From administracion_empresas, administracion_tiemposrespuesta
+    Where administracion_empresas.nit =
+        administracion_tiemposrespuesta.empresa_id;
+
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        qry_empresas = Empresas.objects.filter(
+            tiempos_respuesta__empresa__isnull=False).values('nit', 'nombre').distinct()
+        empresas = []
+        for empresa in qry_empresas:
+            empresas.append(empresa)
+
+        return JsonResponse({'empresas': empresas}, status=200)
+
+
+class CrearTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para guardar/actualizar los tiempos de respuesta.
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        # print(data)
+        nit = data['empresa'][0]
+
+        # Verifica que la emprea exista
+        if Empresas.objects.filter(nit=nit):
+            empresa = Empresas.objects.get(nit=nit)
+
+            # Si la empresa tiene datos en la tabla de Tiempos de respuesta
+            # actualiza esta información, si no entonces los crea.
+            if empresa.tiempos_respuesta.values('prioridad'):
+                with transaction.atomic():
+
+                    # Alta
+                    tr = empresa.tiempos_respuesta.get(prioridad='A')
+                    tr.tiempo = int(data['alta'][0])
+                    tr.save()
+
+                    # Media
+                    tr = empresa.tiempos_respuesta.get(prioridad='M')
+                    tr.tiempo = int(data['media'][0])
+                    tr.save()
+
+                    # Baja
+                    tr = empresa.tiempos_respuesta.get(prioridad='B')
+                    tr.tiempo = int(data['baja'][0])
+                    tr.save()
+                    return JsonResponse(
+                        {'ok': 'Se grabaron correctamente todos los datos'},
+                        status=200)
+            else:
+                with transaction.atomic():
+                    for k, v in data.items():
+                        if k == 'alta':
+                            prioridad = PrioridadesRespuesta(codigo='A')
+                            hora = int(v[0])
+                            TiemposRespuesta.objects.create(
+                                empresa=empresa,
+                                prioridad=prioridad,
+                                tiempo=hora
+                            )
+                        elif k == 'media':
+                            prioridad = PrioridadesRespuesta(codigo='M')
+                            hora = int(v[0])
+                            TiemposRespuesta.objects.create(
+                                empresa=empresa,
+                                prioridad=prioridad,
+                                tiempo=hora
+                            )
+                        elif k == 'baja':
+                            prioridad = PrioridadesRespuesta(codigo='B')
+                            hora = int(v[0])
+                            TiemposRespuesta.objects.create(
+                                empresa=empresa,
+                                prioridad=prioridad,
+                                tiempo=hora
+                            )
+                        else:
+                            continue
+                    return JsonResponse(
+                        {'ok': 'Se grabaron correctamente todos los datos'},
+                        status=200)
+        else:
+            return JsonResponse({'error': 'La empresa no existe'}, status=400)
 
 
 # *****************************************************************************

@@ -1,0 +1,174 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+<!-- Data tables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+<!-- Font awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+<style>
+
+</style>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+<script src="{% static '/js/tiempos_respuesta.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="row">
+  <div class="col-sm-7 pt-1 pl-3">
+    <h4 class="m-2">Tiempos de Respuesta</h4>
+    <hr class="m-1 w-100">
+
+    <!-- Barra de opciones -->
+    <div style="padding: 7px;">
+      <button class="btn btn-primary btn-sm ml-1" id="btnNuevoTiempoRespuesta">Nuevo</button>
+      <button class="btn btn-warning btn-sm ml-1" id="btnEliminarTiempoRespuesta">Eliminar</button> 
+    </div>
+    <!-- Fin barra de opciones -->
+
+    <!-- Alertas Eliminar -->
+    <!-- OK -->
+    <div class="alert alert-warning alert-dismissible fade show mt-1 p-2" id="alertaEliminarOk" style="display: none;">
+      <div class="row">
+        <div class="col-10" id="alertaEliminarOkMensaje">
+        </div>
+        <div class="col-2">
+          <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabla Tiempos de respuesta -->
+    <div class="table-responsive-sm mt-5">
+      <table id="tblTiemposRespuesta" class="display table table-sm table-hover table-striped table-bordered">
+        <thead>
+          <tr class="text-center">
+            <td>Nit</td>
+            <td>Empresa</td>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <!-- Fin Tabla Reportes -->
+
+    <!-- Modal Nuevo Reporte -->
+    <div class="modal" id="modalNuevoTiempoRespuesta" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5>Nuevo Tiempo de Respuesta</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+            <!-- Alertas -->
+            <div class="row">
+              <div class="col">
+                <div style="width: 100%;">
+                  <!-- Alerta ok -->
+                  <div class="alert alert-success alert-dismissible fade show p-1" id="alertaOk" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaOkMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Alerta error -->
+                  <div class="alert alert-danger alert-dismissible fade show p-1" id="alertaError" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaErrorMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>  
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <!-- Fin Alertas -->
+
+            <!-- Formulario captura tiempos de respuesta -->
+            <div class="row p-2">
+              <div class="col-12">
+                <!-- Selección de Empresa -->
+                <div class="row pl-2">
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="form-group">
+                        <label for="elegirEmpresa">Empresa:</label>
+                        <select name="selEmpresa" id="selEmpresa" class="custom-select">
+                          <option value="0">Seleccione una empresa</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Tabla nuevo tiempo respuesta -->
+                    <div class="row">
+                      <label>Tiempos de respuesta:</label>
+                      <table id="tblNuevoTiempoRespuesta" class="table table-bordered table-striped table-sm" style="width: 100%;">
+                        <thead>
+                          <tr>
+                            <td>Indice</td>
+                            <td>Prioridad</td>
+                            <td>Tiempo</td>
+                          </tr>
+                        </thead>
+                          <tr>
+                            <td>0</td>
+                            <td >Alta</td>
+                            <td><input type="number" id="inpPrioridadAlta" class="form-control-sm form-control o"></td>
+                          </tr>
+                          <tr>
+                            <td>1</td>
+                            <td>Media</td>
+                            <td><input type="number" id="inpPrioridadMedia" class="form-control-sm form-control o"></td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Baja</td>
+                            <td><input type="number" id="inpPrioridadBaja" class="form-control-sm form-control o"></td>
+                          </tr>
+                      </table>
+                    </div>
+                    <!-- Fin tabla nuevo tiempo respuesta -->
+                    
+                  </div>  
+                </div>
+
+              </div>
+            </div>
+            <!-- Fin formulario captura tiempos de respuesta -->
+
+          </div>
+          <div class="modal-footer p-2">
+            <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: DodgerBlue; display: none;"></i>
+            <button type="submit" class="btn btn-primary" maxlenght="40" id="btnGuardar" style="box-shadow: 0px 2px 7px 1px grey;">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- Fin Modal Nuevo Reporte -->
+
+  </div>
+</div>
+{% endblock %}

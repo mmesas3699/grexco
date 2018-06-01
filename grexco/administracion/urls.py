@@ -56,6 +56,11 @@ urlpatterns = [
         'plataformas/eliminar', views.DeletePlatformView.as_view(),
         name='eliminar_plataforma'),
     path(
+        'prioridades-respuesta/',
+        views.PrioridadesRespuestaView.as_view(),
+        name='prioridades_respuesta'
+    ),
+    path(
         'reportes/', views.ReportsView.as_view(), name='reportes'),
     path(
         'reportes/nuevo/',
@@ -74,6 +79,21 @@ urlpatterns = [
         'reportes/actualizar/',
         views.UpdateReportsView.as_view(),
         name='actualizar_reporte'
+    ),
+    path(
+        'tiempos-respuesta/',
+        views.TiemposRespuestaView.as_view(),
+        name='tiempos_respuesta'
+    ),
+    path(
+        'tiempos-respuesta/empresas/',
+        views.TiemposRespuestaEmpresas.as_view(),
+        name='tiempos_respuesta_empresas'
+    ),
+    path(
+        'tiempos-respuesta/nuevo/',
+        views.CrearTiemposRespuestaView.as_view(),
+        name='tiempos_respuesta_nuevo'
     ),
     path(
         'usuarios/nuevo/usuario/', views.CreateUserView.as_view(),

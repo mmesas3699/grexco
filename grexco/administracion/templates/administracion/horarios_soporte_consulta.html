@@ -44,44 +44,8 @@
 
       <!-- Almacena el nit del la empresa  -->
       <span id="idReporte" class="d-none">{{ horarios.empresa.nit }}</span>
-      
-      <!-- Barra de opciones -->
-      <hr class="w-100 m-0">
-      <div class="bg-muted rounded mt-1" style="padding: 7px;">
-        <button class="btn btn-info btn-sm" id="btnEditarHorarios">
-          <i class="material-icons align-middle md-19 pr-1">edit</i>
-          Editar
-        </button>
-      </div>
-      <!-- Fin Barra de opciones  -->
-      
-      <!-- Alertas Eliminar -->
-      <!-- OK -->
-      <div class="alert alert-warning alert-dismissible fade show mt-1 p-2" id="alertaEliminarOk" style="display: none;">
-        <div class="row">
-          <div class="col-10" id="alertaEliminarOkMensaje">
-          </div>
-          <div class="col-2">
-            <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
-              <i class="material-icons">close</i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- Error -->
-      <div class="alert alert-danger alert-dismissible fade show mt-1 p-2" id="alertaEliminarError" style="display: none;">
-        <div class="row">
-          <div class="col-10" id="alertaEliminarErrorMensaje">
-          </div>
-          <div class="col-2">
-            <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
-              <i class="material-icons">close</i>
-            </button>
-          </div>  
-        </div>
-      </div>
-      <!-- Fin Alertas Eliminar-->
-      
+            
+      <!-- Info horarios de soporte -->
       <div class="row">
         <div class="pl-3 mt-3">
           <div class="col">
@@ -111,63 +75,8 @@
           </div>
         </div>
       </div>
+      <!-- Fin info horarios de soporte -->
 
-      <!-- Modal Editar nombre Reporte -->
-      <div class="modal" id="modalEditarReporte">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header bg-light">
-              <h5 class="modal-title">{{ reporte.reporte }}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="">
-                <div class="form-group">
-                  <label for="nuevoNombreReporte">Nuevo nombre del reporte:</label>
-                  <input type="text" class="form-control" id="inpNuevoNombreReporte">
-                </div>
-              </form>
-              <!-- Alertas -->
-              <div class="row">
-                <div class="col">
-                  <!-- Alerta ok -->
-                  <div class="alert alert-success alert-dismissible fade show p-1" id="alertaOk" style="display: none;">
-                    <div class="row">
-                      <div class="col-10" id="alertaOkMensaje">
-                      </div>
-                      <div class="col-2">
-                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
-                          <i class="material-icons">close</i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Alerta error -->
-                  <div class="alert alert-danger alert-dismissible fade show p-1" id="alertaError" style="display: none;">
-                    <div class="row">
-                      <div class="col-10" id="alertaErrorMensaje">
-                      </div>
-                      <div class="col-2">
-                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
-                          <i class="material-icons">close</i>
-                        </button>
-                      </div>  
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Fin Alertas -->
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" maxlenght="40" id="btnGuardar">Guardar</button>
-              <button type="button" class="btn btn-secondary" id="btnCerrarModal">Salir</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Fin Modal editar nombre Reporte -->
     </div>
   </div>
 {% endblock %}
