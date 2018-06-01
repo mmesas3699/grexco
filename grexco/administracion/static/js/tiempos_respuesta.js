@@ -60,8 +60,8 @@ $(document).ready( function ()
         event.preventDefault();
         var nit = $(this).children('td:first-child').text();
         l = window.location.href;
-        console.log(l + nit);
-        window.location.assign(l+nit);
+        // console.log(l + 'consulta/' +nit);
+        window.location.assign(l + 'consulta/' +nit);
     });
 
     //Abre el modal para capturar los tiempos de respuesta

@@ -935,6 +935,25 @@ class CrearTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, Templat
             return JsonResponse({'error': 'La empresa no existe'}, status=400)
 
 
+class ConsultaTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar los tiempos de respuesta por empresa.
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/tiempos_respuesta_detalle.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, **kwargs):
+        nit = kwargs['nit']
+        # print(nit)
+        qry_empresa = get_object_or_404(Empresas, nit=nit)
+        qry_tiempos_respuesta = TiemposRespuesta.objects.filter(empresa=nit).all()
+
+        return {'tiempos': qry_tiempos_respuesta, 'empresa': qry_empresa}
+
+
 # *****************************************************************************
 # *                             Dahsboard                                     *
 # *****************************************************************************

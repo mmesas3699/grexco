@@ -1,0 +1,62 @@
+{% extends './base_dashboard.html' %}
+
+{% load static %}
+
+{% block css %}
+<!-- Data tables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+<!-- Font awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+<style>
+
+</style>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+<script src="{% static '/js/tiempos_respuesta_detalle.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="row">
+  <div class="col-sm-7 pt-1 pl-3">
+    <!-- Breadcrumb -->
+    <div class="row">
+      <nav class="m-0 p-0">
+        <ol class="breadcrumb m-0 pl-3" style="font-size: 20px; background-color: white;">
+          <li class="breadcrumb-item">
+            <a href="{% url 'administracion:tiempos_respuesta' %}">Tiempos de respuesta</a>
+          </li>
+          <li class="breadcrumb-item">{{ empresa.nombre }}</li>
+        </ol>
+      </nav>
+    </div>
+    <hr class="m-1 w-100">
+
+    <!-- Tabla Tiempos de respuesta -->
+    <div class="table-responsive-sm mt-5">
+      <table id="tblTiemposRespuesta" class="display table table-sm table-hover table-striped table-bordered">
+        <thead>
+          <tr class="text-center">
+            <td>Prioridad</td>
+            <td>Tiempo</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tiempos %}
+            <tr>
+              <td>{{ t.prioridad.descripcion }}</td>
+              <td>{{ t.tiempo }} Horas</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- Fin Tabla Reportes -->
+
+  </div>
+</div>
+{% endblock %}

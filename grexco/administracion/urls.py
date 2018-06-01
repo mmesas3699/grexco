@@ -86,6 +86,11 @@ urlpatterns = [
         name='tiempos_respuesta'
     ),
     path(
+        'tiempos-respuesta/consulta/<int:nit>/',
+        views.ConsultaTiemposRespuestaView.as_view(),
+        name='tiempos_respuesta_consulta'
+    ),
+    path(
         'tiempos-respuesta/empresas/',
         views.TiemposRespuestaEmpresas.as_view(),
         name='tiempos_respuesta_empresas'
