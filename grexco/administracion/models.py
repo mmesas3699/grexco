@@ -44,6 +44,7 @@ class Empresas(models.Model):
     nombre = models.CharField(max_length=100, blank=False, null=False)
     direccion = models.CharField(max_length=150, blank=False, null=False)
     telefono = models.CharField(max_length=12, null=False)
+    activa = models.BooleanField(default=True)
     plataforma = models.ForeignKey(
         Plataformas, on_delete=models.PROTECT, related_name='empresas')
 
@@ -144,9 +145,9 @@ class HorariosSoporte(models.Model):
 
 class Convenios(models.Model):
     aplicacion = models.ForeignKey(
-        Aplicaciones, related_name='convenios', on_delete=models.PROTECT)
+        'Aplicaciones', on_delete=models.PROTECT, related_name='convenios')
     empresa = models.ForeignKey(
-        Empresas, related_name='convenios', on_delete=models.PROTECT)
+        'Empresas', on_delete=models.PROTECT, related_name='convenios')
 
     def __str__(self):
         return "Empresa: {}, Aplicacion: {}".format(

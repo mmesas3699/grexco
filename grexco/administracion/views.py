@@ -1,18 +1,21 @@
+"""docstring."""
 import json
-import pyexcel as pe
-
 from datetime import time
 
-from django.contrib.auth import authenticate, login, logout
+import pyexcel as pe
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import connection
 from django.db import IntegrityError
 from django.db import transaction
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
+from django.views.generic import View
 
 from administracion.models import Aplicaciones
 from administracion.models import Convenios
@@ -25,12 +28,8 @@ from administracion.models import TiemposRespuesta
 from administracion.models import UsuariosGrexco
 
 
-# Create your views here.
 def genera_id(modelo):
-    """
-    Recibe como parametro un Model de:
-        administracion.Models
-    """
+    """Recibe como parametro un Modelo de: administracion.models."""
     x = modelo.objects.last()
     if x is None:
         return 1
@@ -38,11 +37,34 @@ def genera_id(modelo):
         return x.id + 1
 
 
+def empresa_activa(nit):
+    """
+    Retorna True si la empresa esta activa, si no retorna False.
+
+    Recibe como parametro el nit de la empresa a consultar.
+
+    """
+    empresa = get_object_or_404(Empresas, nit=nit)
+
+    if empresa.activa:
+        return True
+    else:
+        return False
+
+
+def sql_a_diccionario(cursor):
+    """Retorna las filas de la consulta como un diccionario."""
+    columnas = [columna[0] for columna in cursor.description]
+    return [dict(zip(columnas, fila)) for fila in cursor.fetchall()]
+
+
 class LoginView(TemplateView):
-    """docstring for LoginView"""
+    """docstring for LoginView."""
+
     template_name = 'administracion/login.html'
 
     def post(self, request):
+        """m."""
         data = dict(request.POST)
         usuario = authenticate(
             request, username=data['nombre'][0],
@@ -56,122 +78,187 @@ class LoginView(TemplateView):
                 {"error": "Datos invalidos o usuario inactivo"}, status=400)
 
 
+# ............................................................................
+# .                             Dahsboard                                    .
+# ............................................................................
+class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """docstring for DashboardView."""
+
+    login_url = 'usuarios:login'
+    template_name = 'administracion/dashboard.html'
+
+    def test_func(self):
+        """docstring."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+
 # ****************************************************************************
 # *                            Plataformas                                   *
 # ****************************************************************************
-class PlatformView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para consultar plataformas
-    """
+
+class PlataformasView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """Vista para consultar plataformas."""
+
     login_url = 'administracion:admin_login'
     template_name = 'administracion/plataformas.html'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def get_context_data(self, *args, **kwargs):
+        """Retorna un listado de las plataformas creadas."""
         plataforma = Plataformas.objects.all()
 
         return {'plataformas': plataforma}
 
 
-class CreatePlatformView(
+class CrearPlataformasView(
         LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
-    Vista para crear plataformas
+    Vista para crear plataformas.
+
+    * url: plataformas/nuevo/
     """
+
     login_url = 'usuarios:login'
     template_name = 'administracion/nueva_plataforma.html'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
+        """Recibe los datos enviados para crear la nueva plataforma."""
         data = dict(request.POST)
         nombre = data['nombre'][0]
         version = data['version'][0]
 
         if not nombre or not version:
             return JsonResponse(
-                {"error": "Los campos estan vacios"}, status=400)
+                {"error": "Los campos están vacíos"}, status=400)
 
         plataforma = Plataformas.objects.filter(
             nombre=nombre.upper(), version=version.upper())
 
+        # Verifica si la plataforma ya existe
         if plataforma.exists():
+
+            # Si existe retorna un error
             return JsonResponse({"error": "Los datos ya existen"}, status=400)
         else:
-            id = Plataformas.objects.values('id').last()['id'] + 1
+
+            # Si No existe la crea
+            id = genera_id(Plataformas)
             plt = Plataformas(id=id, nombre=nombre.upper(), version=version)
-            try:
-                plt.save()
-            except Exception as e:
-                mensaje = "Ocurrio un error al grabar los datos: {}".format(e)
-                return JsonResponse({"error": mensaje}, status=400)
 
-            mensaje = "Se guardo la plataforma: {}".format(plt)
-            return JsonResponse({"ok": mensaje})
+            with transaction.atomic():
+                try:
+                    plt.save()
+                except Exception as e:
+                    mensaje = """
+                            Ocurrió un error al grabar los datos: {}
+                        """.format(e)
+                    return JsonResponse({"error": mensaje}, status=400)
+
+                mensaje = "Se guardó la plataforma: {}".format(plt)
+                return JsonResponse({"ok": mensaje})
 
 
-class DeletePlatformView(
+class EliminarPlataformasView(
         LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para eliminar plataformas
-    """
+    """Vista para eliminar una plataforma."""
+
     login_url = 'usuarios:login'
     template_name = 'administracion/companies.html'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kargs):
+        """docstring."""
         data = dict(request.POST)
-        for k, v in data.items():
-            plataforma = Plataformas.objects.get(id=int(data[k][0]))
-            if plataforma:
-                from django.db.models.deletion import ProtectedError
-                try:
-                    plataforma.delete()
-                except ProtectedError as e:
-                    empresa = Empresas.objects.get(plataforma__id=plataforma.id)
-                    msj = 'No es posible eliminar: {}-{}. Pertenece a la empresa: {}'.format(
-                        plataforma.nombre, plataforma.version, empresa.nombre,)
-                    return JsonResponse({"error": msj}, status=400)
+        # print(data)
+        with transaction.atomic():
+            for k, v in data.items():
+                plataforma = get_object_or_404(Plataformas, id=int(data[k][0]))
+                if plataforma:
+                    from django.db.models.deletion import ProtectedError
+                    try:
+                        plataforma.delete()
+                    except ProtectedError:
+                        empresa = Empresas.objects.get(
+                            plataforma__id=plataforma.id)
+                        msj = """
+                                No es posible eliminar: {}-{}.
+                                Pertenece a la empresa: {}
+                               """.format(
+                            plataforma.nombre,
+                            plataforma.version,
+                            empresa.nombre
+                        )
+                        return JsonResponse({"error": msj}, status=400)
 
         mensaje = 'Se eliminó la plataforma: {}'.format(plataforma.nombre)
         return JsonResponse({"ok": mensaje}, status=200)
 
 
-# ****************************************************************************
-# *                                Aplicaciones                              *
-# ****************************************************************************
+class ListadoBasicoPlataformasView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    Retorna un Json con los datos de las plataformas.
+
+    Con el formato:
+    """
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        """docstring."""
+        qry_plataformas = Plataformas.objects.values().all()
+        plataformas = []
+        for plataforma in qry_plataformas:
+            plataformas.append(plataforma)
+
+        return JsonResponse({'plataformas': plataformas}, status=200)
+
+
+# ............................................................................
+# .                                Aplicaciones                              .
+# ............................................................................
 class AplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para consultar las aplicaciones
-    """
+    """Vista para consultar las aplicaciones."""
+
     login_url = 'usuarios:login'
     template_name = 'administracion/aplicaciones.html'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def get_context_data(self, *args, **kwargs):
+        """docstring."""
         aplicaciones = Aplicaciones.objects.all()
         return {'aplicaciones': aplicaciones}
 
     def post(self, request, *args, **kwargs):
-        """
-        Retorna la información de: Versión y Convenios, de la aplicación
-        seleccionada.
-        """
+        """Retorna la información de: Versión y Convenios."""
         data = dict(request.POST)
         id = data['id'][0]
         app = Aplicaciones.objects.get(id=id)
 
         convenios = []
-        qry_convenios = app.convenios.values('empresa__nombre', 'empresa__nit').all()
+        qry_convenios = app.convenios.values(
+            'empresa__nombre', 'empresa__nit').all()
         if len(qry_convenios) == 0:
-            dic_convenios = {'empresa': 'Esta aplicación no es usada por ningún Cliente.'}
+            dic_convenios = {
+                'empresa': 'Esta aplicación no es usada por ningún Cliente.'
+            }
             convenios.append(dic_convenios)
         else:
             for convenio in qry_convenios:
@@ -181,58 +268,77 @@ class AplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 convenios.append(dic_convenios)
 
         versiones = []
-        qry_versiones = app.versiones.values('version', 'fecha').all().order_by('-version')
+        qry_versiones = (
+            app.versiones
+               .values('version', 'fecha')
+               .all()
+               .order_by('-version')
+        )
         if len(qry_versiones) == 0:
-            dic_versiones = {'version': 'No tiene versiones', 'fecha': 'No tiene versiones'}
+            dic_versiones = {
+                'version': 'No tiene versiones',
+                'fecha': 'No tiene versiones'
+            }
             versiones.append(dic_versiones)
         else:
             for ver in qry_versiones:
                 dic_versiones = {}
                 dic_versiones['version'] = ver['version']
-                dic_versiones['fecha'] = ver['fecha'].strftime(format='%Y-%m-%d')
+                dic_versiones['fecha'] = ver['fecha'].strftime(
+                    format='%Y-%m-%d')
                 versiones.append(dic_versiones)
 
-        aplicacion = {'aplicacion': app.nombre, 'versiones': versiones, 'convenios': convenios}
-        # print(aplicacion)
+        aplicacion = {
+            'aplicacion': app.nombre,
+            'versiones': versiones,
+            'convenios': convenios
+        }
         return JsonResponse({'aplicacion': aplicacion}, status=200)
 
 
-class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para crear Aplicaciones
-    """
+class CreateAplicationsView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """Vista para crear Aplicaciones."""
+
     login_url = 'usuarios:login'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
-        """
-        Si POST trae datos se crea la aplicacion por formulario, si no
-        entonces, por archivo Excel.
-        """
+        """Si POST trae datos se crea la aplicacion por formulario."""
         data = request.POST
         if len(data) == 1:
             id = genera_id(Aplicaciones)
             nombre = data['nombre']
             app = Aplicaciones(id=id, nombre=nombre)
-
             if Aplicaciones.objects.filter(nombre=nombre).exists():
-                return JsonResponse({'error': 'La aplicación: {}. Ya existe.'.format(nombre)}, status=400)
+                return JsonResponse(
+                    {'error': 'La aplicación: {}. Ya existe.'.format(nombre)},
+                    status=400
+                )
 
             try:
                 app.save()
             except Exception as e:
-                return JsonResponse({'error': 'Ocurrio un error {}'.format(e)}, status=400)
+                return JsonResponse(
+                    {'error': 'Ocurrio un error {}'.format(e)},
+                    status=400
+                )
 
-            return JsonResponse({'ok': 'Se creo la aplicación: {}'.format(nombre)}, status=200)
+            return JsonResponse(
+                {'ok': 'Se creo la aplicación: {}'.format(nombre)},
+                status=200
+            )
         else:
             file = request.FILES['archivo']
             file_type = file.name.split('.')[-1]
             cuenta_guardados = 0
             no_grabados = []
             data = pe.iget_records(file_stream=file, file_type=file_type)
-            n_columnas = pe.get_sheet(file_stream=file, file_type=file_type).number_of_rows() - 1
+            n_columnas = pe.get_sheet(
+                file_stream=file, file_type=file_type).number_of_rows() - 1
             for row in data:
                 id = genera_id(Aplicaciones)
                 nombre = row['Aplicaciones']
@@ -244,28 +350,49 @@ class CreateAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
                     try:
                         app.save()
                     except Exception as e:
-                        return JsonResponse({'error': 'Ocurrio un error: {}'.format(e)}, status=400)
+                        return JsonResponse(
+                            {'error': 'Ocurrio un error: {}'.format(e)},
+                            status=400
+                        )
 
                     cuenta_guardados = cuenta_guardados + 1
 
             if cuenta_guardados == n_columnas:
-                return JsonResponse({'ok': 'Se grabaron todas las Aplicaciones'}, status=200)
+                return JsonResponse(
+                    {'ok': 'Se grabaron todas las Aplicaciones'},
+                    status=200
+                )
             else:
-                respuesta = "Se grabaron {} de {}".format(cuenta_guardados, n_columnas)
-                return JsonResponse({'error': {'respuesta': respuesta, 'aplicaciones': no_grabados}}, safe=False, status=400)
+                respuesta = "Se grabaron {} de {}".format(
+                    cuenta_guardados, n_columnas)
+                return JsonResponse(
+                    {
+                        'error': {
+                            'respuesta': respuesta,
+                            'aplicaciones': no_grabados
+                        }
+                    },
+                    safe=False,
+                    status=400
+                )
 
 
-class DeleteAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class DeleteAplicationsView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para eliminar Aplicaciones.
+
     Solo si la aplicación no tiene versiones, convenios o reportes.
     """
+
     login_url = 'usuarios:login'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
+        """docstring."""
         data = dict(request.POST)
         id = data["aplicacion[0][]"][0]
 
@@ -279,9 +406,13 @@ class DeleteAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
         versiones = app.versiones.all()
         reportes = app.reportes.all()
 
-        if len(convenios) > 0 or len(versiones) > 0 or len(reportes):
+        if len(convenios) > 0 or len(versiones) > 0 or len(reportes) > 0:
             return JsonResponse(
-                {'error': 'No es posible eliminar {}. Está siendo usada'.format(app.nombre)},
+                {
+                    'error':
+                        """No es posible eliminar {}.
+                        Está siendo usada""".format(app.nombre)
+                },
                 status=400
             )
         else:
@@ -291,45 +422,48 @@ class DeleteAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateVie
                 status=200)
 
 
-class ListAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ListadoAplicacionesView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
-    Retorna un JSON con la información (id y nombre) de la aplicación o
-    un archivo de Excel con la misma información dependiendo del 'tipo' que
-    se envie en los parametros que se pasen en el POST al momento
-    de hacer el Request:
+    Retorna un JSON con la información (id y nombre) de la aplicación.
 
-    tipo = listado --> JSON
-    tipo = excel   --> Excel
+    url = aplicaciones/listado/
 
     """
+
     login_url = 'usuarios:login'
 
     def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def post(self, request, *args, **kwargs):
-        data = dict(request.POST)
-        tipo = data['tipo'][0]
-
-        if tipo == 'listado':
-            qry_aplicaciones = Aplicaciones.objects.values('id', 'nombre').all().order_by('id')
-            aplicaciones = []
-            for aplicacion in qry_aplicaciones:
-                aplicaciones.append(aplicacion)
-
-            return JsonResponse(aplicaciones, status=200, safe=False)
-
-
-class ListExcelAplicationsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Retorna un archivo de excel con el listado de las aplicaciones.
-    """
-    login_url = 'usuarios:login'
-
-    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def get(self, request, *args, **kwargs):
+        """docstring."""
+        qry_aplicaciones = (
+            Aplicaciones.objects
+                        .values('id', 'nombre')
+                        .all()
+                        .order_by('id')
+        )
+        aplicaciones = []
+        for aplicacion in qry_aplicaciones:
+            aplicaciones.append(aplicacion)
+
+        return JsonResponse({'aplicaciones': aplicaciones}, status=200)
+
+
+class ListExcelAplicationsView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un archivo de excel con el listado de las aplicaciones."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        """docstring."""
         qry_aplicaciones = Aplicaciones.objects.values(
             'id', 'nombre').order_by('id')
         aplicaciones = []
@@ -349,18 +483,22 @@ class ListExcelAplicationsView(LoginRequiredMixin, UserPassesTestMixin, Template
 # *                                  REPORTES                                *
 # ****************************************************************************
 class ReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista reportes
-    """
+    """Vista reportes."""
+
     login_url = 'usuarios:login'
     template_name = 'administracion/reportes.html'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
-        qry_reportes = Reportes.objects.values(
-            'id', 'nombre', 'aplicacion__nombre').all()
+        """docstring."""
+        qry_reportes = (
+            Reportes.objects
+                    .values('id', 'nombre', 'aplicacion__nombre')
+                    .all()
+        )
         reportes = []
         for reporte in qry_reportes:
             reportes.append(reporte)
@@ -371,6 +509,7 @@ class ReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 class CreateReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para crear reportes.
+
     La vista recibe un JSON con los datos:
         - tipo (si la aplicación se crea de forma invidual o
                 masivamente por archivo de excel)
@@ -380,9 +519,11 @@ class CreateReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     login_url = 'usuarios:login'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
+        """docstring."""
         data = dict(request.POST)
         tipo = data['tipo'][0]
 
@@ -418,7 +559,12 @@ class CreateReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 reporte.save()
             except IntegrityError:
                 return JsonResponse(
-                    {"error": "¡El reporte '{}' ya existe!".format(reporte.nombre)}, status=400)
+                    {
+                        "error": "¡El reporte '{}' ya existe!".format(
+                            reporte.nombre)
+                    },
+                    status=400
+                )
 
             return JsonResponse(
                 {"ok": "Se creó el reporte: '{}'".format(reporte.nombre)},
@@ -485,15 +631,20 @@ class DetailReportView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     def get_context_data(self, **kwargs):
         id_reporte = kwargs['id']
         reporte = get_object_or_404(Reportes, id=id_reporte)
-        qry_versiones = reporte.versiones.values(
-            'version', 'fecha').all().order_by('-fecha')
+        qry_versiones = (
+            reporte.versiones
+                   .values('version', 'fecha')
+                   .all()
+                   .order_by('-fecha')
+        )
         qry_incidentes = reporte.incidentes.values('codigo')
         info_reporte = {
             'reporte': reporte.nombre,
             'id': reporte.id,
             'aplicacion': reporte.aplicacion.nombre,
             'versiones': dict(qry_versiones),
-            'incidentes': dict(qry_incidentes)}
+            'incidentes': dict(qry_incidentes)
+        }
 
         return {'reporte': info_reporte}
 
@@ -523,14 +674,19 @@ class UpdateReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 # Cambia el nombre del reporte
                 reporte.nombre = nuevo_nombre
                 reporte.save()
-                mensaje = 'El nuevo nombre del reporte "{}" es: {}'.format(nombre_antiguo, nuevo_nombre)
+                mensaje = 'El nuevo nombre del reporte "{}" es: {}'.format(
+                    nombre_antiguo, nuevo_nombre)
                 return JsonResponse({'ok': mensaje}, status=200)
             else:
                 return JsonResponse(
-                    {'error': 'No existe el reporte: {}'.format(nombre_antiguo)}, status=400)
+                    {'error': 'No existe el reporte: {}'.format(nombre_antiguo)},
+                    status=400
+                )
         else:
             return JsonResponse(
-                {'error': 'Ya existe un reporte con el mismo nombre'}, status=400)
+                {'error': 'Ya existe un reporte con el mismo nombre'},
+                status=400
+            )
 
 
 class DeleteReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -565,7 +721,8 @@ class DeleteReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 # ............................................................................
 # .                        Horarios de soporte                               .
 # ............................................................................
-class HorariosSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class HorariosSoporteView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para consultar los horarios de soporte por Empresa.
     """
@@ -576,13 +733,12 @@ class HorariosSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView)
         return self.request.user.usuariosgrexco.tipo == 'A'
 
 
-class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para consultar los horarios de soporte por Empresa.
-    """
+class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Vista para consultar los horarios de soporte por Empresa."""
     login_url = 'usuarios:login'
 
     def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
@@ -594,6 +750,7 @@ class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView
         # y crea una lista Modelos creados con estos datos.
         if Empresas.objects.filter(nit=nit_empresa):
             empresa = Empresas.objects.get(nit=nit_empresa)
+            print(data)
             for k, v in data.items():
                 # Las variables: hora_inicio y hora_fin son listas con el
                 # formato: [hora, minuto]
@@ -609,7 +766,8 @@ class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView
                         lunes = HorariosSoporte(
                             dia=0,
                             descripcion='Lunes',
-                            inicio=time(hour=hora_inicio[0], minute=hora_inicio[1]),
+                            inicio=time(
+                                hour=hora_inicio[0], minute=hora_inicio[1]),
                             fin=time(hour=hora_fin[0], minute=hora_fin[1])
                         )
                     else:
@@ -759,8 +917,7 @@ class CrearHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateView
                         )
                     horarios.append(domingo)
                 else:
-                    return JsonResponse(
-                        {'error': 'Los datos no son validos'}, status=400)
+                    pass
         else:
             return JsonResponse({'error': 'La empresa no existe'}, status=400)
 
@@ -850,8 +1007,12 @@ class TiemposRespuestaEmpresas(LoginRequiredMixin, UserPassesTestMixin, Template
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def get(self, request, *args, **kwargs):
-        qry_empresas = Empresas.objects.filter(
-            tiempos_respuesta__empresa__isnull=False).values('nit', 'nombre').distinct()
+        qry_empresas = (
+            Empresas.objects
+                    .filter(tiempos_respuesta__empresa__isnull=False)
+                    .values('nit', 'nombre')
+                    .distinct()
+        )
         empresas = []
         for empresa in qry_empresas:
             empresas.append(empresa)
@@ -859,7 +1020,8 @@ class TiemposRespuestaEmpresas(LoginRequiredMixin, UserPassesTestMixin, Template
         return JsonResponse({'empresas': empresas}, status=200)
 
 
-class CrearTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class CrearTiemposRespuestaView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para guardar/actualizar los tiempos de respuesta.
     """
@@ -873,7 +1035,7 @@ class CrearTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, Templat
         # print(data)
         nit = data['empresa'][0]
 
-        # Verifica que la emprea exista
+        # Verifica que la empresa exista
         if Empresas.objects.filter(nit=nit):
             empresa = Empresas.objects.get(nit=nit)
 
@@ -935,10 +1097,12 @@ class CrearTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, Templat
             return JsonResponse({'error': 'La empresa no existe'}, status=400)
 
 
-class ConsultaTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ConsultaTiemposRespuestaView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
     Vista para consultar los tiempos de respuesta por empresa.
     """
+
     login_url = 'usuarios:login'
     template_name = 'administracion/tiempos_respuesta_detalle.html'
 
@@ -954,25 +1118,499 @@ class ConsultaTiemposRespuestaView(LoginRequiredMixin, UserPassesTestMixin, Temp
         return {'tiempos': qry_tiempos_respuesta, 'empresa': qry_empresa}
 
 
-# *****************************************************************************
-# *                             Dahsboard                                     *
-# *****************************************************************************
-class DashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """docstring for DashboardView"""
+# ............................................................................
+# .                            Empresas                                      .
+# ............................................................................
+class CompaniesView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista consultar empresas
+    """
     login_url = 'usuarios:login'
-    template_name = 'administracion/dashboard.html'
+    template_name = 'administracion/empresas.html'
 
     def test_func(self):
         return self.request.user.usuariosgrexco.tipo == 'A'
 
+    def get_context_data(self, *args, **kwargs):
+        empresas = Empresas.objects.all()
+        plataformas = Plataformas.objects.all()
+        aplicaciones = Aplicaciones.objects.all()
 
-class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+        return {
+            'empresas': empresas, 'plataformas': plataformas,
+            'aplicaciones': aplicaciones}
+
+
+class CrearEmpresaView(LoginRequiredMixin, UserPassesTestMixin, View):
     """
+    Vista para crear empresas."""
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        """docstring."""
+        data = dict(request.POST)
+        nit = data['nit'][0]
+        nombre = data['nombre'][0]
+        direccion = data['direccion'][0]
+        telefono = data['telefono'][0]
+        activa = data['activa'][0]
+        id_plataforma = int(data['plataforma'][0])
+
+        # Verifica que no hayan campos en blanco.
+        for k, v in data.items():
+            if len(data[k][0]) == 0:
+                mensaje = 'El campo {} esta vacio'.format(k.capitalize())
+                return JsonResponse({'error': mensaje}, status=400)
+                break
+
+        if id_plataforma == 0:
+            return JsonResponse(
+                {'error': 'Debe seleccionar una plataforma'}, status=400)
+
+        plataforma = Plataformas.objects.get(id=id_plataforma)
+        empresa = Empresas(
+            nit=nit, nombre=nombre, direccion=direccion, telefono=telefono,
+            activa=activa, plataforma=plataforma
+        )
+
+        with transaction.atomic():
+            try:
+                empresa.save()
+            except Exception as e:
+                return JsonResponse({"error": e}, status=400)
+
+            return JsonResponse(
+                {"ok": "Los datos de guardaron correctamente."})
+
+
+class ConsultaEmpresaView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Renderiza un template para consultar la información de una Empresa.
+
+    """
+    login_url = 'usuarios:login'
+    template_name = 'administracion/empresas_detalle.html'
+
+    def test_func(self):
+        """docstring."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, **kwargs):
+        nit = kwargs['nit']
+        qry_empresa = get_object_or_404(Empresas, nit=nit)
+        qry_convenios = qry_empresa.convenios.all()
+        return {'empresa': qry_empresa, 'convenios': qry_convenios}
+
+
+class DetalleEmpresaView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un JSON con la información de la empresa seleccionada."""
+    login_url = 'usuarios:login'
+    template_name = 'administracion/empresas_detalle.html'
+
+    def test_func(self):
+        """docstring."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        nit = kwargs['nit']
+        qry_empresa = get_object_or_404(Empresas, nit=nit)
+        return JsonResponse({'empresa': nit}, status=200)
+
+
+class ListadoBasicoEmpresasView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un listado con los datos basicos de las Empresas."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """docstring."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        """docstring."""
+        qry_empresas = (
+            Empresas.objects
+                    .values(
+                        'nit', 'nombre', 'direccion', 'telefono', 'activa',
+                        'plataforma__nombre')
+                    .all()
+        )
+        empresas = []
+        for empresa in qry_empresas:
+            if empresa['activa'] is True:
+                empresa['activa'] = 'Si'
+            else:
+                empresa['activa'] = 'No'
+            empresas.append(empresa)
+
+        return JsonResponse({'empresas': empresas}, status=200)
+
+
+class ListadoEmpresasActivas(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un listado con los datos basicos de las empresas activas."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        """docstring."""
+        qry_empresas = (
+            Empresas.objects
+                    .filter(activa=True)
+                    .values(
+                        'nit', 'nombre', 'direccion', 'telefono', 'activa',
+                        'plataforma__nombre')
+                    .all()
+        )
+        empresas = []
+        for empresa in qry_empresas:
+            if empresa['activa'] is True:
+                empresa['activa'] = 'Si'
+            else:
+                empresa['activa'] = 'No'
+            empresas.append(empresa)
+
+        return JsonResponse({'empresas': empresas}, status=200)
+
+
+
+class ActualizaEmpresaView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Permite actualizar la información de la empresa."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request):
+        data = dict(request.POST)
+        nit = data['nit'][0]
+        direccion = data['direccion'][0]
+        telefono = data['telefono'][0]
+        id_plataforma = int(data['plataforma'][0])
+        empresa = get_object_or_404(Empresas, nit=nit)
+
+        if empresa_activa(nit):
+            pass
+        else:
+            return JsonResponse(
+                {'error': 'La empresa esta inactiva'}, status=400)
+
+        if direccion:
+            empresa.direccion = direccion
+
+        if telefono:
+            empresa.telefono = telefono
+
+        print(id_plataforma, type(id_plataforma))
+        if id_plataforma == 0:
+            print('1')
+        else:
+            print('2')
+            plataforma = get_object_or_404(Plataformas, id=id_plataforma)
+            empresa.plataforma = plataforma
+
+        with transaction.atomic():
+            try:
+                empresa.save()
+            except Exception as e:
+                return JsonResponse({'error': e}, status=400)
+
+        return JsonResponse({'ok': 'Se actualizó la información'}, status=200)
+
+
+class ActivaEmpresasView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Activa empresas. """
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request):
+        data = dict(request.POST)
+        nit = data['nit'][0]
+        empresa = get_object_or_404(Empresas, nit=nit)
+
+        with transaction.atomic():
+            if empresa.activa is False:
+                empresa.activa = True
+            else:
+                return JsonResponse(
+                    {'error': 'La empresa se encuentra activa'},
+                    status=400
+                )
+
+            try:
+                empresa.save()
+            except Exception as e:
+                return JsonResponse({'error': e}, status=400)
+
+            return JsonResponse({'ok': 'ok'}, status=200)
+
+
+class DesactivaEmpresasView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Permite desactivar una empresa."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request):
+        data = dict(request.POST)
+        nit = data['nit'][0]
+        empresa = get_object_or_404(Empresas, nit=nit)
+
+        with transaction.atomic():
+            if empresa.activa:
+                empresa.activa = False
+            else:
+                return JsonResponse(
+                    {'error': 'La empresa ya se encuentra inactiva'},
+                    status=400
+                )
+
+            try:
+                empresa.save()
+            except Exception as e:
+                return JsonResponse({'error': e}, status=400)
+
+            return JsonResponse({'ok': 'ok'}, status=200)
+
+
+# ............................................................................
+# .                            Convenios                                     .
+# ............................................................................
+class ConveniosView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para consultar los convenios organizados por Empresa.
+
+    url = convenios/
+    """
+
+    login_url = 'usuarios:login'
+    template_name = 'administracion/convenios.html'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+
+class CrearConveniosView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    Vista para crear convenios.
+
+    url = convenios/nuevo/
+    """
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        """docstring."""
+        data = json.loads(request.body.decode('utf-8'))
+        nit_empresa = data['empresa']
+        aplicaciones = data['aplicaciones']
+
+        # Verifica si la empresa existe
+        if Empresas.objects.filter(nit=nit_empresa):
+            empresa = Empresas.objects.get(nit=nit_empresa)
+        else:
+            return JsonResponse({'error': 'La empresa no existe'}, status=400)
+
+        # verifica si la empresa esta activa
+        if empresa_activa(nit_empresa):
+            pass
+        else:
+            return JsonResponse(
+                {'error': 'La empresa esta inactiva'}, status=400)
+
+        # Verifica si la empresa ya tiene convenios
+        if empresa.convenios.all():
+            mensaje = """ La empresa '{}' ya tiene convenios.
+                          Si desea modificarlos por favor consulte la
+                          empresa y actualice la información.
+                      """.format(empresa.nombre)
+            return JsonResponse({'error': mensaje}, status=400)
+
+        with transaction.atomic():
+            for app in aplicaciones:
+                aplicacion = get_object_or_404(Aplicaciones, id=app['id'])
+                Convenios.objects.create(
+                    empresa=empresa, aplicacion=aplicacion)
+
+            return JsonResponse(
+                {'ok': 'Se crearon todos los convenios'}, status=200)
+
+
+class ConsultaConveniosView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Template para consultar una empresa y sus convenios.
+
+    """
+
+    login_url = 'usuarios:login'
+    template_name = 'administracion/convenios_consulta.html'
+
+    def test_func(self):
+        """Restringe el acceso solo a usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get_context_data(self, **kwargs):
+        """docstring."""
+        nit = kwargs['nit']
+        qry_empresa = get_object_or_404(Empresas, nit=nit)
+        qry_convenios = qry_empresa.convenios.all()
+
+        return {'empresa': qry_empresa, 'convenios': qry_convenios}
+
+
+class ActualizarConveniosView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Agrega los convenios recibidos ya existentes."""
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo al usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request):
+        """docstring."""
+        data = json.loads(request.body.decode('utf-8'))
+        nit_empresa = data['empresa']
+        aplicaciones = data['aplicaciones']
+
+        # Verifica si la empresa existe
+        if Empresas.objects.filter(nit=nit_empresa):
+            empresa = Empresas.objects.get(nit=nit_empresa)
+
+            # Verifica si la empresa esta activa
+            if empresa_activa(nit_empresa):
+                pass
+            else:
+                return JsonResponse(
+                    {'error': 'La empresa esta inactiva'}, status=400)
+
+            with transaction.atomic():
+                for aplicacion in aplicaciones:
+                    app = Aplicaciones.objects.get(id=aplicacion['id'])
+                    convenio = Convenios(empresa=empresa, aplicacion=app)
+                    try:
+                        convenio.save()
+                    except Exception as e:
+                        return JsonResponse(
+                            {'error': 'Ocurrió un error: %s' % (e)},
+                            status=400
+                        )
+                        break
+
+                return JsonResponse(
+                    {'ok': 'Se guardó la información correctamente'},
+                    status=200
+                )
+        else:
+            return JsonResponse({'error': 'La empresa no existe'}, status=400)
+
+
+class EliminaConveniosView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """pass."""
+    pass
+
+
+class ListadoConveniosEmpresasView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un listado de Empresas que tengan Convenios."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo al usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request):
+        """docstring."""
+        qry_empresas = (
+            Empresas.objects
+                    .filter(convenios__empresa__isnull=False)
+                    .values('nit', 'nombre')
+                    .distinct()
+                    .all()
+        )
+        empresas = []
+
+        for empresa in qry_empresas:
+            empresas.append(empresa)
+
+        return JsonResponse({'empresas': empresas}, status=200)
+
+
+class ListadoNoConveniosEmpresasView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un JSON con las aplicaciones que no pertencen a la empresa."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo al usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, **kwargs):
+        nit = kwargs['nit']
+
+        if Empresas.objects.filter(nit=nit):
+            qry_sql = """
+                SELECT administracion_aplicaciones.id,
+                       administracion_aplicaciones.nombre
+                FROM administracion_aplicaciones
+                WHERE administracion_aplicaciones.id NOT IN
+                (
+                    SELECT administracion_convenios.aplicacion_id
+                    FROM administracion_convenios
+                    WHERE administracion_convenios.empresa_id = '%s'
+                )
+                ORDER BY administracion_aplicaciones.id;""" % (nit)
+
+            with connection.cursor() as cursor:
+                cursor.execute(qry_sql)
+                aplicaciones = sql_a_diccionario(cursor)
+
+            return JsonResponse({'aplicaciones': aplicaciones}, status=200)
+        else:
+            return JsonResponse(
+                {'error': 'La empresa no existe'},
+                status=400
+            )
+
+
+# ............................................................................
+# .                             Usuarios                                     .
+# ............................................................................
+class CrearUsuariosView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """
+    Vista para crear Usuarios.
+
     El orden para crear un usuario:
         1. Tener creada la: Empresa
         2. User
         3. UsuariosGrexco
+
     """
+
     login_url = 'usuarios:login'
     template_name = 'administracion/nuevo_usuario.html'
 
@@ -981,22 +1619,22 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
     def get_context_data(self):
         empresas = Empresas.objects.all()
-
         return {'empresas': empresas}
 
     def post(self, request, *args, **kwargs):
         data = dict(request.POST)
+        nombre_usuario = data['nombre_usuario'][0]
+        tipo = data['tipo_usuario'][0]
 
-        user = User.objects.filter(username=data['nombre_usuario'][0])
-        print(user)
-        if len(user) != 0:
+        # Verifica si el nombre de usuario existe.
+        if User.objects.filter(username=nombre_usuario):
+            user = get_object_or_404(username=nombre_usuario)
             return JsonResponse(
-                {"error": "El nombre de usuario ya existe"},
-                status=400,
+                {'error': 'El nombre de usuario ya existe'},
+                status=400
             )
 
-        tipo_usuario = data['tipo_usuario'][0]
-        if tipo_usuario == 'cliente':
+        if tipo == 'cliente':
             try:
                 user = User.objects.create_user(
                     username=data['nombre_usuario'][0],
@@ -1006,7 +1644,6 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                     last_name=data['apellido'][0],
                 )
             except Exception as e:
-                print(e)
                 return JsonResponse(
                     {"error": "Ocurrio un error al crear el usuario: {}".format(e)},
                     status=400,
@@ -1136,6 +1773,7 @@ class CreateUserView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             return JsonResponse({'ok': mensaje})
 
 
+
 class ConsultClientsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     login_url = 'usuarios:login'
     template_name = 'administracion/clientes.html'
@@ -1155,96 +1793,3 @@ class ConsultClientsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         usuario = serializers.serialize('json', usr)
         print(usuario)
         return HttpResponse(usuario, content_type='application/json')
-
-
-
-class CompaniesView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista consultar empresas
-    """
-    login_url = 'usuarios:login'
-    template_name = 'administracion/companies.html'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def get_context_data(self, *args, **kwargs):
-        empresas = Empresas.objects.all()
-        plataformas = Plataformas.objects.all()
-        aplicaciones = Aplicaciones.objects.all()
-
-        return {'empresas': empresas,
-                'plataformas': plataformas,
-                'aplicaciones': aplicaciones}
-
-
-class CreateCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Vista para crear empresas:
-    Orden:
-        1. Crear la plataforma.
-        2. Crear la empresa.
-    """
-    login_url = 'usuarios:login'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def post(self, request, *args, **kwargs):
-        data = dict(request.POST)
-
-        for k, v in data.items():
-            if len(data[k][0]) == 0:
-                mensaje = 'El campo {} esta vacio'.format(k.capitalize())
-                return JsonResponse(
-                    {'error': mensaje}, status=400
-                )
-                break
-
-        aplicaciones = data['aplicaciones[]']
-        plataforma = Plataformas.objects.get(id=int(data['plataforma'][0]))
-        empresa = Empresas(
-            nit=data['nit'][0],
-            nombre=data['nombre'][0],
-            direccion=data['direccion'][0],
-            telefono=data['telefono'][0],
-            plataformas_nombre=plataforma
-        )
-
-        try:
-            empresa.save()
-
-            for a in aplicaciones:
-                app = Aplicaciones.objects.get(id=int(a))
-                convenio = Convenios()
-                convenio.aplicaciones_id = app
-                convenio.empresas_nit = empresa
-                convenio.save()
-
-            return JsonResponse({"ok": "Los datos de guardaron correctamente."})
-        except Exception as e:
-            return JsonResponse({"error": e}, status=400)
-
-
-class BasicListCompanyView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """
-    Retorna un listado con los datos basicos de las Empresas.
-    """
-    login_url = 'usuarios:login'
-
-    def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
-
-    def get(self, request, *args, **kwargs):
-        qry_empresas = Empresas.objects.values(
-            'nit',
-            'nombre',
-            'direccion',
-            'telefono',
-            'plataforma__nombre').all()
-
-        empresas = []
-        for empresa in qry_empresas:
-            empresas.append(empresa)
-
-        return JsonResponse({'empresas': empresas}, status=200)

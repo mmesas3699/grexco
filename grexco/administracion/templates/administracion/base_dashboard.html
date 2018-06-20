@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Grexco | Dashboard</title>
+	<title>
+		{% block title %} {% endblock %}
+	</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{% load static %}
@@ -16,6 +18,9 @@
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 	{% block css %}
 
 	{% endblock %}
@@ -24,7 +29,7 @@
 <body style="font-size: .875rem; font-family: 'Roboto', sans-serif;"> 
 
 <!-- Barra de navegación en mobiles -->
-<nav class="navbar navbar-expand-lg bg-dark d-lg-none d-md-block d-sm-block">
+<nav class="navbar navbar-expand-lg bg-primary d-lg-none d-md-block d-sm-block">
 	<div class="container-fluid">	
 	    <!-- User -->
 		  <div class="dropdown">
@@ -57,7 +62,7 @@
 	
 	<!-- Top Nav -->
 	<div class="row d-none d-lg-block">
-		<nav class="nav bg-dark sticky-top p-1 clearfix" style="width: 100%; height: 50px;">
+		<nav class="nav bg-primary sticky-top p-1 clearfix" style="width: 100%; height: 50px;">
 			<div class="col">
 				<a href="/a/" class="navbar-brand pl-1" style="color: white; font-size: 22px;">
 					GREXCO S.A.S
@@ -65,7 +70,7 @@
 			</div>
 			<div class="col">				
 				<div class="dropdown">
-					<button class="btn btn-dark float-right p-1 m-0" data-toggle="dropdown">
+					<button class="btn btn-primary float-right p-1 m-0" data-toggle="dropdown">
 						<i class="material-icons person">person</i>
 					</button>
 					<div class="dropdown-menu">
@@ -83,16 +88,15 @@
 	<div class="row">
 
 		<!-- sidebar -->
-		<div class="col-md-2 d-none d-lg-block bg-light sidebar">
+		<div class="col-md-2 d-none d-lg-block sidebar">
 			<div class="sidebar-sticky p-0 pt-2">
-				<h6 class="text-center">Administración</h6>
 				<!-- Usuarios -->
 				<div class="m-1">
-					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold" 
+					<button class="btn btn-sm btn-toolbar btn-block menu-btn" 
 							type="button" 
 							data-toggle="collapse" 
 							data-target="#collapseUsuarios"
-							style="font-size: 15px;">	Usuarios
+							style="font-size: 15px; background-color: white !important">Usuarios
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
   				</button>
@@ -132,11 +136,11 @@
 
 				<!-- Clientes -->
 				<div class="m-1">
-					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold" 
+					<button class="btn btn-sm btn-toolbar btn-block menu-btn" 
 									type="button" 
 									data-toggle="collapse" 
 									data-target="#collapseClientes"
-									style="font-size: 15px;">
+									style="font-size: 15px; background-color: white !important">
 									Clientes
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
@@ -162,6 +166,10 @@
 										<a href="{% url 'administracion:tiempos_respuesta' %}"
 											 class="btn btn-sm btn-block p-1 text-dark text-left">Tiempos de respuesta</a>
 									</li>
+   								<li class="list-group-item p-0">
+										<a href="{% url 'administracion:convenios' %}"
+											 class="btn btn-sm btn-block p-1 text-dark text-left">Convenios</a>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -170,11 +178,11 @@
 
 				<!-- Aplicaciones -->
 				<div class="m-1">
-					<button class="btn btn-sm btn-toolbar btn-block btn-light menu-btn font-weight-bold"
+					<button class="btn btn-sm btn-toolbar btn-block menu-btn"
 									type="button"
 									data-toggle="collapse" 
 									data-target="#collapseAplicaciones"
-									style="font-size: 15px;">
+									style="font-size: 15px; background-color: white !important">
 							Aplicaciones
 						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
 						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
@@ -228,10 +236,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="{% static '/js/base_dashboard.js' %}"></script>
+<script src="{% static '/js/urls.js' %}"></script>
 
-	{% block js %}
+{% block js %}
 
-	{% endblock %}
+{% endblock %}
 
 </body>
 </html>

@@ -52,10 +52,9 @@ $(document).ready( function ()
         
         //Trae el listado de aplicaciones para asociar al Reporte
         $.ajax({
-            url: '/a/aplicaciones/listado',
-            type: 'POST',
+            url: '/a/aplicaciones/listado/',
+            type: 'GET',
             dataType: 'json',
-            data: {tipo: 'listado'},
         })
         .done(function(data) {
             //Inserta el listado de aplicaciones en el 'select'

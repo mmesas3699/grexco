@@ -122,7 +122,7 @@ $(document).ready( function ()
             console.log(data);
             $.ajax(
             {
-                url: '/a/aplicaciones/nuevo',
+                url: '/a/aplicaciones/nuevo/',
                 type: 'POST',
                 processData: false,
                 contentType: false,
@@ -258,7 +258,7 @@ $(document).ready( function ()
 
                 $.ajax(
                 {
-                    url: '/a/aplicaciones/eliminar',
+                    url: '/a/aplicaciones/eliminar/',
                     type: 'POST',
                     dataType: 'json',
                     data: plataformas,

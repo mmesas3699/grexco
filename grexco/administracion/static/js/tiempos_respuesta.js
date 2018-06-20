@@ -67,7 +67,7 @@ $(document).ready( function ()
     //Abre el modal para capturar los tiempos de respuesta
     $('#btnNuevoTiempoRespuesta').click(function(event) {
         event.preventDefault();
-        $.get('/a/empresas/listado/', function(data) {
+        $.get('/a/empresas/listado/activas/', function(data) {
             var empresas = data['empresas'];
             $(empresas).each(function(index, el) {
                 $('#selEmpresa').append(
@@ -77,6 +77,7 @@ $(document).ready( function ()
         });
         $('#modalNuevoTiempoRespuesta').modal('show');
     });
+
 
     //Al cerrar el modal 'modalNuevoTiempoRespuesta' borra las opciones del 
     //select de empresas. Esto porque cada vez que se abre el modal duplica los
@@ -95,6 +96,7 @@ $(document).ready( function ()
         $('#alertaOk').hide();
         $('#alertaError').hide();
     });
+
 
     // Guarda los tiempos de respuesta
     $("#btnGuardar").click(function(event) {

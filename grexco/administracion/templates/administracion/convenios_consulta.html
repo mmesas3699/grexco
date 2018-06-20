@@ -1,0 +1,234 @@
+{% extends './base_dashboard.html' %}
+
+{% block title %}
+  Convenios | {{ empresa.nombre }}
+{% endblock %}
+
+{% load static %}
+
+{% block css %}
+<!-- Data tables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/sl-1.2.5/datatables.min.css"/>
+
+<style>
+  .material-icons.md-18 {
+    font-size: 18px;
+  }
+  
+  .material-icons.md-19 {
+    font-size: 19px;
+  }
+
+  .material-icons.md-20 {
+    font-size: 20px;
+  }
+
+</style>
+  
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-html5-1.5.1/b-print-1.5.1/r-2.2.1/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+
+<script src="{% static '/js/consulta_convenios.js' %}"></script>
+{% endblock%}
+
+{% block content %}
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-10 pt-2 pl-3">
+      
+      <!-- Breadcrumb -->
+      <div class="row">
+          <nav class="m-0 p-0">
+            <ol class="breadcrumb m-0 pl-3" style="font-size: 20px; background-color: white;">
+              <li class="breadcrumb-item"><a href="{% url 'administracion:convenios' %}">Convenios</a></li>
+              <li class="breadcrumb-item">{{ empresa.nombre }}</li>
+            </ol>
+          </nav>
+      </div>
+
+      <!-- Almacena el Nit de la empresa actual  -->
+      <span id="nitEmpresa" class="d-none">{{ empresa.nit }}</span>
+      
+      <!-- Barra de opciones -->
+      <hr class="w-100 m-0">
+      <div class="row">
+        <div class="col">
+          <div class="rounded bg-light mt-1" style="padding: 7px;">
+            <button class="btn btn-muted btn-sm" id="btnEditarConvenios">
+              <i class="material-icons align-middle md-19 pr-1">edit</i>
+              Editar
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Barra de opciones  -->
+   
+      <!-- Datos básicos de la Empresa -->
+      <div class="container mt-4 border border-info rounded p-2">
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-2">
+              Nit:
+            </div>
+            <div class="col-sm">
+              <p class="p-1 rounded border" style="background-color: white;">{{ empresa.nit }}</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-2">
+              <p>Nombre:</p>
+            </div>
+            <div class="col-sm">
+              <p class="p-1 rounded border" style="background-color: white;">{{ empresa.nombre }}</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Empresa activa/inactiva -->
+      <div class="row mt-2">
+        <div class="col-sm-4 text-center" style="font-size: 1.1em; color: white;">
+          {% if empresa.activa %}
+            <p class="p-1 text-success border border-success">Empresa activa</p>
+          {% else %}
+            <p class="p-1 text-danger border border-danger">Empresa inactiva</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Convenios -->
+	    <div class="row">
+        <div class="col mt-2">
+          <div class="card">
+            <div class="card-header bg-info p-1 pl-2" style="color: white;">
+              <h5>Convenios:</h5>
+            </div>
+            <div class="card-body">
+              <div class="col-6">
+                <ul class="list-group">
+                  {% for convenio in convenios %}
+                    <li class="list-group-item"> {{ convenio.aplicacion }} </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>       
+          </div>
+        </div>
+      </div>
+      <!-- Fin convenios -->
+
+      <!-- Modal Editar Convenios -->
+      <div class="modal" id="modalEditarConvenios">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-light">
+              <h5 class="modal-title">Modificar convenios empresa: {{ empresa.nombre }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Alertas -->
+              <div class="row">
+                <div class="col">
+                  <!-- Alerta ok -->
+                  <div class="alert alert-success alert-dismissible fade show p-1" id="alertaOk" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaOkMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Alerta error -->
+                  <div class="alert alert-danger alert-dismissible fade show p-1" id="alertaError" style="display: none;">
+                    <div class="row">
+                      <div class="col-10" id="alertaErrorMensaje">
+                      </div>
+                      <div class="col-2">
+                        <button type="button" class="close mr-3 p-0 btnCerrarAlerta">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Fin Alertas -->
+              <div class="row">
+                <div class="col">
+                  <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" data-toggle="pill" href="#agregarConvenios">Agregar</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-toggle="pill" href="#quitarConvenios">Quitar</a>
+                    </li>
+                  </ul>
+
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                    <div id="agregarConvenios" class="container tab-pane active"><br>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col p-0">
+                            <div class="border border-secondary rounded p-2 mb-2">
+                              <div class="table-container table-responsive-sm">
+                                <table class="table table-bordered table-striped table-sm w-100" id="tblAplicaciones">
+                                  <thead>
+                                    <tr class="text-center">
+                                      <th>Id</th>
+                                      <th>Nombre</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>    
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="float-right mt-2">
+                              <i class="fa fa-circle-o-notch fa-spin" 
+                                 style="font-size:24px; color: DodgerBlue; display: none;"></i>
+                              <button type="submit" 
+                                      class="btn btn-success"
+                                      id="btnAgregar"
+                                      style="box-shadow: 0px 1px 7px 0.5px grey;">
+                                Agregar
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="quitarConvenios" class="container tab-pane fade"><br>
+                      <h5>Quitar</h5>
+                      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                      <button type="submit" 
+                              class="btn btn-warning btn-sm"
+                              id="btnQuitar"
+                              style="box-shadow: 0px 1px 7px 0.5px grey;">Quitar
+                      </button>
+                    </div>
+                  </div>                  
+                  <!-- Tab panes -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Modal editar nombre Reporte -->
+		</div>
+  </div>
+{% endblock %}

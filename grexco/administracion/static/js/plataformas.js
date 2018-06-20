@@ -65,9 +65,6 @@ $(document).ready( function ()
             alert('¡Solo puede eliminar una plataforma a la vez!');
             location.reload();
         } else {
-
-            console.log(data.length)
-            
             if (confirm("¿Está seguro de eliminar la plataforma: " + data[0][1] + "?")) {
                 var plataformas = {'plataformas': data.toArray()};
                 var row = table.row('.selected');
@@ -75,7 +72,7 @@ $(document).ready( function ()
 
                 $.ajax(
                 {
-                    url: '/a/plataformas/eliminar',
+                    url: '/a/plataformas/eliminar/',
                     type: 'POST',
                     dataType: 'json',
                     data: plataformas,

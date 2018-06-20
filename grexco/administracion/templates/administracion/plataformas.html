@@ -22,9 +22,9 @@
       <hr class="m-1 w-100">
 
       <!-- Barra de opciones -->
-      <div class="bg-light rounded" style="padding: 7px;">
+      <div style="padding: 7px;" class="rounded bg-light">
         <a class="btn btn-primary btn-sm" href="{% url 'administracion:nueva_plataforma' %}">Nuevo</a>
-        <button class="btn btn-warning btn-sm" id="eliminar">Eliminar</button> 
+        <button class="btn btn-warning btn-sm" id="eliminar">Eliminar</button>
       </div>
       <!-- Fin Barra de opciones -->
 
@@ -45,11 +45,11 @@
       <!-- Tabla -->
       <div class="table-responsive-sm mt-5">
         <table id="tabla-plataformas" class="display table table-sm table-striped table-hover table-bordered">
-          <thead class="thead-dark">
+          <thead>
             <tr class="text-center">
-              <th>Id</th>
-              <th>Nombre</th>
-              <th>Versión</th>
+              <td>Id</td>
+              <td>Nombre</td>
+              <td>Versión</td>
             </tr>
           </thead>
           <tbody>

@@ -33,21 +33,21 @@ $(document).ready(function () {
             $('div.alert').hide();
        } else if (option == 'cliente') {
             $('#form-cliente').show();
+            $('button#guardar').show();
             $('#form-soporte').hide();
             $('#form-tecnologia').hide();
-            $('button#guardar').show();
             $('div.alert').hide();
        } else if (option == 'soporte') {
             $('#form-soporte').show();
+            $('button#guardar').show();
             $('#form-cliente').hide();
             $('#form-tecnologia').hide();
-            $('button#guardar').show();
             $('div.alert').hide();
        } else {
-            $('#form-soporte').hide();
-            $('#form-cliente').hide();
             $('#form-tecnologia').show();
             $('button#guardar').show();
+            $('#form-soporte').hide();
+            $('#form-cliente').hide();
             $('div.alert').hide();
        };    
     });
@@ -74,6 +74,7 @@ $(document).ready(function () {
         e.preventDefault();
         
         if ($('select#tipo-usuario').val() == 'cliente'){
+            console.log('Cliente');
             data = {
                 "tipo_usuario": $('select#tipo-usuario').val(),
                 "empresa": $('form#cliente  select#empresa').val(),
@@ -86,6 +87,7 @@ $(document).ready(function () {
                 "nombre_usuario": $('form#cliente  input#nombre-usuario').val(),
             }
         } else if ($('select#tipo-usuario').val() == 'soporte'){
+            console.log('Soporte');
             data = {
                 "tipo_usuario": $('select#tipo-usuario').val(),
                 "nombre": $('form#soporte  input#nombre').val(),
@@ -96,6 +98,7 @@ $(document).ready(function () {
                 "es-coordinador": $('form#soporte input#es-coordinador').val(),
             }
         } else if($('select#tipo-usuario').val() == 'tecnologia'){
+            console.log('tecnologia');
             data = {
                 "tipo_usuario": $('select#tipo-usuario').val(),
                 "nombre": $('form#tecnologia  input#nombre').val(),

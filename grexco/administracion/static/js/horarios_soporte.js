@@ -43,7 +43,7 @@ $(document).ready( function ()
         "searching": true,
         "select": 'single',
         "ajax": {
-            url: '/a/empresas/listado',
+            url: '/a/empresas/listado/activas/',
             type: 'get',
             dataSrc: 'empresas'
         },
@@ -57,7 +57,7 @@ $(document).ready( function ()
     //Abre el modal para capturar horarios de soporte
     $('#btnCrearHorarios').click(function(event) {
         event.preventDefault();
-        $.get('/a/empresas/listado/', function(data) {
+        $.get('/a/empresas/listado/activas/', function(data) {
             var empresas = data['empresas'];
             $(empresas).each(function(index, el) {
                 $('#selEmpresa').append(
