@@ -169,7 +169,7 @@
                       <a class="nav-link active" data-toggle="pill" href="#agregarConvenios">Agregar</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" data-toggle="pill" href="#quitarConvenios">Quitar</a>
+                      <a class="nav-link" data-toggle="pill" href="#retirarConvenios">Retirar</a>
                     </li>
                   </ul>
 
@@ -211,14 +211,38 @@
                         </div>
                       </div>
                     </div>
-                    <div id="quitarConvenios" class="container tab-pane fade"><br>
-                      <h5>Quitar</h5>
-                      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                      <button type="submit" 
-                              class="btn btn-warning btn-sm"
-                              id="btnQuitar"
-                              style="box-shadow: 0px 1px 7px 0.5px grey;">Quitar
-                      </button>
+                    <div id="retirarConvenios" class="container tab-pane fade"><br>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col">
+                            <div class="table-container table-responsive-sm">
+                              <table class="table table-bordered table-striped table-sm w-100" id="tblConvenios">
+                                <thead>
+                                  <tr class="text-center">
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                  </tr>
+                                </thead>
+                                <tbody>    
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="float-right mt-2">
+                              <i class="fa fa-circle-o-notch fa-spin" 
+                                 style="font-size:24px; color: DodgerBlue; display: none;"></i>                            
+                              <button type="submit" 
+                                      class="btn btn-warning"
+                                      id="btnRetirar"
+                                      style="box-shadow: 0px 1px 7px 0.5px grey;">Retirar
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>                  
                   <!-- Tab panes -->

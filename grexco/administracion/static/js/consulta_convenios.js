@@ -46,9 +46,23 @@ $(document).ready( function ()
         ]
     });
 
+    // Tabla Convenios
+    var tblConvenios = $("#tblConvenios").DataTable({
+        "searching": false,
+        "paging": false,
+        "ajax": {
+            url: urlConveniosConsultaIndividual + $('#nitEmpresa').text(),
+            type: "get",
+            dataSrc: "convenios"
+        },
+        columns: [
+            {data: "aplicacion__id"},
+            {data: "aplicacion__nombre"}
+        ]
+    })
 
     // Asigna o retira la clase 'selected' al dar clic sobre una fila
-    $('#tblAplicaciones tbody').on( 'click', 'tr', function () {
+    $('#tblAplicaciones tbody, #tblConvenios tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
     } );
 
@@ -68,7 +82,7 @@ $(document).ready( function ()
     });
 
 
-    // Envia los datos por ajax:
+    // Agregar convenios
     $("#btnAgregar").click(function(event)
     {
         event.preventDefault();
@@ -96,7 +110,63 @@ $(document).ready( function ()
 
         $.ajax(
         {
-            url: '/a/convenios/actualizar/',
+            url: urlConveniosAgregar,
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            async: 'False',
+        })
+        .done(function(data, status)
+        {
+           $('#alertaOk').find('#alertaOkMensaje').text(data['ok']);
+            $('#alertaOk').show();
+            $('i.fa-circle-o-notch').removeClass('fa-spin');        
+            $('i.fa-circle-o-notch').hide();
+            $("#btnAgregar").prop("disabled", false);
+            $('#alertaError').hide();
+        })
+        .fail(function(error, status)
+        {
+            console.log(error)
+            $('#alertaError').find('#alertaErrorMensaje').text(error.responseJSON['error']);
+            $('#alertaError').show();
+            $('i.fa-circle-o-notch').removeClass('fa-spin'); 
+            $('i.fa-circle-o-notch').hide();
+            $("#btnAgregar").prop("disabled", false);
+            $('#alertaOk').hide();
+        });
+
+    });
+
+    // Retirar convenios
+    $("#btnRetirar").click(function(event)
+    {
+        event.preventDefault();
+       
+        // Deshabilita el botón #btnRetirar 
+        $("#btnRetirar").prop("disabled", true);
+
+        // Empieza a girar el icono spin
+        $('i.fa-circle-o-notch').addClass('fa-spin');
+        
+        // Muestra el icono spin
+        $('i.fa-circle-o-notch').show();
+        
+        // Si están abiertos las alertas las oculta
+        $('#alertaError').hide();
+        $('#alertaError').hide();
+
+        var empresa = $('#nitEmpresa').text()
+        var aplicaciones = tblConvenios.rows('.selected').data().toArray();
+        var convenios = {
+            'empresa': empresa,
+            'aplicaciones': aplicaciones,
+        }
+        var data = JSON.stringify(convenios)
+
+        $.ajax(
+        {
+            url: urlConveniosRetirar,
             type: 'POST',
             dataType: 'json',
             data: data,

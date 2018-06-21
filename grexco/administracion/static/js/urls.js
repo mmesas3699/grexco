@@ -8,5 +8,8 @@ var urlBase = '/a/'
 // Convenios
 var urlConvenios = urlBase + 'convenios/'
 var urlConveniosNuevo = urlConvenios + 'nuevo/'
-var urlConveniosAgregar = urlConvenios + 'actualizar/'
+var urlConveniosAgregar = urlConvenios + 'agregar/'
 var urlConveniosNoConvenios = urlConvenios + 'listado/no-convenios/'
+var urlConveniosConsulta = urlConvenios + "consulta/"
+var urlConveniosConsultaIndividual = urlConveniosConsulta + "individual/"
+var urlConveniosRetirar = urlConvenios + "retirar/"

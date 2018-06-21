@@ -40,9 +40,7 @@ def genera_id(modelo):
 def empresa_activa(nit):
     """
     Retorna True si la empresa esta activa, si no retorna False.
-
     Recibe como parametro el nit de la empresa a consultar.
-
     """
     empresa = get_object_or_404(Empresas, nit=nit)
 
@@ -1481,7 +1479,49 @@ class ConsultaConveniosView(
         return {'empresa': qry_empresa, 'convenios': qry_convenios}
 
 
-class ActualizarConveniosView(LoginRequiredMixin, UserPassesTestMixin, View):
+class ConveniosConsultaIndividualView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    Para consultar los convenios que tiene una empresa.
+
+    Retorna un JSON con los datos de la empresa consultada.
+        - url = a/convenios/consulta/individual/<str:nit>
+    """
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo al usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        nit = kwargs['nit']
+
+        # Verifica si la empresa existe
+        if Empresas.objects.filter(nit=nit):
+
+            # Verifica si la empresa esta activa
+            if empresa_activa(nit):
+                empresa = get_object_or_404(Empresas, nit=nit)
+            else:
+                return JsonResponse(
+                    {'error': 'La empresa está inactiva'}, status=400)
+
+            qry_convenios = (
+                empresa.convenios
+                       .values('aplicacion__id', 'aplicacion__nombre')
+                       .all()
+                       .order_by('aplicacion__id')
+            )
+            convenios = []
+            for convenio in qry_convenios:
+                convenios.append(convenio)
+
+            return JsonResponse({'convenios': convenios}, status=200)
+        else:
+            return JsonResponse({'error': 'La empresa no existe'}, status=400)
+
+
+class ConveniosAgregarView(LoginRequiredMixin, UserPassesTestMixin, View):
     """Agrega los convenios recibidos ya existentes."""
     login_url = 'usuarios:login'
 
@@ -1527,9 +1567,41 @@ class ActualizarConveniosView(LoginRequiredMixin, UserPassesTestMixin, View):
             return JsonResponse({'error': 'La empresa no existe'}, status=400)
 
 
-class EliminaConveniosView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """pass."""
-    pass
+class ConveniosRetirarView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Vista para retirar convenios de un empresa."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        """Restringe el acceso solo al usuario administrador."""
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode('utf-8'))
+        nit = data['empresa']
+        aplicaciones = data['aplicaciones']
+
+        if not Empresas.objects.filter(nit=nit):
+            return JsonResponse({'error': 'La empresa no existe'}, status=400)
+
+        with transaction.atomic():
+            for aplicacion in aplicaciones:
+                convenio = get_object_or_404(
+                    Convenios,
+                    aplicacion=aplicacion['aplicacion__id'],
+                    empresa=nit
+                )
+
+                try:
+                    convenio.delete()
+                except Exception as e:
+                    return JsonResponse(
+                        {'error': 'Ocurrió un error con el convenio: %s' % (convenio.aplicacion.nombre)},
+                        status=400
+                    )
+
+            return JsonResponse(
+                {'ok': 'Se retiraron los convenios correctamente'}, status=200)
 
 
 class ListadoConveniosEmpresasView(

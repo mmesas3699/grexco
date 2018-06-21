@@ -35,8 +35,8 @@ urlpatterns = [
     ),
     path('convenios/', views.ConveniosView.as_view(), name='convenios'),
     path(
-        'convenios/actualizar/',
-        views.ActualizarConveniosView.as_view(),
+        'convenios/agregar/',
+        views.ConveniosAgregarView.as_view(),
         name='convenios_actualizar'
     ),
     path(
@@ -45,8 +45,12 @@ urlpatterns = [
         name='convenios_consulta'
     ),
     path(
-        'convenios/eliminar/',
-        views.EliminaConveniosView.as_view(),
+        'convenios/consulta/individual/<str:nit>',
+        views.ConveniosConsultaIndividualView.as_view()
+    ),
+    path(
+        'convenios/retirar/',
+        views.ConveniosRetirarView.as_view(),
         name='convenios_eliminar'
     ),
     path(
