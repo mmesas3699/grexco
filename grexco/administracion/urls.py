@@ -119,9 +119,6 @@ urlpatterns = [
         views.CrearHorariosSoporte.as_view(),
         name='nuevo_horario_soporte'
     ),
-
-    path('login/', views.LoginView.as_view(), name='admin_login'),
-    path('logout/', logout, {'next_page': '/'}, name="logout"),
     path('plataformas/', views.PlataformasView.as_view(), name='plataformas'),
     path(
         'plataformas/eliminar/',

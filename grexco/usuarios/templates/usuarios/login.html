@@ -1,49 +1,65 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-  	<title>Login</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/gif/png" href="{% static 'landing/img/icono.png' %}">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<head>
+	<title>Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/gif/png" href="{% static '/img/icono.png' %}">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-		<link rel="stylesheet" href="{% static 'usuarios/css/login.css' %}">
+	<!-- JQUERY -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-    <!-- <script src="{% static 'usuarios/js/login.js' %}"></script> -->
-		<style>
-			body
-			{
-				background-color: #E6E6E6; 
-				font-family: 'Roboto'; 
-			}
-		</style>
-  </head>
-  <body>
-		
-		<div class="container">
-		<!-- Contenedor -->
-			<div>
-				Grexco
+	<!-- Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+  <script src="{% static '/js/login.js' %}"></script>
+	
+	<style>
+		body
+		{
+			background-color: #E6E6E6; 
+			font-family: 'Roboto';
+		}
+	</style>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<div class="d-flex justify-content-center align-items-center">
+					<div class="p-1 mt-5 bg-white rounded" style="width: 450px;">
+		   			<div class="text-center">
+		   				<img src="{% static '/img/logo.jpg' %}" class="w-100">
+		   			</div>
+		   			<div class="mt-4 p-3">
+							<form action="." method="POST">
+								{% csrf_token %}
+								<div class="form-group">
+							    <input type="text" class="form-control" placeholder="Usuario" id="usuario">
+								</div>
+	  						<div class="form-group">
+						    	<input type="password" class="form-control" placeholder="Contraseña" id="contraseña">
+	  						</div>
+	  						<button type="button" class="btn btn-primary" id="btnIngresar">Ingresar</button>		
+							</form>
+		   			</div>
+					</div>
+				</div>
 			</div>
-			<div class="column2">
-					<form action="." method="post">
-						{% csrf_token %}
-						<div class="item-user">
-								<label for="">Usuario:</label>
-								<input type="text" name="name" id="name">		
-						</div>
-						<div class="itme-password">
-							<label for="">Contraseña:</label>
-							<input type="password" name="pwd" id="pwd">		
-						</div>
-						<button type="submit" class="btn-submit">Ingresar</button>
-					</form>
-			</div>	
-  	<!-- Fin contenedor -->
-		</div>
-  </body>
+		</div>	
+	</div>
+
+</body>
 </html>

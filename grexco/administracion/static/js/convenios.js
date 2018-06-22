@@ -120,7 +120,7 @@ $(document).ready( function ()
         })
         .done(function(data, status)
         {
-           $('#alertaOk').find('#alertaOkMensaje').text(data['ok']);
+            $('#alertaOk').find('#alertaOkMensaje').text(data['ok']);
             $('#alertaOk').show();
             $('i.fa-circle-o-notch').removeClass('fa-spin');        
             $('i.fa-circle-o-notch').hide();

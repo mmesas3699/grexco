@@ -32,36 +32,34 @@ $(document).ready(function($) {
    		   };
 	    });
 
-	// Envia el formulario de Contacto
-	$("button").click(function(e) 
+
+	// Envia los datos para el Login
+	$("#btnIngresar").click(function(e) 
 	{
 		e.preventDefault();
-		$("#enviar").prop('disabled', true);
+		$("#btnIngresar").prop('disabled', true);
 		
-		var user = {
-						'name': $("#name").val(),
-					    'pwd': $("#pwd").val(),
-					};
+		var usuario =
+		{
+			'usuario': $("#usuario").val(),
+		    'contraseña': $("#contraseña").val(),
+		};
 
 		$.ajax(
 		{
 			url: '',
 			type: 'POST',
 			dataType: 'json',
-			data: user,
+			data: usuario,
 		})
-		.done(function(result)
+		.done(function(data, status)
 		{
-			alert(result);
+			window.location.replace(data["url"])
 		})
-		.fail(function()
+		.fail(function(xhr, status)
 		{
-			alert("error");
-		})
-		.always(function()
-		{
-			alert("complete");
-		});
-		
+			console.log(xhr.status, status);
+		})		
 	});
+
 });

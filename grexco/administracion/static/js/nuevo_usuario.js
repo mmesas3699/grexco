@@ -26,29 +26,29 @@ $(document).ready(function () {
     
        var option = $(this).val()
        if (option == 'none') {
-            $('#form-cliente').hide();
-            $('#form-soporte').hide();
-            $('#form-tecnologia').hide();
-            $('button#guardar').hide();
-            $('div.alert').hide();
-       } else if (option == 'cliente') {
-            $('#form-cliente').show();
-            $('button#guardar').show();
-            $('#form-soporte').hide();
-            $('#form-tecnologia').hide();
-            $('div.alert').hide();
-       } else if (option == 'soporte') {
-            $('#form-soporte').show();
-            $('button#guardar').show();
-            $('#form-cliente').hide();
-            $('#form-tecnologia').hide();
-            $('div.alert').hide();
+            $("#form-cliente").hide();
+            $("#form-soporte").hide();
+            $("#form-tecnologia").hide();
+            $("#btnGuardar").hide();
+            $("div.alert").hide();
+       } else if (option == "cliente") {
+            $("#form-cliente").show();
+            $("#btnGuardar").show();
+            $("#form-soporte").hide();
+            $("#form-tecnologia").hide();
+            $("div.alert").hide();
+       } else if (option == "soporte") {
+            $("#form-soporte").show();
+            $("#btnGuardar").show();
+            $("#form-cliente").hide();
+            $("#form-tecnologia").hide();
+            $("div.alert").hide();
        } else {
-            $('#form-tecnologia').show();
-            $('button#guardar').show();
-            $('#form-soporte').hide();
-            $('#form-cliente').hide();
-            $('div.alert').hide();
+            $("#form-tecnologia").show();
+            $("#btnGuardar").show();
+            $("#form-soporte").hide();
+            $("#form-cliente").hide();
+            $("div.alert").hide();
        };    
     });
 
@@ -69,12 +69,14 @@ $(document).ready(function () {
 
     
     // Envia los datos por ajax:
-    $("button#guardar").click(function(e) 
+    $("#btnGuardar").click(function(e) 
     {
         e.preventDefault();
         
+        // Deshabilita el botón #btnGuardar 
+        $("#btnGuardar").prop("disabled", true);
+        
         if ($('select#tipo-usuario').val() == 'cliente'){
-            console.log('Cliente');
             data = {
                 "tipo_usuario": $('select#tipo-usuario').val(),
                 "empresa": $('form#cliente  select#empresa').val(),
@@ -86,51 +88,53 @@ $(document).ready(function () {
                 "email": $('form#cliente  input#email').val(),
                 "nombre_usuario": $('form#cliente  input#nombre-usuario').val(),
             }
-        } else if ($('select#tipo-usuario').val() == 'soporte'){
-            console.log('Soporte');
+        } else if ($("select#tipo-usuario").val() == "soporte"){
             data = {
-                "tipo_usuario": $('select#tipo-usuario').val(),
-                "nombre": $('form#soporte  input#nombre').val(),
-                "apellido": $('form#soporte  input#apellido').val(),
-                "extension": $('form#soporte  input#extension').val(),
-                "email": $('form#soporte  input#email').val(),
-                "nombre_usuario": $('form#soporte  input#nombre-usuario').val(),   
-                "es-coordinador": $('form#soporte input#es-coordinador').val(),
+                "tipo_usuario": $("select#tipo-usuario").val(),
+                "nombre": $("form#soporte  input#nombre").val(),
+                "apellido": $("form#soporte  input#apellido").val(),
+                "extension": $("form#soporte  input#extension").val(),
+                "email": $("form#soporte  input#email").val(),
+                "nombre_usuario": $("form#soporte  input#nombre-usuario").val(),   
+                "es-coordinador": $("form#soporte input#es-coordinador").val(),
             }
         } else if($('select#tipo-usuario').val() == 'tecnologia'){
-            console.log('tecnologia');
             data = {
-                "tipo_usuario": $('select#tipo-usuario').val(),
-                "nombre": $('form#tecnologia  input#nombre').val(),
-                "apellido": $('form#tecnologia  input#apellido').val(),
-                "extension": $('form#tecnologia  input#extension').val(),
-                "email": $('form#tecnologia input#email').val(),
-                "nombre_usuario": $('form#tecnologia  input#nombre-usuario').val(),   
-                "es-coordinador": $('form#tecnologia input#es-coordinador').val(),
+                "tipo_usuario": $("select#tipo-usuario").val(),
+                "nombre": $("form#tecnologia  input#nombre").val(),
+                "apellido": $("form#tecnologia  input#apellido").val(),
+                "extension": $("form#tecnologia  input#extension").val(),
+                "email": $("form#tecnologia input#email").val(),
+                "nombre_usuario": $("form#tecnologia  input#nombre-usuario").val(),   
+                "es-coordinador": $("form#tecnologia input#es-coordinador").val(),
             }
         }
-
-        console.log(data)
-        
+     
+        var usuario = JSON.stringify(data)
         $.ajax({
             url: '',
             type: 'POST',
             dataType: 'json',
-            data: data,
+            data: usuario,
             async: 'False',
         })
-        .done(function(msj, status){
-            // console.log(msj);
-            // console.log(msj.ok);
-            $('#alerta-ok').text(msj.ok)
-            $('#alerta-err').hide();
-            $('#alerta-ok').show();
+        .done(function(data, status){
+            $('#alertaOk').find('#alertaOkMensaje').text(data['ok']);
+            $('#alertaOk').show();
+            $("#btnGuardar").prop("disabled", false);
+            $('#alertaError').hide();
         })
-        .fail(function(err, status){
-            // console.log(err);
-            $('#alerta-err').text(err.responseJSON['error'])
-            $('#alerta-ok').hide();
-            $('#alerta-err').show();
+        .fail(function(error, status){
+            $('#alertaError').find('#alertaErrorMensaje').text(error.responseJSON['error']);
+            $('#alertaError').show();
+            $("#btnGuardar").prop("disabled", false);
+            $('#alertaOk').hide();
         })       
+    });
+
+    //Oculta las Alertas
+    $('.btnCerrarAlerta').click(function(event) {
+        event.preventDefault();
+        $(this).parents('div.alert').hide();
     });
 });
