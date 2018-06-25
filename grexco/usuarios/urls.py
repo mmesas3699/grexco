@@ -26,4 +26,5 @@ urlpatterns = [
     path('', views.HomeUsuariosView.as_view(), name='home_usuarios'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', logout, {'next_page': '/'}, name='logout'),
+    path('incidentes/', views.IncidentesView.as_view(), name='incidente')
 ]
