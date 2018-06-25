@@ -182,6 +182,26 @@ urlpatterns = [
         name='tiempos_respuesta_nuevo'
     ),
     path(
+        'tipos-incidentes/',
+        views.TiposIncidentesView.as_view(),
+        name='tipos_incidentes'
+    ),
+    path(
+        'tipos-incidentes/listado/',
+        views.TiposIncidentesListadoView.as_view(),
+        name='tipos_incidentes_listado'
+    ),
+    path(
+        'tipos-incidentes/nuevo/',
+        views.TiposIncidentesNuevoView.as_view(),
+        name='tipos_incidentes_nuevo'
+    ),
+    path(
+        'tipos-incidentes/eliminar/',
+        views.TiposIncidentesEliminar.as_view(),
+        name='tipos_incidentes_eliminar'
+    ),
+    path(
         'usuarios/nuevo/usuario/',
         views.CrearUsuariosView.as_view(),
         name='nuevo_usuario'

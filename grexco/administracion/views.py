@@ -3,7 +3,7 @@ import json
 from datetime import time
 
 import pyexcel as pe
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core import serializers
@@ -25,6 +25,7 @@ from administracion.models import Plataformas
 from administracion.models import PrioridadesRespuesta
 from administracion.models import Reportes
 from administracion.models import TiemposRespuesta
+from administracion.models import TiposIncidentes
 from administracion.models import UsuariosGrexco
 
 
@@ -1835,3 +1836,91 @@ class ConsultClientsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         usuario = serializers.serialize('json', usr)
         print(usuario)
         return HttpResponse(usuario, content_type='application/json')
+
+
+class TiposIncidentesView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    """Template para ver un listado de los Tipos de Incidentes."""
+
+    login_url = 'usuarios:login'
+    template_name = 'administracion/tipos_incidentes.html'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+
+class TiposIncidentesListadoView(
+        LoginRequiredMixin, UserPassesTestMixin, View):
+    """Retorna un listado de los Tipos de Incidentes creados."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def get(self, request, *args, **kwargs):
+        qry_tipos_incidentes = (
+            TiposIncidentes.objects
+                           .values('id', 'descripcion')
+                           .all())
+        tipos_incidentes = []
+
+        for tipo in qry_tipos_incidentes:
+            tipos_incidentes.append(tipo)
+
+        return JsonResponse(
+            {'tipos-incidentes': tipos_incidentes},
+            status=200)
+
+
+class TiposIncidentesNuevoView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Vista para crear los Tipos de Incidentes."""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode('utf-8'))
+        descripcion = data['tipo_incidente']
+        id = genera_id(TiposIncidentes)
+
+        with transaction.atomic():
+            tipo = TiposIncidentes()
+            tipo.id = id
+            tipo.descripcion = descripcion
+
+            try:
+                tipo.save()
+            except Exception as e:
+                return JsonResponse({'error': 'Ocurrió un error'}, status=400)
+
+            return JsonResponse(
+                {'ok': 'Se guardaron los datos correctamente'}, status=200)
+
+
+class TiposIncidentesEliminar(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Vista para eliminar un Tipo de Incidente"""
+
+    login_url = 'usuarios:login'
+
+    def test_func(self):
+        return self.request.user.usuariosgrexco.tipo == 'A'
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode('utf-8'))
+        id = data['tipo_incidente']
+
+        with transaction.atomic():
+            from django.db.models.deletion import ProtectedError
+
+            tipo_incidente = get_object_or_404(TiposIncidentes, id=id)
+
+            try:
+                tipo_incidente.delete()
+            except ProtectedError as error:
+                return JsonResponse(
+                    {"error": "Ocurrió un error: %s" % (error)}, status=400)
+
+            return JsonResponse({'ok': 'Se eliminó correctamente'}, status=200)

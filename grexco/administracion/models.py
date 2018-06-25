@@ -157,7 +157,7 @@ class Convenios(models.Model):
 
 
 class TiposIncidentes(models.Model):
-    codigo = models.SmallIntegerField(primary_key=True)
+    id = models.SmallIntegerField(primary_key=True)
     descripcion = models.CharField(max_length=20)
 
     def __str__(self):

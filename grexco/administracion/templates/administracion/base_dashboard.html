@@ -215,6 +215,34 @@
 						</div>
 					</div>
 				</div>
+				
+				<!-- Tipos Incidentes -->
+				<div class="m-1">
+					<button class="btn btn-sm btn-toolbar btn-block menu-btn" 
+							type="button" 
+							data-toggle="collapse" 
+							data-target="#collapseTiposIncidentes"
+							style="font-size: 15px; background-color: white !important">Tipos de Incidentes
+						<i class="material-icons ml-auto arrow">arrow_drop_down</i>
+						<i class="material-icons ml-auto arrow" style="display: none;">arrow_drop_up</i>
+  				</button>
+  				<!-- Collapse -->
+  				<div class="collapse" id="collapseTiposIncidentes">
+	  				<div class="card card-body p-1">
+	  					<div>
+	  						<ul class="list-group listas-menu">
+	  							<li class="list-group-item p-0">
+	  								<a href="{% url 'administracion:tipos_incidentes' %}"
+	  									 class="btn btn-sm btn-block p-1 text-dark text-left"
+	  									 role="button">
+	  								  Consultar
+	  								</a>
+	  							</li>
+	  						</ul>	  						
+	  					</div>
+	  				</div>
+					</div>
+				</div>
 
 			</div>			
 		</div>			
