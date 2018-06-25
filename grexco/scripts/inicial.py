@@ -65,6 +65,7 @@ def crear_prioridades():
             prioridad = PrioridadesRespuesta(codigo=p[0], descripcion=p[1])
             prioridad.save()
 
+
 if __name__ == '__main__':
 
     # Instancia la plataforma

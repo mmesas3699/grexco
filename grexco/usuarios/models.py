@@ -5,14 +5,6 @@ import administracion.models as administracion
 # Create your models here.
 
 
-class TiposIncidentes(models.Model):
-    codigo = models.SmallIntegerField(primary_key=True)
-    descripcion = models.CharField(max_length=20)
-
-    def __str__(self):
-        return '{}'.format(self.descripcion)
-
-
 class Incidentes(models.Model):
     codigo = models.PositiveIntegerField(primary_key=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -23,7 +15,10 @@ class Incidentes(models.Model):
         related_name='incidentes'
     )
     tipo_incidente = models.ForeignKey(
-        TiposIncidentes, on_delete=models.PROTECT, related_name='incidentes')
+        administracion.TiposIncidentes,
+        on_delete=models.PROTECT,
+        related_name='incidentes'
+    )
     reporte = models.ForeignKey(
         administracion.Reportes,
         on_delete=models.PROTECT,

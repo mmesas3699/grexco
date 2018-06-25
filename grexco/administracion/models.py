@@ -154,3 +154,11 @@ class Convenios(models.Model):
     def __str__(self):
         return "Empresa: {}, Aplicacion: {}".format(
             self.empresa, self.aplicacion)
+
+
+class TiposIncidentes(models.Model):
+    codigo = models.SmallIntegerField(primary_key=True)
+    descripcion = models.CharField(max_length=20)
+
+    def __str__(self):
+        return '{}'.format(self.descripcion)
