@@ -1,0 +1,70 @@
+{% extends './base_contenido.html' %}
+
+{% load static %}
+
+
+{% block title %}
+	Incidentes | Nuevo
+{% endblock %}
+
+
+{% block js %}
+	<script src="{% static '/js/urls.js' %}"></script>
+	<script src="{% static '/js/nuevo_incidente.js' %}"></script>
+{% endblock %}
+
+{% block titulo_contenido %}
+	<h3>Nuevo Incidente</h3>
+{% endblock %}
+
+{% block barra_herramientas %}
+	<i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color: DodgerBlue; display: none;"></i>
+	<button id="btnGuardar" class="btn btn-sm btn-primary">Guardar</button>
+{% endblock %}
+
+{% block contenido %}
+	{% csrf_token %}
+	<div class="container-fluid">
+		<div class="row shadow-sm p-1">
+			<div class="col">
+				{% include './alertas.html' %}
+				<form style="font-size: 15px;" id="formIncidente" name="formIncidente">
+					<div class="form-group row">
+						<label for="" class="col-sm-1 col-form-label">Código:</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" id="inpCodigo" value="" name="inpCodigo" disabled>
+							<input type="text" class="form-control d-none" id="codigo" value="" name="codigo">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="" class="col-sm-1 col-form-label">Aplicación:</label>
+						<div class="col-sm-4">
+							<select name="selAplicacion" id="selAplicacion" class="form-control">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="" class="form-control-label-label">Descripción:</label><br>
+						<textarea id="descripcion"
+											name="descripcion"
+											cols="100"
+											rows="10"
+											class="rounded"
+											placeholder="Por favor, recuerde digitar la ruta en la que se presenta el error."></textarea>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label class="btn btn-sm btn-outline-dark p-1 pl-4 pr-4">
+							  <i class="material-icons md-19 align-middle mr-1">attach_file</i>Adjuntar Archivos
+							  <input type="file" style="display: none;" id="inpAdjuntos" name="inpAdjuntos" multiple>
+							</label>
+						</div>
+          </div>
+				</form>
+				<div class="row mt-0" id="listadoAdjuntos">
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

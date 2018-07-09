@@ -1,8 +1,36 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
 
 import administracion.models as administracion
 
 # Create your models here.
+
+ubicacion_archivos = FileSystemStorage(
+    location='/mnt/c/User/arju/Desktop/Grexco/Proyectos/Web/grexco/usuarios/')
+
+
+def my_awesome_upload_function(instance, filename):
+    """ this function has to return the location to upload the file """
+    return 'incidentes/' + instance.incidente.codigo + '/' + filename
+
+
+class EstadosIncidentes(models.Model):
+    """
+    Se definen los diferentes estados que tendran los incidentes.
+
+        C = Creado (Cuando el cliente crea el incidente)
+        S = Soporte (Cuando el caso es asignado a un integrante de soporte)
+        T = Tecnología (Cuando soporte envia el caso a Tecnología)
+        P = Pruebas (Cuando tecnologia lo devuelve a soporte)
+        E = Entregado (Cuando soporte envia la respuesta al cliente)
+        So = Solucionado (Cuando el cliente cierra el caso)
+
+    """
+    codigo = models.CharField(primary_key=True, max_length=3)
+    descripcion = models.CharField(max_length=20)
+
+    def __str__(self):
+        return '{}:{}'.format(self.codigo, self.descripcion)
 
 
 class Incidentes(models.Model):
@@ -17,7 +45,9 @@ class Incidentes(models.Model):
     tipo_incidente = models.ForeignKey(
         administracion.TiposIncidentes,
         on_delete=models.PROTECT,
-        related_name='incidentes'
+        related_name='incidentes',
+        blank=True,
+        null=True
     )
     reporte = models.ForeignKey(
         administracion.Reportes,
@@ -36,31 +66,31 @@ class Incidentes(models.Model):
     prioridad_respuesta = models.ForeignKey(
         administracion.PrioridadesRespuesta,
         on_delete=models.PROTECT,
+        related_name='incidentes',
+        blank=True,
+        null=True
+    )
+    estado = models.ForeignKey(
+        EstadosIncidentes,
+        on_delete=models.PROTECT,
         related_name='incidentes'
     )
-    fecha_respuesta = models.DateTimeField()
+    fecha_respuesta = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return '{}:{}'.format(self.codigo, self.usuario)
+        """docstring."""
+        return 'codigo: {}'.format(self.codigo)
 
 
 class Adjuntos(models.Model):
     incidente = models.ForeignKey(
         Incidentes, on_delete=models.PROTECT, related_name='adjuntos')
     archivo = models.FileField(
-        storage=administracion.ubicacion_archivos,
-        upload_to='incidentes/{}/'.format(incidente))
+        storage=ubicacion_archivos,
+        upload_to=my_awesome_upload_function)
 
     def __str__(self):
-        return '{}:{}'.format(self.incidente, self.archivo)
-
-
-class EstadosIncidentes(models.Model):
-    codigo = models.CharField(primary_key=True, max_length=3)
-    descripcion = models.CharField(max_length=20)
-
-    def __str__(self):
-        return '{}:{}'.format(self.codigo, self.descripcion)
+        return 'incidente:{}, archivo:{}'.format(self.incidente, self.archivo)
 
 
 class IncidentesReportes(models.Model):

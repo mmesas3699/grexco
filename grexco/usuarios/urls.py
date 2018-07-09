@@ -26,5 +26,20 @@ urlpatterns = [
     path('', views.HomeUsuariosView.as_view(), name='home_usuarios'),
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', logout, {'next_page': '/'}, name='logout'),
-    path('incidentes/', views.IncidentesView.as_view(), name='incidente')
+    path('incidentes/', views.IncidentesView.as_view(), name='incidente'),
+    path(
+        'incidentes/codigo/',
+        views.CodigoIncidentesView.as_view(),
+        name='codigo_incidentes'
+    ),
+    path(
+        'incidentes/nuevo',
+        views.IncientesNuevoView.as_view(),
+        name='incidentes_nuevo'
+    ),
+    path(
+        'incidentes/guardar/',
+        views.GuardaIncidentesView.as_view(),
+        name='guarda_incidentes'
+    )
 ]

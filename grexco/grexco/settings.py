@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',  # Contiene el nucleo del framework de autenticación
-    'django.contrib.contenttypes',  # Permite que los permisos se asocien a los modulos creados
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -137,7 +137,6 @@ STATIC_URL = '/static/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Email
-
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'miguel.mesa@grexco.com.co'
 EMAIL_HOST_PASSWORD = 'grexco02'
@@ -146,3 +145,6 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 CSRF_USE_SESSIONS = True
+
+MEDIA_ROOT = '/mnt/c/User/arju/Desktop/Grexco/Proyectos/Web/grexco/usuarios/'
+MEDIA_URL = '/usuarios/'

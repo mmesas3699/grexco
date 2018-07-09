@@ -42,6 +42,7 @@
 				</button>
 				<div class="dropdown-menu p-0">
 					<a href="#" class="dropdown-item p-1 text-center">{{ request.user.username }}</a>
+					<i id="nitEmpresa" class="d-none">{{ request.user.usuariosgrexco.empresa.nit }}</i>
 					<div class="dropdown-divider m-1"></div>
 					<a href="{% url 'usuarios:logout' %}"
 						 class="dropdown-item p-1 text-center"
@@ -73,7 +74,7 @@
         		</button>
         		<div id="collapseIncidentes" class="collapse pl-4">
 							<nav class="nav flex-column">
-								<a href="" class="nav-link p-1">Nuevo</a>
+								<a href="{% url 'usuarios:incidentes_nuevo' %}" class="nav-link p-1">Nuevo</a>
 								<a href="" class="nav-link p-1">Consultar</a>
 							</nav>
         		</div>

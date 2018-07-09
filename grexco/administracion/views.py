@@ -406,8 +406,7 @@ class DeleteAplicationsView(
                 status=200)
 
 
-class ListadoAplicacionesView(
-        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ListadoAplicacionesView(LoginRequiredMixin, TemplateView):
     """
     Retorna un JSON con la información (id y nombre) de la aplicación.
 
@@ -416,10 +415,6 @@ class ListadoAplicacionesView(
     """
 
     login_url = 'usuarios:login'
-
-    def test_func(self):
-        """Restringe el acceso solo a usuario administrador."""
-        return self.request.user.usuariosgrexco.tipo == 'A'
 
     def get(self, request, *args, **kwargs):
         """docstring."""
@@ -1465,8 +1460,7 @@ class ConsultaConveniosView(
         return {'empresa': qry_empresa, 'convenios': qry_convenios}
 
 
-class ConveniosConsultaIndividualView(
-        LoginRequiredMixin, UserPassesTestMixin, View):
+class ConveniosConsultaIndividualView(LoginRequiredMixin, View):
     """
     Para consultar los convenios que tiene una empresa.
 
@@ -1474,10 +1468,6 @@ class ConveniosConsultaIndividualView(
         - url = a/convenios/consulta/individual/<str:nit>
     """
     login_url = 'usuarios:login'
-
-    def test_func(self):
-        """Restringe el acceso solo al usuario administrador."""
-        return self.request.user.usuariosgrexco.tipo == 'A'
 
     def get(self, request, *args, **kwargs):
         nit = kwargs['nit']

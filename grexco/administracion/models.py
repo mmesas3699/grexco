@@ -93,7 +93,7 @@ class UsuariosGrexco(models.Model):
 
     def __str__(self):
         return "usuario: {user_id}, tipo: {tipo}".format(
-            user_id=self.user_id.username,
+            user_id=self.usuario.username,
             tipo=self.tipo
         )
 
@@ -157,6 +157,14 @@ class Convenios(models.Model):
 
 
 class TiposIncidentes(models.Model):
+    """
+    Almacena los tipos de incidentes.
+
+        Ejemplo:
+            - Error aplicación
+            - Error usuario
+    """
+
     id = models.SmallIntegerField(primary_key=True)
     descripcion = models.CharField(max_length=20)
 
