@@ -1,3 +1,4 @@
+"""Se definen los models de la aplicación Usuarios."""
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 
@@ -10,7 +11,7 @@ ubicacion_archivos = FileSystemStorage(
 
 
 def my_awesome_upload_function(instance, filename):
-    """ this function has to return the location to upload the file """
+    """Esta función retorn la ruta para guardar los archivos."""
     return 'incidentes/' + instance.incidente.codigo + '/' + filename
 
 
@@ -24,18 +25,20 @@ class EstadosIncidentes(models.Model):
         P = Pruebas (Cuando tecnologia lo devuelve a soporte)
         E = Entregado (Cuando soporte envia la respuesta al cliente)
         So = Solucionado (Cuando el cliente cierra el caso)
-
     """
+
     codigo = models.CharField(primary_key=True, max_length=3)
     descripcion = models.CharField(max_length=20)
 
     def __str__(self):
+        """docstring."""
         return '{}:{}'.format(self.codigo, self.descripcion)
 
 
 class Incidentes(models.Model):
     codigo = models.PositiveIntegerField(primary_key=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    titulo = models.CharField(max_length=80)
     descripcion = models.TextField()
     usuario = models.ForeignKey(
         administracion.UsuariosGrexco,

@@ -1,0 +1,46 @@
+{% extends './base_contenido.html' %}
+
+{% block title %}
+	Incidentes
+{% endblock %}
+
+{% block titulo_contenido %}
+	<h3>Incidentes</h3>
+{% endblock %}
+
+{% block barra_herramientas %}
+	<a href="{% url 'usuarios:incidentes_nuevo' %}" class="btn btn-sm btn-primary text-white">
+		<i class="material-icons md-30 align-middle">library_add</i> Nuevo
+	</a>
+	<button class="btn btn-sm btn-info ml-1" id="btnConsultar"><i class="material-icons md-22 align-middle">search</i>Consultar</button>
+{% endblock %}
+
+{% block contenido %}
+	{% load static %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<table class="table table-striped table-sm" id="tblIncidentes">
+					<thead class="thead-light">
+						<tr class="text-center">
+							<td>Código</td>
+							<td>Titulo</td>
+							<td>Aplicación</td>
+							<td>Estado</td>
+							<td>Fecha</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	{% block css %}
+
+	{% endblock %}
+
+	{% block js %}
+		<script src="{% static '/js/incidentes.js' %}"></script>
+	{% endblock %}
+
+{% endblock %}

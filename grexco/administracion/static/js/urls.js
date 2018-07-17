@@ -39,4 +39,6 @@ var urlBaseUsuarios = "/usuarios/"
 // Incidentes
 var urlIncidentes = urlBaseUsuarios + "incidentes/"
 var urlCodigoIncidentes = urlIncidentes + "codigo/"
+var urlConsultaIncidentes = urlIncidentes + "consulta/"
+var urlConsultaIncidentesPorUsuario = urlConsultaIncidentes + "por-usuario/"
 var urlGuardaIncidentes = urlIncidentes + "guardar/"

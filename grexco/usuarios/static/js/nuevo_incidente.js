@@ -73,7 +73,7 @@ $(document).ready(function() {
         var data = new FormData(form);
 
 	    $.ajax({
-	    	url: urlGuardaIncidentes,
+	    	url: '',
 	    	type: 'POST',
 	    	data: data,
 	    	processData: false,

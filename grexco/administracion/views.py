@@ -350,11 +350,8 @@ class CreateAplicationsView(
                 respuesta = "Se grabaron {} de {}".format(
                     cuenta_guardados, n_columnas)
                 return JsonResponse(
-                    {
-                        'error': {
-                            'respuesta': respuesta,
-                            'aplicaciones': no_grabados
-                        }
+                    {'error':
+                        {'respuesta': respuesta, 'aplicaciones': no_grabados}
                     },
                     safe=False,
                     status=400

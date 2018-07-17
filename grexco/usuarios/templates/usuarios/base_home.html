@@ -8,14 +8,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	{% load static %}
 
+	<!-- Jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- CSS DataTables -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-print-1.5.2/sc-1.5.0/sl-1.2.6/datatables.min.css"/>
+
+	<!-- JS DataTables --> 
+	<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-print-1.5.2/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
+
+	<!-- Bootstrap -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="{% static '/bootstrap-4.1.1/dist/js/bootstrap.min.js' %}"></script>
+	
+	<!-- CSS Bootstrap -->
+	<link rel="stylesheet" href="{% static '/bootstrap-4.1.1/dist/css/bootstrap.min.css' %}">
+		
 	<!-- Google Icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 	<!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-
-	<!-- Bootstrap -->
-	<link rel="stylesheet" href="{% static '/bootstrap-4.1.1/dist/css/bootstrap.min.css' %}">
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -75,7 +88,7 @@
         		<div id="collapseIncidentes" class="collapse pl-4">
 							<nav class="nav flex-column">
 								<a href="{% url 'usuarios:incidentes_nuevo' %}" class="nav-link p-1">Nuevo</a>
-								<a href="" class="nav-link p-1">Consultar</a>
+								<a href="{% url 'usuarios:incidentes' %}" class="nav-link p-1">Consultar</a>
 							</nav>
         		</div>
         	</div>
@@ -98,13 +111,7 @@
       <!-- Fin contenido -->
     </div>
   </div>
-
-  <!-- Jquery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-	<!-- Bootstrap -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script src="{% static '/bootstrap-4.1.1/dist/js/bootstrap.min.js' %}"></script>
+	
 	<script src="{% static '/js/urls.js' %}"></script>
 
 	{% block js %}
