@@ -3,7 +3,7 @@ import json
 from datetime import time
 
 import pyexcel as pe
-from django.contrib.auth import login
+# from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.core import serializers
@@ -1731,7 +1731,8 @@ class CrearUsuariosView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                     {"error": "Ocurrio un error: {}".format(e)}, status=400)
 
             empresa = Empresas.objects.get(nit='8000497311')
-            if data['es-coordinador'] == 'on':
+            print(data['es-coordinador'])
+            if data['es-coordinador'] is True:
                 ug = UsuariosGrexco(
                     usuario=user,
                     tipo='S',
@@ -1774,7 +1775,7 @@ class CrearUsuariosView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                     {"error": "Ocurrio un error: {}".format(e)}, status=400)
 
             empresa = Empresas.objects.get(nit='8000497311')
-            if data['es-coordinador'][0] == 'on':
+            if data['es-coordinador'][0] is True:
                 ug = UsuariosGrexco(
                     usuario=user,
                     tipo='T',

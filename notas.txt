@@ -110,3 +110,19 @@ user = User.objects.create_user(username='john', email='lennon@thebeatles.com', 
 		USE_L10N = True
 
 		USE_TZ = False
+
+
+******************
+	Usuarios
+******************
+
+..
+Clientes
+	user: cliente
+	pass: 123456
+
+..
+Adminstrador
+	user: adms
+	pass: grexco02
+

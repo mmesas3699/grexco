@@ -96,8 +96,9 @@ $(document).ready(function () {
                 "extension": $("form#soporte  input#extension").val(),
                 "email": $("form#soporte  input#email").val(),
                 "nombre_usuario": $("form#soporte  input#nombre-usuario").val(),   
-                "es-coordinador": $("form#soporte input#es-coordinador").val(),
+                "es-coordinador": $("form#soporte input#es-coordinador").prop('checked'),
             }
+            console.log($("form#soporte input#es-coordinador").val());
         } else if($('select#tipo-usuario').val() == 'tecnologia'){
             data = {
                 "tipo_usuario": $("select#tipo-usuario").val(),
@@ -106,7 +107,7 @@ $(document).ready(function () {
                 "extension": $("form#tecnologia  input#extension").val(),
                 "email": $("form#tecnologia input#email").val(),
                 "nombre_usuario": $("form#tecnologia  input#nombre-usuario").val(),   
-                "es-coordinador": $("form#tecnologia input#es-coordinador").val(),
+                "es-coordinador": $("form#tecnologia input#es-coordinador").prop('checked'),
             }
         }
      
