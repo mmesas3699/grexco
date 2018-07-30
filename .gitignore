@@ -1,2 +1,6 @@
 venv/
-__pycache__/
+administracion/__pycache__/
+soporte/__pycache/
+usuarios/__pycache__/
+landing/__pycache__/
+tecnologia/__pycache/
