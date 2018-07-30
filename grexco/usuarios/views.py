@@ -1,5 +1,6 @@
 """Vistas para la aplicación Usuarios."""
 from datetime import datetime
+import json
 
 from django.contrib.auth import authenticate, login  # , logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -50,9 +51,9 @@ class LoginView(TemplateView):
 
     def post(self, request):
         """docstring."""
-        data = dict(request.POST)
-        usuario = data['usuario'][0]
-        password = data['contraseña'][0]
+        data = json.loads(request.body.decode('utf-8'))
+        usuario = data['usuario']
+        password = data['contraseña']
         user = authenticate(request, username=usuario, password=password)
 
         if user is not None:
@@ -70,7 +71,7 @@ class LoginView(TemplateView):
             else:
                 return JsonResponse({'url': '/'}, status=200)
         else:
-            return HttpResponse('Datos invalidos o usuario inactivo')
+            return HttpResponse('Datos invalidos o usuario inactivo', status=400)
 
 
 class HomeUsuariosView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
