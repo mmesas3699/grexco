@@ -45,22 +45,32 @@ $(document).ready(function($) {
 		    'contraseña': $("#contraseña").val(),
 		};
 
+		var data = JSON.stringify(usuario)
+
 		$.ajax(
 		{
 			url: '',
 			type: 'POST',
 			dataType: 'json',
-			data: usuario,
+			data: data,
 		})
 		.done(function(data, status)
 		{
-			console.log(data)
 			window.location.replace(data["url"])
 		})
-		.fail(function(xhr, status)
+		.fail(function(error, status)
 		{
-			console.log(xhr.status, status);
+
+			$('#alertaError').find('#alertaErrorMensaje').text(error.responseText);
+            $('#alertaError').show();
+			$("#btnIngresar").prop('disabled', false);
 		})		
 	});
+
+	//Oculta las Alertas
+    $('.btnCerrarAlerta').click(function(event) {
+        event.preventDefault();
+        $(this).parents('div.alert').hide();
+    });
 
 });
