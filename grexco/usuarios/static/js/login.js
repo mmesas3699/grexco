@@ -54,6 +54,7 @@ $(document).ready(function($) {
 		})
 		.done(function(data, status)
 		{
+			console.log(data)
 			window.location.replace(data["url"])
 		})
 		.fail(function(xhr, status)

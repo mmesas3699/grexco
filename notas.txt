@@ -121,8 +121,22 @@ Clientes
 	user: cliente
 	pass: 123456
 
+	user: cliente_pru
+	pass: 123456
+
 ..
 Adminstrador
 	user: adms
 	pass: grexco02
+
+..
+Soporte
+	
+	.Coordinador
+		user: soporte
+		pass: grexco02
+
+	.No coordinador
+		user: soporte2
+		pass: grexco02
 

@@ -65,6 +65,8 @@ class LoginView(TemplateView):
                 return JsonResponse({'url': '/a/'}, status=200)
             elif tipo == 'C':
                 return JsonResponse({'url': '/usuarios/'}, status=200)
+            elif tipo == 'S':
+                return JsonResponse({'url': '/soporte/'}, status=200)
             else:
                 return JsonResponse({'url': '/'}, status=200)
         else:
@@ -154,7 +156,7 @@ class IncientesNuevoView(
         descripcion = data['descripcion'][0]
         aplicacion_id = data['selAplicacion'][0]
         titulo = data['titulo'][0]
-        usuario = self.request.user.usuariosgrexco
+        usuario = self.request.user
         aplicacion = get_object_or_404(Aplicaciones, id=aplicacion_id)
         estado = get_object_or_404(EstadosIncidentes, codigo='C')
 
@@ -178,7 +180,11 @@ class IncientesNuevoView(
             if request.FILES:
                 archivos = request.FILES.getlist('inpAdjuntos')
                 for archivo in archivos:
-                    adjunto = Adjuntos(incidente=incidente, archivo=archivo)
+                    adjunto = Adjuntos(
+                        incidente=incidente,
+                        archivo=archivo,
+                        nombre_archivo=archivo
+                    )
                     try:
                         adjunto.save()
                     except Exception as e:
@@ -217,12 +223,26 @@ class IncidentesConsultaIndividualJsonView(
             - Cliente
         """
         tipo = self.request.user.usuariosgrexco.tipo
-        return tipo == 'A' or tipo == 'C'
+        return tipo == 'A' or tipo == 'C' or tipo == 'S'
 
     def get(self, request, **kwargs):
         """Retorna un Json con la información del incidente consultado."""
         codigo = kwargs['codigo']
-        qry_incidente = Incidentes.objects.filter(codigo=codigo).values()
+        qry_incidente = (
+            Incidentes.objects
+                      .filter(codigo=codigo)
+                      .values(
+                          'codigo',
+                          'titulo',
+                          'descripcion',
+                          'aplicacion__nombre',
+                          'fecha_creacion',
+                          'usuario__empresa__nombre',
+                          'fecha_respuesta',
+                          'prioridad_respuesta__descripcion',
+                          'tipo_incidente__descripcion',
+                      )
+        )
         qry_adjuntos = Adjuntos.objects.filter(
             incidente__codigo=codigo).values('archivo')
 
@@ -290,10 +310,10 @@ class IncidentesConsultaUsuarioJsonView(
 
     def get(self, request):
         """Retorna un JSON con los incidentes creados por el Usuario."""
-        usuario_grexco = UsuariosGrexco.objects.get(usuario=self.request.user)
+        usuario = self.request.user
         qry_incidentes = (
             Incidentes.objects
-                      .filter(usuario=usuario_grexco)
+                      .filter(usuario=usuario)
                       .values(
                           'codigo',
                           'titulo',

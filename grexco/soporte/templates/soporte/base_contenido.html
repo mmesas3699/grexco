@@ -1,0 +1,24 @@
+{% extends './base_home.html' %}
+
+{% block contenedor %}
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<div class="row mt-2">
+				{% block titulo_contenido %}
+				{% endblock %}
+			</div>
+			<div class="row">
+				<div class="rounded bg-light w-100 p-2">
+					{% block barra_herramientas %}
+					{% endblock %}
+				</div>
+			</div>
+			<div class="row mt-3">
+				{% block contenido %}
+				{% endblock %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

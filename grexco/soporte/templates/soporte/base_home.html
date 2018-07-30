@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		{% block title %} {% endblock %}
+	</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{% load static %}
+
+	<!-- Jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- CSS DataTables -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-print-1.5.2/sc-1.5.0/sl-1.2.6/datatables.min.css"/>
+
+	<!-- JS DataTables --> 
+	<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-print-1.5.2/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
+
+	<!-- Bootstrap -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="{% static '/bootstrap-4.1.1/dist/js/bootstrap.min.js' %}"></script>
+	
+	<!-- CSS Bootstrap -->
+	<link rel="stylesheet" href="{% static '/bootstrap-4.1.1/dist/css/bootstrap.min.css' %}">
+		
+	<!-- Google Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="{% static '/css/base.css' %}">
+
+	{% block css %}
+
+	{% endblock %}
+	
+</head>
+<body style="font-size: .875rem; font-family: 'Roboto', sans-serif;">
+	
+	<!-- Top nav -->
+	<nav class="nav bg-primary sticky-top clearfix shadow" style="width: 100%; height: 40px;">
+		<div class="col">
+			<a href="#" class="navbar-brand" style="color: white; font-size: 20px;">GREXCO</a>
+		</div>
+		<div class="col">				
+			<div class="dropdown">
+				<button class="btn btn-sm btn-primary float-right p-0" data-toggle="dropdown">
+					<i class="material-icons person md-30">person</i>
+				</button>
+				<div class="dropdown-menu p-0">
+					<a href="#" class="dropdown-item p-1 text-center">{{ request.user.username }}</a>
+					<i id="nitEmpresa" class="d-none">{{ request.user.usuariosgrexco.empresa.nit }}</i>
+					<div class="dropdown-divider m-1"></div>
+					<a href="{% url 'usuarios:logout' %}"
+						 class="dropdown-item p-1 text-center"
+						 style="font-size: 15px;">
+						<i class="material-icons align-middle">exit_to_app</i> 
+						Cerrar sesión
+					</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!-- Fin top nav -->
+
+  <div class="container-fluid">
+    <div class="row">
+			
+			<!-- Sidebar -->
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky mb-3">
+        	
+        	<!-- Acordión Incidentes -->
+        	<div class="accordion m-1 mt-2">
+        		<button class="btn btn-sm btn-block btn-light text-left text-primary"
+        						type="button" 
+        						data-toggle="collapse" 
+        						data-target="#collapseIncidentes" 
+        						style="font-size: 15px;">
+        			Incidentes <span class="badge badge-danger ml-2">1</span>
+        		</button>
+        		<div id="collapseIncidentes" class="collapse pl-4">
+							<nav class="nav flex-column">
+								{% if request.user.usuariosgrexco.es_coordinador %}
+									<a href="{% url 'soporte:home_soporte' %}" class="nav-link p-1">Consultar</a>
+								{% endif %}
+								<a href="{% url 'soporte:home_soporte' %}" class="nav-link p-1">Asignados</a>
+							</nav>
+        		</div>
+        	</div>
+
+        	<!-- Acordión Cambios -->
+        	<div class="accordion m-1 mt-2">
+        		<button class="btn btn-sm btn-block btn-light text-left text-primary"
+        						type="button" 
+        						data-toggle="collapse" 
+        						data-target="#collapseCambios" 
+        						style="font-size: 15px;">
+        			Cambios <span class="badge badge-danger ml-2">1</span>
+        		</button>
+        		<div id="collapseCambios" class="collapse pl-4">
+							<nav class="nav flex-column">
+								{% if request.user.usuariosgrexco.es_coordinador %}
+									<a href="{% url 'soporte:home_soporte' %}" class="nav-link p-1">Consultar</a>
+								{% endif %}
+								<a href="{% url 'soporte:home_soporte' %}" class="nav-link p-1">Asignados</a>
+							</nav>
+        		</div>
+        	</div>
+
+        </div>
+      </nav>
+      <!-- Fin sidebar -->
+
+			<!-- Contenido -->
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      	{% block contenedor %}
+      	{% endblock %}
+      </main>
+      <!-- Fin contenido -->
+    </div>
+  </div>
+	
+	<script src="{% static '/js/urls.js' %}"></script>
+
+	{% block js %}
+
+	{% endblock %}
+
+</body>
+</html>

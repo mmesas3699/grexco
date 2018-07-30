@@ -1,6 +1,10 @@
+"""Modelos para la aplicación de Soporte."""
+
+from django.contrib.auth.models import User
 from django.db import models
 
 from administracion.models import ubicacion_archivos
+from usuarios.models import Incidentes
 from tecnologia.models import Cambios
 
 
@@ -35,3 +39,21 @@ class ArchivosPruebas(models.Model):
 
     def __str__(self):
         return '{}'.format(self.archivo)
+
+
+class NotasSoporte(models.Model):
+    incidente = models.ForeignKey(
+        Incidentes, on_delete=models.PROTECT)
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name='usuario_soporte')
+    fecha = models.DateTimeField(auto_now_add=True)
+    nota = models.TextField(null=True, blank=True)
+
+
+class NotasTecnologia(models.Model):
+    incidente = models.ForeignKey(
+        Incidentes, on_delete=models.PROTECT)
+    usuario = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name='usuario_tecnologia')
+    fecha = models.DateTimeField(auto_now_add=True)
+    nota = models.TextField(null=True, blank=True)

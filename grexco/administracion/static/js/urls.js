@@ -42,3 +42,17 @@ var urlCodigoIncidentes = urlIncidentes + "codigo/"
 var urlConsultaIncidentes = urlIncidentes + "consulta/"
 var urlConsultaIncidentesPorUsuario = urlConsultaIncidentes + "por-usuario/"
 var urlGuardaIncidentes = urlIncidentes + "guardar/"
+var urlIncidentesConsultaIndividualJson = urlConsultaIncidentes + "json/"
+
+
+/* ------------------------------------------------------
+					SOPORTE
+------------------------------------------------------- */
+// Base Soporte
+var urlBaseSoporte = "/soporte/"
+
+// Soporte
+var urlSoporteIncidentes = urlBaseSoporte + "incidentes/"
+var urlListadoIncidentes = urlSoporteIncidentes + "listado/"
+var urlSopConInc = urlSoporteIncidentes + "consulta/"
+var urlUsuariosSoporte = urlBaseSoporte + "consulta/usuarios/"

@@ -1,0 +1,38 @@
+{% extends './base_contenido.html' %}
+
+{% block title %}
+	Soporte
+{% endblock%}
+
+{% block titulo_contenido %}
+	<h4>Incidentes</h4>
+{% endblock %}
+
+{% block barra_herramientas %}
+herramientas
+{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+	
+	<table id="tblIncidentes" class="table table-striped">
+		<thead>
+			<tr>
+				<td>Código</td>
+				<td>Fecha</td>
+				<td>Titulo</td>
+				<td>Empresa</td>
+				<td>Aplicación</td>
+				<td>Estado</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+{% block js %}
+	{% load static %}
+	<script src="{% static '/js/soporte.js' %}"></script>
+{% endblock %}
