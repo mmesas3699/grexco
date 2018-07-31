@@ -10,8 +10,8 @@ from django.shortcuts import get_object_or_404, HttpResponse
 from django.views.generic import TemplateView
 from django.views.generic import View
 
-from administracion.models import Aplicaciones, UsuariosGrexco
-# from administracion.views import genera_id, empresa_activa
+from administracion.models import Aplicaciones
+from administracion.views import empresa_activa
 
 from usuarios.models import Adjuntos
 from usuarios.models import EstadosIncidentes
@@ -158,8 +158,15 @@ class IncientesNuevoView(
         aplicacion_id = data['selAplicacion'][0]
         titulo = data['titulo'][0]
         usuario = self.request.user
+        nit = self.request.user.usuariosgrexco.empresa.nit
         aplicacion = get_object_or_404(Aplicaciones, id=aplicacion_id)
         estado = get_object_or_404(EstadosIncidentes, codigo='C')
+
+        if empresa_activa(nit):
+            pass
+        else:
+            return JsonResponse(
+                {'error': 'La empresa esta inactiva'}, status=400)
 
         with transaction.atomic():
             # Guarda el incidente

@@ -118,10 +118,10 @@ user = User.objects.create_user(username='john', email='lennon@thebeatles.com', 
 
 ..
 Clientes
-	user: cliente
+	user: cliente1
 	pass: 123456
 
-	user: cliente_pru
+	user: cliente2
 	pass: 123456
 
 ..

@@ -90,13 +90,11 @@ def crea_estados_incidentes():
             estado.save()
 
 
-if __name__ == '__main__':
-
-    # Instancia la plataforma
+def inicial():
+    """Función inicial."""
+    # Graba la plataforma
     plataforma = Plataformas(
         id=1, nombre=NOMBRE_PLATAFORMA, version=VERSION_PLATAFORMA)
-
-    # Graba la plataforma
     plataforma.save()
 
     # Trae el objeto plataforma
@@ -134,4 +132,8 @@ if __name__ == '__main__':
     )
     usuario_administrador.save()
 
+    # Crea las prioridades de respuesta
+    crear_prioridades()
+
+    # Crea los estados de los incidentes
     crea_estados_incidentes()
