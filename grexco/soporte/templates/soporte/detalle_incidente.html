@@ -87,7 +87,7 @@
 					<hr>
 					{% if adjuntos %}
 						{% for adjunto in adjuntos %}
-							<a class="btn btn-sm" href="{{ adjunto.archivo.url }}">
+							<a class="btn btn-sm btn-outline-success" href="{{ adjunto.archivo.url }}">
 								<i class="material-icons md-19 align-middle mr-1">attach_file</i>{{ adjunto.nombre_archivo }}
 							</a>
 						{% endfor %}

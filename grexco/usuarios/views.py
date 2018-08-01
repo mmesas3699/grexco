@@ -71,7 +71,8 @@ class LoginView(TemplateView):
             else:
                 return JsonResponse({'url': '/'}, status=200)
         else:
-            return HttpResponse('Datos invalidos o usuario inactivo', status=400)
+            return HttpResponse(
+                'Datos invalidos o usuario inactivo', status=400)
 
 
 class HomeUsuariosView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
