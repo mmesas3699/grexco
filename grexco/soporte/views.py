@@ -33,7 +33,10 @@ class HomeSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
 
 class ListadoIncidentesView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """Retorna un listado de todos los incidentes creados."""
+    """Retorna un listado de todos los incidentes creados.
+
+        :url :soporte/incidentes/listado/
+    """
 
     login_url = 'usuarios:login'
 
@@ -74,7 +77,17 @@ class ListadoIncidentesView(LoginRequiredMixin, UserPassesTestMixin, View):
 
             return JsonResponse({'incidentes': incidentes}, status=200)
         else:
-            print(usuario)
+            print('usuario no coordinador')
+            qry_incidentes = (
+                UsuariosSoporteIncidentes.objects
+                                         .filter(usuario=usuario,
+                                                 incidente__estado='S')
+                                         .values('incidente__codigo')
+            )
+            incidentes = []
+            for incidente in qry_incidentes:
+                incidentes.append(incidente)
+            return JsonResponse({'incidentes': incidentes}, status=200)
 
 
 class DetalleIncidentesView(
@@ -138,7 +151,7 @@ class AsignaIncidentesSoporteView(
 
     def test_func(self):
         """
-        Retringe el acceso de usuarios.
+        Restringe el acceso de usuarios.
 
         Solo permite el acceso a los usuarios:
             - Administrador
