@@ -48,19 +48,19 @@
 		<div class="col">
 			<a href="#" class="navbar-brand" style="color: white; font-size: 20px;">GREXCO</a>
 		</div>
-		<div class="col">				
+		<div class="col">
+			<!-- Opciones de usuario y cerrar sesión -->
 			<div class="dropdown">
 				<button class="btn btn-sm btn-primary float-right p-0" data-toggle="dropdown">
 					<i class="material-icons person md-30">person</i>
 				</button>
-				<div class="dropdown-menu p-0">
-					<a href="#" class="dropdown-item p-1 text-center">{{ request.user.username }}</a>
+				<div class="dropdown-menu p-0" style="font-size: 14px;">
+					<a href="#" class="dropdown-item p-1 text-center"><b>Usuario/</b> {{ request.user.username }}</a>
 					<i id="nitEmpresa" class="d-none">{{ request.user.usuariosgrexco.empresa.nit }}</i>
 					<div class="dropdown-divider m-1"></div>
 					<a href="{% url 'usuarios:logout' %}"
-						 class="dropdown-item p-1 text-center"
-						 style="font-size: 15px;">
-						<i class="material-icons align-middle">exit_to_app</i> 
+						 class="dropdown-item p-1 text-center">
+						<i class="material-icons align-middle md-21">exit_to_app</i> 
 						Cerrar sesión
 					</a>
 				</div>
