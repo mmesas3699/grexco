@@ -102,7 +102,7 @@ class PrioridadesRespuesta(models.Model):
     """
     'A' = 'Alta'
     'M' = 'Media'
-    'B' = 'Baja'
+    'B' = 'Baja'    
     """
     codigo = models.CharField(max_length=2, primary_key=True)
     descripcion = models.CharField(max_length=20)

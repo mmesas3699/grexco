@@ -10,12 +10,21 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views.generic import TemplateView, View
 
-from usuarios.models import (Incidentes, UsuariosSoporteIncidentes,
-    MovimientosIncidentes, EstadosIncidentes, Adjuntos)
+from usuarios.models import (
+    Incidentes,
+    UsuariosSoporteIncidentes,
+    MovimientosIncidentes,
+    EstadosIncidentes,
+    Adjuntos
+)
 
 
 class HomeSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    """Home para los clientes de Grexco."""
+    """
+    Home para los clientes de Grexco.
+
+        :url    :soporte/
+    """
 
     login_url = 'usuarios:login'
     template_name = 'soporte/home.html'
@@ -33,7 +42,8 @@ class HomeSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
 
 class ListadoIncidentesView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """Retorna un listado de todos los incidentes creados.
+    """
+    Retorna un listado de todos los incidentes creados.
 
         :url :soporte/incidentes/listado/
     """
@@ -67,7 +77,7 @@ class ListadoIncidentesView(LoginRequiredMixin, UserPassesTestMixin, View):
                               'estado__descripcion',
                               'fecha_creacion',
                               'usuario__usuariosgrexco__empresa__nombre'
-                          ).order_by('-codigo')
+                          )
             )
             incidentes = []
             for incidente in qry_incidentes:
@@ -82,7 +92,14 @@ class ListadoIncidentesView(LoginRequiredMixin, UserPassesTestMixin, View):
                 UsuariosSoporteIncidentes.objects
                                          .filter(usuario=usuario,
                                                  incidente__estado='S')
-                                         .values('incidente__codigo')
+                                         .values(
+                                             'incidente__codigo',
+                                             'incidente__titulo',
+                                             'incidente__aplicacion__nombre',
+                                             'incidente__estado__descripcion',
+                                             'incidente__fecha_creacion',
+                                             'usuario__usuariosgrexco__empresa__nombre'
+                                         )
             )
             incidentes = []
             for incidente in qry_incidentes:
@@ -172,11 +189,13 @@ class AsignaIncidentesSoporteView(
         return JsonResponse({'ok': 'ok'}, status=200)
 
     def post(self, request, *args, **kwargs):
-        """Recibe el codigo del usuario y del incidentes para asignar el
+        """Recibe el codigo del usuario y de incidente para asignar el
         incidente al usuario."""
         data = json.loads(request.body.decode('utf-8'))
         cod_usuario = data['usuario']
         cod_incidente = data['incidente']
+        cod_prioridad = data['prioridad']
+        print(cod_prioridad, cod_incidente, cod_usuario)
         estado = EstadosIncidentes.objects.get(codigo='S')
 
         with transaction.atomic():
@@ -216,6 +235,6 @@ class AsignaIncidentesSoporteView(
             except Exception as e:
                 return JsonResponse({'error': e}, status=400)
 
-            # Si no hay ningún error.
+            # Si NO hay ningún error.
             return JsonResponse(
                 {'ok': 'Se asignó el incidente correctamente'}, status=200)

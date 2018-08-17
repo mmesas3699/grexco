@@ -41,7 +41,8 @@ def genera_id(modelo):
 def empresa_activa(nit):
     """
     Retorna True si la empresa esta activa, si no retorna False.
-    Recibe como parametro el nit de la empresa a consultar.
+
+        :nit    :nit de la empresa a consultar.
     """
     empresa = get_object_or_404(Empresas, nit=nit)
 
@@ -351,8 +352,7 @@ class CreateAplicationsView(
                     cuenta_guardados, n_columnas)
                 return JsonResponse(
                     {'error':
-                        {'respuesta': respuesta, 'aplicaciones': no_grabados}
-                    },
+                        {'respuesta': respuesta, 'aplicaciones': no_grabados}},
                     safe=False,
                     status=400
                 )
@@ -674,9 +674,11 @@ class DeleteReportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     login_url = 'usuarios:login'
 
     def test_func(self):
+        """Docstring."""
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
+        """Docstring."""
         data = dict(request.POST)
         id_reporte = data['reporte'][0]
 
@@ -933,14 +935,18 @@ class ConsultaHorariosSoporte(LoginRequiredMixin, UserPassesTestMixin, TemplateV
 # ............................................................................
 #                     PRIORIDADES DE RESPUESTA                               .
 # ............................................................................
-class PrioridadesRespuestaView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class PrioridadesRespuestaView(
+        LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     """
-    Vista que retorna un Json con los datos de las prioridades de respuesta
+    Vista que retorna un Json con los datos de las prioridades de respuesta.
+
+        :url    :administracion/prioridades-respuesta/
     """
     login_url = 'usuarios:login'
 
     def test_func(self):
-        return self.request.user.usuariosgrexco.tipo == 'A'
+        tipo = self.request.user.usuariosgrexco.tipo
+        return tipo == 'A' or tipo == 'S' or tipo == 'T'
 
     def get(self, request):
         qry_prio_respuesta = PrioridadesRespuesta.objects.values().all()
@@ -1007,6 +1013,9 @@ class CrearTiemposRespuestaView(
         return self.request.user.usuariosgrexco.tipo == 'A'
 
     def post(self, request, *args, **kwargs):
+        """
+        tr = Tiempos de respuesta
+        """
         data = dict(request.POST)
         # print(data)
         nit = data['empresa'][0]

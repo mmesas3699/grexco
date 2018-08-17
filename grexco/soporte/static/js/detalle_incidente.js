@@ -36,8 +36,12 @@ $(document).ready(function() {
     // Asigna el caso al Usuario seleccionado.
     $("#btnEnviar").click(function(event) {
         event.preventDefault();
-        var usuario = {'usuario': $('#selUsuario').val(), 'incidente': $('#codigo').text()}
-        var data = JSON.stringify(usuario)
+        var frmData = {
+            'usuario': $('#selUsuario').val(),
+            'incidente': $('#codigo').text(),
+            'prioridad': $('#selPrioResp').val()
+        }
+        var data = JSON.stringify(frmData)
         $.ajax({
             url: '/soporte/asigna/incidentes/soporte/',
             type: 'POST',
@@ -58,6 +62,16 @@ $(document).ready(function() {
             $('#selUsuario').append(
                 '<option value="'+ this['username']+ '">'+ this['username'] + '</option>'
             );
+        });
+    });
+
+    // Consulta las prioridades de respuesta.
+    $.get(urlPrioridadesRespuesta, function(data) {
+        var prioridades = data['prioridades'];
+        $(prioridades).each(function(index, el) {
+            $('#selPrioResp').append(
+                '<option value="'+ this['codigo']+ '">'+ this['descripcion'] + '</option>'
+            );     
         });
     });
 

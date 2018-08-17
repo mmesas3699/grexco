@@ -29,23 +29,45 @@ $(document).ready(function() {
         },
     });
 
-    // Tabla Incidentes
-    $('#tblIncidentes').DataTable( {
-    	"order": [[ 0, "desc" ]],
-    	"select": "single",
-	    "ajax": {
-	        url: urlListadoIncidentes,
-	        dataSrc: 'incidentes'
-	    },
-	    "columns": [
-	    	{data: 'codigo'},
-	    	{data: 'fecha_creacion'},
-	    	{data: 'titulo'},
-	    	{data: 'usuario__usuariosgrexco__empresa__nombre'},
-	    	{data: 'aplicacion__nombre'},
-	    	{data: 'estado__descripcion'}
-	    ]
-	} );
+
+    var esCoordinador = $("#es_coordinador").text();
+    if (esCoordinador === 'True') {
+        $('#tblIncidentes').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "select": "single",
+            "ajax": {
+                url: urlListadoIncidentes,
+                dataSrc: 'incidentes'
+            },
+            "columns": [
+                {data: 'codigo'},
+                {data: 'fecha_creacion'},
+                {data: 'titulo'},
+                {data: 'usuario__usuariosgrexco__empresa__nombre'},
+                {data: 'aplicacion__nombre'},
+                {data: 'estado__descripcion'}
+            ]
+        } );
+    } else {
+        $('#tblIncidentes').DataTable( {
+            "order": [[ 0, "desc" ]],
+            "select": "single",
+            "ajax": {
+                url: urlListadoIncidentes,
+                dataSrc: 'incidentes'
+            },
+            "columns": [
+                {data: 'incidente__codigo'},
+                {data: 'incidente__fecha_creacion'},
+                {data: 'incidente__titulo'},
+                {data: 'usuario__usuariosgrexco__empresa__nombre'},
+                {data: 'incidente__aplicacion__nombre'},
+                {data: 'incidente__estado__descripcion'}
+            ]
+        } );
+    }
+
+    
 
     //  Consulta detalle del incidente seleccionado
     $('#tblIncidentes').on('dblclick', 'tr', function(event) {

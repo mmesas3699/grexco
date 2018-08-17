@@ -2,9 +2,9 @@
 Se definen la variables que almacenan las URLs usadas por la APP.
 */
 
-/* ********************************************************
+/* --------------------------------------------------------
 				       ADMINISTRACION
-******************************************************** */
+-------------------------------------------------------- */
 
 // Base Administración
 var urlBaseAdministracion = '/a/' 
@@ -28,11 +28,13 @@ var urlAplicacionesEliminar = urlAplicaciones + "eliminar/"
 var urlAplicacionesListado = urlAplicaciones + "listado/"
 var urlAplicacionesNuevo = urlAplicaciones + "nuevo/"
 
+// Prioridades de Respuesta
+var urlPrioridadesRespuesta = urlBaseAdministracion + "prioridades-respuesta/"
 
 
-/* ********************************************************
+/* --------------------------------------------------------
 						USUARIOS
-******************************************************** */
+-------------------------------------------------------- */
 // Base Usuarios
 var urlBaseUsuarios = "/usuarios/"
 
@@ -47,12 +49,12 @@ var urlIncidentesConsultaIndividualJson = urlConsultaIncidentes + "json/"
 
 /* ------------------------------------------------------
 					SOPORTE
-------------------------------------------------------- */
+------------------------------------------------------ */
 // Base Soporte
-var urlBaseSoporte = "/soporte/"
+var urlHomeSoporteView = "/soporte/"
 
 // Soporte
-var urlSoporteIncidentes = urlBaseSoporte + "incidentes/"
+var urlSoporteIncidentes = urlHomeSoporteView + "incidentes/"
 var urlListadoIncidentes = urlSoporteIncidentes + "listado/"
 var urlSopConInc = urlSoporteIncidentes + "consulta/"
-var urlUsuariosSoporte = urlBaseSoporte + "consulta/usuarios/"
+var urlUsuariosSoporte = urlHomeSoporteView + "consulta/usuarios/"
