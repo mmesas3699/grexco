@@ -21,6 +21,16 @@ def verifica_servicio(empresa, dia):
         return None
 
 
+def mas_un_dia()
+def guarda_fecha_respuesta(hora_respuesta, hora_fin_servicio):
+    """docstring."""
+    if hora_respuesta < hora_fin_servicio:
+        print('Guardar')
+    else:
+        t_rta = hora_respuesta - hora_fin_servicio
+        return(t_rta)
+
+
 def fecha_respuesta(incidente, codigo_prioridad):
     """docstring."""
     incidente = incidente
@@ -32,23 +42,22 @@ def fecha_respuesta(incidente, codigo_prioridad):
         empresa=incidente.usuario.empresa,
         prioridad=prioridad
     )
-    tiempo_respuesta = qry_tiempo_respuesta.tiempo
-    tiempo_rta = datetime.timedelta(hours=tiempo_respuesta)
+    t_rta = datetime.timedelta(hours=qry_tiempo_respuesta.tiempo)
 
-    hora_caso = incidente.fecha_creacion
-    hora_respuesta = hora_caso + tiempo_rta
-    dia_rta = datetime.date.today()
+    h_caso = incidente.fecha_creacion
+    dia_rta = datetime.date(h_caso.year, h_caso.month, h_caso.day)
 
     servicio = verifica_servicio(empresa, dia_rta.weekday())
     if servicio:
+        h_rta = h_caso + t_rta
         hora_fin_servicio = datetime.datetime(
             year=dia_rta.year,
             month=dia_rta.month,
             day=dia_rta.day,
             hour=servicio.fin.hour,
             minute=servicio.fin.minute,
-            second=00
         )
+
     else:
     un_dia = datetime.timedelta(days=1)
 print(hora_respuesta > hora_fin_servicio)
