@@ -3,6 +3,7 @@
 import json
 
 from datetime import datetime
+from datetime import timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -10,13 +11,16 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views.generic import TemplateView, View
 
-from usuarios.models import (
-    Incidentes,
-    UsuariosSoporteIncidentes,
-    MovimientosIncidentes,
-    EstadosIncidentes,
-    Adjuntos
-)
+from administracion.models import TiemposRespuesta
+from usuarios.models import Adjuntos
+from usuarios.models import EstadosIncidentes
+from usuarios.models import Incidentes
+from usuarios.models import MovimientosIncidentes
+from usuarios.models import UsuariosSoporteIncidentes
+
+# Función para calcular el tiempo de respuesta
+from .fecha_respuesta import respuesta
+
 
 
 class HomeSoporteView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -195,7 +199,6 @@ class AsignaIncidentesSoporteView(
         cod_usuario = data['usuario']
         cod_incidente = data['incidente']
         cod_prioridad = data['prioridad']
-        print(cod_prioridad, cod_incidente, cod_usuario)
         estado = EstadosIncidentes.objects.get(codigo='S')
 
         with transaction.atomic():
@@ -217,12 +220,7 @@ class AsignaIncidentesSoporteView(
             except Exception as e:
                 return JsonResponse({'error': e}, status=400)
 
-            # Cambia el estado del Incidente.
-            incidente.estado = estado
-            try:
-                incidente.save()
-            except Exception as e:
-                return JsonResponse({'error': e}, status=400)
+            print('usuarios incidente')
 
             # Guarda los movimientos del Incidente.
             usr_coordinador = self.request.user
@@ -234,7 +232,28 @@ class AsignaIncidentesSoporteView(
                 movimiento.save()
             except Exception as e:
                 return JsonResponse({'error': e}, status=400)
+            # Cambia el estado del Incidente.
+            incidente.estado = estado
+            try:
+                incidente.save()
+            except Exception as e:
+                return JsonResponse({'error': e}, status=400)
 
+            # Calcula la fecha de respuesta
+            """
+            empresa = incidente.usuario.usuariosgrexco.empresa
+            qry_tiempo_respuesta = TiemposRespuesta.objects.get(
+                empresa=empresa, prioridad=cod_prioridad)
+            tiempo_respuesta = timedelta(hours=qry_tiempo_respuesta.tiempo)
+            print(tiempo_respuesta)
+            fecha = incidente.fecha_creacion
+            print(fecha)
+            """
+            fecha = incidente.fecha_creacion
+            tiempo = timedelta(hours=8)
+            fecha_respuesta = respuesta(incidente, tiempo, fecha)
+            print('fecha_respuesta', fecha_respuesta)
+           
             # Si NO hay ningún error.
             return JsonResponse(
                 {'ok': 'Se asignó el incidente correctamente'}, status=200)

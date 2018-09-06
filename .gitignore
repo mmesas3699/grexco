@@ -1,6 +1,3 @@
 venv/
-grexco/administracion/__pycache__/
-grexco/soporte/__pycache/
-grexco/usuarios/__pycache__/
-grexco/landing/__pycache__/
-grexco/tecnologia/__pycache/
+__pycache__/
+*.pyc

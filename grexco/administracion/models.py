@@ -100,9 +100,10 @@ class UsuariosGrexco(models.Model):
 
 class PrioridadesRespuesta(models.Model):
     """
-    'A' = 'Alta'
-    'M' = 'Media'
-    'B' = 'Baja'    
+    Codigos:
+        'A' = 'Alta'
+        'M' = 'Media'
+        'B' = 'Baja'    
     """
     codigo = models.CharField(max_length=2, primary_key=True)
     descripcion = models.CharField(max_length=20)
