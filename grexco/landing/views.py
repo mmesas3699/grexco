@@ -9,7 +9,7 @@ from .models import Contact
 # Create your views here.
 
 def index(request):
-    return render(request, 'landing/index.html')
+    return render(request, 'landing/otro_index.html')
 
 
 def contacto(request):

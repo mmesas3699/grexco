@@ -19,18 +19,15 @@ $(document).ready(function($) {
 	Verifica que los campos del formulario de contacto NO
 	estén vacios.	
 	*/ 
-	$(".contacto").focusout(function()
-		{
-   		  var valor = $(this).val();
-   		  if (valor.length == 0)
-   		   {
-   			  $(this).siblings('span').show();
-   		   }
-   		  else
-   		   {
-   			  $(this).siblings('span').hide();
-   		   };
-	    });
+	$(".contacto").focusout(function(){
+   		var valor = $(this).val();
+   		if (valor.length == 0){
+   			$(this).siblings('span').show();
+		}
+   		else{
+   			$(this).siblings('span').hide();
+   		};
+	});
 
 
 	// Envia los datos para el Login
@@ -60,7 +57,6 @@ $(document).ready(function($) {
 		})
 		.fail(function(error, status)
 		{
-
 			$('#alertaError').find('#alertaErrorMensaje').text(error.responseText);
             $('#alertaError').show();
 			$("#btnIngresar").prop('disabled', false);

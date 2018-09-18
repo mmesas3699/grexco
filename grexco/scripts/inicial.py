@@ -27,8 +27,6 @@ CONTRASENA = 'grexco02'
 
 # El primer nombre de la persona responsable de este usuario.
 NOMBRE_RESPONSABLE = 'Miguel'
-
-# El apellido de la persona responsbel de este usuario.
 APELLIDO_RESPONSABLE = 'Mesa'
 EMAIL_RESPONSABLE = 'miguel.mesa@grexco.com.co'
 TELEFONO_RESPONSABLE = '2351180'
@@ -56,20 +54,6 @@ EMPRESA_TELEFONO = '2351180'
 
 
 # *************************************************************
-#                   PRIORIDADES DE RESPUESTA                  *
-# *************************************************************
-PRIORIDADES = [['a', 'Alta'], ['m', 'Media'], ['b', 'Baja']]
-
-
-def crear_prioridades():
-    """docstring."""
-    with transaction.atomic():
-        for p in PRIORIDADES:
-            prioridad = PrioridadesRespuesta(codigo=p[0], descripcion=p[1])
-            prioridad.save()
-
-
-# *************************************************************
 #                 ESTADOS INCIDENTES                          *
 # *************************************************************
 ESTADOS = [
@@ -80,6 +64,19 @@ ESTADOS = [
     ['E', 'Entregado'],
     ['So', 'Solucionado']
 ]
+
+
+# *************************************************************
+#                   PRIORIDADES DE RESPUESTA                  *
+# *************************************************************
+PRIORIDADES = [['a', 'Alta'], ['m', 'Media'], ['b', 'Baja']]
+
+def crear_prioridades():
+    """docstring."""
+    with transaction.atomic():
+        for p in PRIORIDADES:
+            prioridad = PrioridadesRespuesta(codigo=p[0], descripcion=p[1])
+            prioridad.save()
 
 
 def crea_estados_incidentes():

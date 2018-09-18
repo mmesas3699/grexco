@@ -58,7 +58,7 @@
 					<a href="#" class="dropdown-item p-1 text-center"><b>Usuario/</b> {{ request.user.username }}</a>
 					<i id="nitEmpresa" class="d-none">{{ request.user.usuariosgrexco.empresa.nit }}</i>
 					<div class="dropdown-divider m-1"></div>
-					<a href="{% url 'usuarios:logout' %}"
+					<a href="{% url 'logout' %}"
 						 class="dropdown-item p-1 text-center">
 						<i class="material-icons align-middle md-21">exit_to_app</i> 
 						Cerrar sesión

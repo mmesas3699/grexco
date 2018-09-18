@@ -36,7 +36,7 @@
 				<button class="btn bg-dark float-right pt-0 pb-0 pl-1 pr-1 dropdown-toggle btn-user" data-toggle="dropdown"><i class="material-icons md-36 person">person</i></button>
 		    <div class="dropdown-menu">
 				  <a class="dropdown-item" href="#"><b>Usuario:</b> {{request.user.username}}</a>
-			  	<a class="dropdown-item" href="{% url 'usuarios:logout'%}">Cerrar sesión</a>
+			  	<a class="dropdown-item" href="{% url 'logout'%}">Cerrar sesión</a>
 				</div>
 		  </div>
 				
@@ -76,7 +76,7 @@
 					<div class="dropdown-menu">
 						<a href="#" class="dropdown-item">{{ request.user.username }}</a>
 						<div class="dropdown-divider"></div>
-						<a href="{% url 'usuarios:logout' %}" class="dropdown-item">Cerrar sesión</a>
+						<a href="{% url 'logout' %}" class="dropdown-item">Cerrar sesión</a>
 					</div>
 				</div>
 			</div>

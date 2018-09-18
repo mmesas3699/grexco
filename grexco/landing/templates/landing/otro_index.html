@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% load static %}
+	<title>GREXCO</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+	<!-- Google Fonts  -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  
+  <!-- Google Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	
+	<!-- CSS Local -->
+  <link rel="stylesheet" type="text/css" href="{% static '/css/otro_css.css' %}">
+  
+  <!-- Icono Grexco -->
+  <link rel="icon" type="image/gif/png" href="{% static '/img/icono.png' %}">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="{% static 'landing/js/contacto.js' %}"></script>
+
+</head>
+<body>
+<header id="header" class="navbar navbar-expand-lg bd-navbar">
+	<!-- Brand -->
+	<a class="navbar-brand" href="#">
+	  <img src="{% static '/img/Logo.jpg' %}" alt="logo" style="width:150px;">
+	</a>
+		
+	<!-- Toggler/collapsibe Button -->
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+	  <i class="material-icons menu">menu</i>
+	</button>
+
+	<!-- Navbar links -->
+	<div class="collapse navbar-collapse " id="collapsibleNavbar">
+	  <ul class="navbar-nav">
+	    <li class="nav-item"><a class="nav-link text-primary" href="#">Inicio</a></li>
+	    <li class="nav-item"><a class="nav-link text-primary" href="#grexco">Grexco</a></li>
+	    <li class="nav-item dropdown">
+	      <a class="nav-link text-primary dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Productos</a>
+	      <div class="dropdown-menu">
+	        <a class="dropdown-item text-primary" href="#activos-fijos">Activos Fijos</a>
+	        <a class="dropdown-item text-primary" href="#caja-menor">Caja Menor</a>
+	        <a class="dropdown-item text-primary" href="#contabilidad">Contabilidad</a>
+	        <a class="dropdown-item text-primary" href="#nomina">Nómina</a>
+	        <a class="dropdown-item text-primary" href="#restaurante">Punto de Venta Restaurante</a>
+	        <a class="dropdown-item text-primary" href="#sistema-comercial">Sistema Comercial</a>
+	        <a class="dropdown-item text-primary" href="#industrial">Sistema Industrial</a>
+	      </div>
+	    </li> 
+	    <li class="nav-item"><a class="nav-link text-primary" href="#contacto">Contáctenos</a></li>
+	    <li class="nav-item"><a class="nav-link text-primary" href="{% url 'login' %}">Soporte</a></li>
+	  </ul>
+	</div> 
+</header>
+
+<main class="container-fluid">
+  <div class="row p-sm-1 pt-sm-2 p-md-4" style="background-color: #299cff; margin-top: 65px;">
+    <div class="clearfix">
+      <div class="bg-dark p-2 rounded float-md-right float-sm-none w-50">
+        <h5 class="text-light">BIENVENIDOS A GREXCO S.A.S.</h5>
+        <p class="text-light" style="font-size: font-size:10vw">Ofrecemos la <b>MEJOR SOLUCION INTEGRADA</b> del mercado, con la cual se contabilizan automáticamente todos los documentos realizados en los diferentes módulos, con este beneficio se evitan los dobles procesos y se optimiza el tiempo de los usuarios y mejora la productividad de su empresa.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+	<p>Footer</p>
+</footer>
+</body>
+</html>

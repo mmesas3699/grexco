@@ -16,7 +16,6 @@ Including another URLconf
 """
 
 from django.urls import path
-from django.contrib.auth.views import logout
 
 from . import views
 
@@ -45,6 +44,4 @@ urlpatterns = [
         views.IncidentesConsultaUsuarioJsonView.as_view(),
         name='incidentes_consulta_usuario'
     ),
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('logout/', logout, {'next_page': '/'}, name='logout'),
 ]

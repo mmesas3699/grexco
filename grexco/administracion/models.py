@@ -94,8 +94,7 @@ class UsuariosGrexco(models.Model):
     def __str__(self):
         return "usuario: {user_id}, tipo: {tipo}".format(
             user_id=self.usuario.username,
-            tipo=self.tipo
-        )
+            tipo=self.tipo)
 
 
 class PrioridadesRespuesta(models.Model):
