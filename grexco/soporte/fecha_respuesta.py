@@ -51,15 +51,16 @@ def respuesta(incidente, tiempo_respuesta, fecha_respuesta):
     incidente = incidente
     empresa = incidente.usuario.usuariosgrexco.empresa
     fecha_incidente = incidente.fecha_creacion
-    print('i', fecha_incidente)
+    print('incidente:', fecha_incidente)
     tiempo_respuesta = tiempo_respuesta
-    print('t', tiempo_respuesta)
-    fecha_respuesta = fecha_respuesta
-    print('r', fecha_respuesta)
+    print('tiempo respuesta:', tiempo_respuesta)
+    fecha_respuesta = fecha_incidente + tiempo_respuesta
+    print('fecha respuesta:', fecha_respuesta)
     servicio = verifica_servicio(empresa, fecha_respuesta.weekday())
-    print('s', servicio)
+    print('hay servicio?', servicio)
 
     while servicio is False:
+        print('Entra a verificar si hay servicio')
         fecha_respuesta = mas_un_dia(fecha_respuesta)
         print('w r', fecha_respuesta)
         servicio = verifica_servicio(empresa, fecha_respuesta.weekday())
@@ -67,7 +68,7 @@ def respuesta(incidente, tiempo_respuesta, fecha_respuesta):
 
     # Horarios de servicio para la fecha de respuesta
     horario_servicio = inicio_fin_servicio(empresa, fecha_respuesta.weekday())
-    print('h s', horario_servicio)
+    print('horarios de servicio para la fecha de respuesta', horario_servicio)
 
     # Si el mismo dia del caso hay servicio
     if fecha_incidente.date() == fecha_respuesta.date():
