@@ -1,130 +1,59 @@
 """docstring."""
-import datetime
+from datetime import datetime, timedelta
+
+from django.shortcuts import get_object_or_404
 
 from administracion.models import HorariosSoporte
 from administracion.models import PrioridadesRespuesta
 from administracion.models import TiemposRespuesta
 
-
-def verifica_servicio(empresa, dia):
-    """
-    Verifica si para el dia en cuestión la empresa tiene servicio.
-
-    parametros:
-        :empresa    :la empresa que se desea consultar
-        :dia        :el dia que se desea verificar
-    """
-    hs = HorariosSoporte.objects.get(empresa=empresa, dia=dia)
-    if hs.inicio:
-        return True
-    else:
-        return False
-
-
 def mas_un_dia(fecha):
-    """Función que agrega 1 día a la fecha de respuesta."""
-    un_dia = datetime.timedelta(days=1)
-    fecha_respuesta = fecha + un_dia
-
-    return fecha_respuesta
+    """Recibe una fecha y le agrega un día"""
+    un_dia = timedelta(days=1)
+    return fecha + un_dia
 
 
-def inicio_fin_servicio(empresa, dia):
-    """Retorna los horarios de inicio y fin servicio para el dia."""
-    hs = HorariosSoporte.objects.get(empresa=empresa, dia=dia)
-    if hs.inicio:
-        return hs
-    else:
-        return False
+def verifica_servicio(empresa, fecha_incidente):
+    """Retorna un objeto HorariosSoporte."""
+    dia = fecha_incidente.weekday()
+
+    return get_object_or_404(HorariosSoporte, empresa=empresa, dia=dia)
 
 
-def respuesta(incidente, tiempo_respuesta, fecha_respuesta):
-    """
-    Función para generar la fecha de respuesta de los incidentes.
-
-    Recibe como parametros:
-
-    :incidente           :clase usuarios.models.Incidentes
-    :tiempo_respuesta    :clase datetime.timedelta
-    :fecha_respuesta     :clase datetime.datetime
-    """
-    incidente = incidente
-    empresa = incidente.usuario.usuariosgrexco.empresa
-    fecha_incidente = incidente.fecha_creacion
-    print('incidente:', fecha_incidente)
+def fecha_respuesta(fecha_incidente, tiempo_respuesta, empresa):
+    """Calcula la fecha de respuesta para el caso deacuerdo a la prioridad
+    asignada."""
+    empresa = empresa
+    fecha_incidente = fecha_incidente
     tiempo_respuesta = tiempo_respuesta
-    print('tiempo respuesta:', tiempo_respuesta)
-    fecha_respuesta = fecha_incidente + tiempo_respuesta
-    print('fecha respuesta:', fecha_respuesta)
-    servicio = verifica_servicio(empresa, fecha_respuesta.weekday())
-    print('hay servicio?', servicio)
+    horario_soporte = verifica_servicio(empresa, fecha_incidente)
 
-    while servicio is False:
-        print('Entra a verificar si hay servicio')
-        fecha_respuesta = mas_un_dia(fecha_respuesta)
-        print('w r', fecha_respuesta)
-        servicio = verifica_servicio(empresa, fecha_respuesta.weekday())
-        print('ser', servicio)
-
-    # Horarios de servicio para la fecha de respuesta
-    horario_servicio = inicio_fin_servicio(empresa, fecha_respuesta.weekday())
-    print('horarios de servicio para la fecha de respuesta', horario_servicio)
-
-    # Si el mismo dia del caso hay servicio
-    if fecha_incidente.date() == fecha_respuesta.date():
-        print('mismo dia')
-        fecha_respuesta = fecha_incidente + tiempo_respuesta
-        print('fr 1', fecha_respuesta)
-        f_fin_servicio = datetime.datetime(
-            fecha_incidente.year,
-            fecha_incidente.month, 
-            fecha_incidente.day,
-            horario_servicio.fin.hour,
-            horario_servicio.fin.minute,
-        )
-        print('fin serv', f_fin_servicio)
-        if fecha_respuesta < f_fin_servicio:
-            # return
-            fecha_respuesta = fecha_respuesta
-            print('1', fecha_respuesta)
+    if horario_soporte.inicio:
+        # Se crean las variables 'inicio_soporte' y 'fin_soporte'
+        # con los datos 'date' de la fecha del incidente
+        inicio_soporte = datetime(
+            year=fecha_incidente.year,
+            month=fecha_incidente.month,
+            day=fecha_incidente.day,
+            hour=horario_soporte.inicio.hour,
+            minute=horario_soporte.inicio.minute)
+        fin_soporte = datetime(
+            year=fecha_incidente.year,
+            month=fecha_incidente.month,
+            day=fecha_incidente.day,
+            hour=horario_soporte.fin.hour,
+            minute=horario_soporte.fin.minute)
+        
+        if fecha_incidente < inicio_soporte:
+            respuesta = fecha_incidente + tiempo_respuesta
         else:
-            f_fin_servicio = datetime.datetime(
-                fecha_respuesta.year, 
-                fecha_respuesta.month, 
-                fecha_respuesta.day,
-                horario_servicio.fin.hour,
-                horario_servicio.fin.minute,
-            )
-            print('fin serv 1', f_fin_servicio)
-            # Calcula el tiempo de respuesta restante
-            tiempo_respuesta = fecha_respuesta - f_fin_servicio
-            fecha_respuesta = mas_un_dia(fecha_respuesta)
-            respuesta(incidente, tiempo_respuesta, fecha_respuesta)
+            respuesta = fecha_incidente + tiempo_respuesta
+
+        if respuesta < fin_soporte:
+            print('Guardar', respuesta)
+        else:
+            tiempo_respuesta = tiempo_respuesta - (fin_soporte - respuesta)
+            fecha_respuesta(fecha_incidente, tiempo_respuesta, empresa)
     else:
-    # El mismo dia del caso NO hay servicio
-        print('dif dia')
-        fecha_respuesta = datetime.datetime(
-            fecha_respuesta.year, 
-            fecha_respuesta.month, 
-            fecha_respuesta.day,
-            horario_servicio.inicio.hour,
-            horario_servicio.inicio.minute,
-        ) + tiempo_respuesta
-        hora_respuesta = fecha_respuesta.time()
-        if hora_respuesta < horario_servicio.fin:
-            # return fecha_respuesta
-            fecha_respuesta = fecha_respuesta
-            print('2', fecha_respuesta)
-            return fecha_respuesta
-        else:
-            f_fin_servicio = datetime.datetime(
-                fecha_respuesta.year, 
-                fecha_respuesta.month, 
-                fecha_respuesta.day,
-                horario_servicio.fin.hour,
-                horario_servicio.fin.minute,
-            )
-            print('fin serv 2', f_fin_servicio)
-            tiempo_respuesta = fecha_respuesta - f_fin_servicio
-            fecha_respuesta = mas_un_dia(fecha_respuesta)
-            respuesta(incidente, tiempo_respuesta, fecha_respuesta)
+        fecha_incidente = mas_un_dia(fecha_incidente)
+        fecha_respuesta(fecha_incidente, tiempo_respuesta, empresa)
