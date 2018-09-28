@@ -78,12 +78,13 @@ WSGI_APPLICATION = 'grexco.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'grexco_pru',     # Or path to database file if using sqlite3.
         'USER': 'sa',             # Not used with sqlite3.
-        'PASSWORD': 'Grexco02',   # Not used with sqlite3.
+        'PASSWORD': os.getenv('PASS_DB'),   # Not used with sqlite3.
         'HOST': '',               # Set to empty string for localhost.
         'PORT': '3306',
         'OPTIONS': {

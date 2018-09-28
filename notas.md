@@ -3,7 +3,7 @@ Conectar Mysql y Django: https://www.digitalocean.com/community/tutorials/how-to
 Conceder acceso a usuarios a Mysql: https://chartio.com/resources/tutorials/how-to-grant-all-privileges-on-a-database-in-mysql/
 
 - Crear Data base: CREATE DATABASE grexco_pru CHARACTER SET utf8 COLLATE utf8_general_ci;	
-- CREATE USER 'sa'@'localhost' IDENTIFIED BY 'Grexco02';
+- CREATE USER 'sa'@'localhost' IDENTIFIED BY 'Grexco_02';
 - Dar permisos a un usuario: GRANT ALL PRIVILEGES ON grexco_pru.*  TO 'sa'@'localhost';
 Check Mysql services:
 	$ sudo service mysql status
@@ -88,13 +88,11 @@ $ python manage.py createsuperuser
 ******** Crear usuarios  ********
 from django.contrib.auth.models import User
 user = User.objects.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword', **extra_fields)
-
 ·· Cambiar la contraseña:
 	>>> from django.contrib.auth.models import User
 	>>> u = User.objects.get(username='john')
 	>>> u.set_password('new password')
 	>>> u.save()
-
 
 ******** Para que la aplicacion guarde la hora de la ciudad actual en la BD ********
 
