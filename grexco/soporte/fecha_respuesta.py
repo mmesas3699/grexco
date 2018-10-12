@@ -9,6 +9,8 @@ from administracion.models import TiemposRespuesta
 
 
 def mas_un_dia(fecha, empresa):
+    """Agrega un día a la fecha recidida y le asigna el horario correspondiente
+    al inicio del servicio para ese día."""
     fecha = fecha
     empresa = empresa
     un_dia = timedelta(days=1)
@@ -16,6 +18,7 @@ def mas_un_dia(fecha, empresa):
     h_servicio = servicio(empresa, nueva_fecha)
 
     if h_servicio:
+        print('mas_un_dia', h_servicio)
         fecha_respuesta = datetime(
             year=nueva_fecha.year, month=nueva_fecha.month,
             day=nueva_fecha.day, hour=h_servicio['inicio'].hour,
@@ -34,7 +37,6 @@ def servicio(empresa, fecha):
     par el día obtenido."""
     empresa = empresa
     fecha = fecha
-    print(fecha)
     dia = fecha.weekday()
     horarios_servicio = HorariosSoporte.objects.get(
         empresa=empresa, dia=dia)
@@ -66,11 +68,31 @@ def respuesta(fecha_incidente, tiempo_respuesta, empresa):
     # Verifica si hay servicio, si No hay entonces agrega un dia
     # a la fecha actual.
     if horario_servicio:
-        if fecha_incidente > horario_servicio['inicio'] and \
-                fecha_incidente < horario_servicio['fin']:
-            fecha_respuesta = 'estra entre los horarios de soporte'
+        print('si hay servicio', horario_servicio)
+        if fecha_incidente >= horario_servicio['inicio'] and \
+                fecha_incidente <= horario_servicio['fin']:
+            print('esta entre los horarios de soporte')
+            fecha_respuesta = fecha_incidente + tiempo_respuesta
+
+            # Verifica si la fecha de la respuesta es mayor que la fecha fin
+            # del servicio.
+            if fecha_respuesta < horario_servicio['fin']:
+                # Si es menor se calcula la fecha de respuesta
+                print('si es menor')
+                return "si es menor"
+            else:
+                # Si es mayor se suma un dia y se realizar el proceso nuevamente.
+                # Tiempo de respuesta restante
+                tiempo_respuesta = (
+                    tiempo_respuesta - (horario_servicio['fin'] - fecha_incidente))
+                # Más un dia
+                fecha_respuesta = mas_un_dia(fecha_incidente, empresa)
+                # Calcula la fecha nuevamente
+                respuesta(fecha_respuesta, tiempo_respuesta, empresa)
         else:
+            print('2')
             fecha_respuesta = mas_un_dia(fecha_incidente, empresa)
+            print('2 - ', fecha_respuesta)
             respuesta(fecha_respuesta, tiempo_respuesta, empresa)
     else:
         fecha_respuesta = mas_un_dia(fecha_incidente, empresa)
