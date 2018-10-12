@@ -19,7 +19,7 @@ from usuarios.models import MovimientosIncidentes
 from usuarios.models import UsuariosSoporteIncidentes
 
 # Función para calcular el tiempo de respuesta
-from .fecha_respuesta import respuesta
+from .fecha_respuesta import f_respuesta
 
 
 
@@ -251,9 +251,9 @@ class AsignaIncidentesSoporteView(
             """
             fecha = incidente.fecha_creacion
             tiempo = timedelta(hours=8)
-            fecha_respuesta = respuesta(incidente, tiempo, fecha)
+            fecha_respuesta = f_respuesta(incidente, tiempo, fecha)
             print('fecha_respuesta', fecha_respuesta)
-           
+
             # Si NO hay ningún error.
             return JsonResponse(
                 {'ok': 'Se asignó el incidente correctamente'}, status=200)
